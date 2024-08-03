@@ -14,10 +14,39 @@ repositories = {
     'o': 'space_station'
 }
 
-author = "AdventureTimeSS14"
-github_link = "https://github.com/"
+# Список фраз, которые нужно проверять
+phrases = [
+    "когда апстрим?",
+    "апстрим когда?",
+    "когда будет апстрим?",
+    "Апстрим?",
+    "как апстрим?",
+    "чо по апстриму",
+    "апстримчикк?",
+    "Апстрим скоро?",
+    "Скоро там апстрим?",
+    "Апстрим когда?",
+    "Апстрим",
+    "upstream",
+]
 
-pattern = re.compile(r'\[(s|c|t)(\d+)\]')
+# Список вариаций "обнимает"
+hug_variations = [
+    "*обнимает*",
+    "обнимает",
+    "обнимашки",
+    "обними",
+    "дай обнимашек",
+    "прижми",
+    "обниму",
+    "хочу обнимашек",
+    "обнял",
+    "обняла"
+]
+
+author = "AdventureTimeSS14"
+
+pattern = re.compile(r'\[(n|o)(\d+)\]')
 
 def check_github_issue_or_pr(repo_code, number):
     """
@@ -34,11 +63,11 @@ def check_github_issue_or_pr(repo_code, number):
     if not repo_name:
         return None
 
-    base_url = f'{github_link}{author}/{repo_name}'
+    base_url = f'https://github.com/{author}/{repo_name}'
     issue_url = f'{base_url}/issues/{number}'
     pr_url = f'{base_url}/pull/{number}'
     
-    return f'{repo_name} {number}'  # You were returning the repository name and number, not the URL
+    return f'[{repo_name} {number}]({pr_url})'  # You were returning the repository name and number, not the URL
 
 @bot.event
 async def on_ready():
@@ -80,21 +109,7 @@ async def on_message(message):
         await bot.process_commands(message)
         return
     
-    # Список фраз, которые нужно проверять
-    phrases = [
-        "когда апстрим?",
-        "апстрим когда?",
-        "когда будет апстрим?",
-        "Апстрим?",
-        "как апстрим?",
-        "чо по апстриму",
-        "апстримчикк?",
-        "Апстрим скоро?",
-        "Скоро там апстрим?",
-        "Апстрим когда?",
-        "Апстрим",
-        "upstream",
-    ]
+
     # Проверяем наличие фраз в сообщении
     if any(fuzz.ratio(message.content.lower(), phrase) >= 70 for phrase in phrases):
         await message.channel.send("Через неделю.")
@@ -103,6 +118,15 @@ async def on_message(message):
     if any(phrase.lower() in message.content.lower() for phrase in phrases):
         await message.channel.send("Через неделю.")
         return
+    
+    if f"<@{bot.user.id}>" in message.content:
+        # Извлекаем текст без упоминания бота
+        text_without_mention = message.content.replace(f"<@{bot.user.id}>", "").strip()
+        # Проверяем, содержит ли текст любую вариацию "обнимает"
+        for variation in hug_variations:
+            if fuzz.token_sort_ratio(text_without_mention.lower(), variation) > 80:
+                await message.channel.send("*Обнимает в ответ.*")
+                break  # Прерываем цикл после отправки сообщения
     
     # Ищем паттерн в сообщении
     match = pattern.search(message.content)
