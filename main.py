@@ -8,8 +8,37 @@ from fuzzywuzzy import fuzz
 from consts import DISCORD_KEY
 
 bot = commands.Bot(command_prefix='&', help_command=None, intents=discord.Intents.all())
-link_new = "https://github.com/AdventureTimeSS14/space_station_ADT/pull/"
-link_old = "https://github.com/AdventureTimeSS14/space_station/pull/"
+
+repositories = {
+    'n': 'space_station_ADT',
+    'o': 'space_station'
+}
+
+author = "AdventureTimeSS14"
+github_link = "https://github.com/"
+
+pattern = re.compile(r'\[(s|c|t)(\d+)\]')
+
+def check_github_issue_or_pr(repo_code, number):
+    """
+    Возвращает ссылку на GitHub issue или PR в зависимости от введенного кода репозитория (n или o).
+
+    Args:
+        repo_code: Код репозитория (n или o).
+        number: Номер issue или PR.
+
+    Returns:
+        Ссылка на GitHub issue или PR, если она найдена, иначе None.
+    """
+    repo_name = repositories.get(repo_code)
+    if not repo_name:
+        return None
+
+    base_url = f'{github_link}{author}/{repo_name}'
+    issue_url = f'{base_url}/issues/{number}'
+    pr_url = f'{base_url}/pull/{number}'
+    
+    return f'{repo_name} {number}'  # You were returning the repository name and number, not the URL
 
 @bot.event
 async def on_ready():
@@ -75,32 +104,37 @@ async def on_message(message):
         await message.channel.send("Через неделю.")
         return
     
-    # Проверяем, является ли сообщение текстом в квадратных скобках
-    if message.content.startswith('[') and message.content.endswith(']'):
-        pr_number = message.content[1:-1]  # Убираем квадратные скобки
+    # Ищем паттерн в сообщении
+    match = pattern.search(message.content)
+    if match:
+        repo_code, number = match.groups()
+        link = check_github_issue_or_pr(repo_code, number)
+        if link:
+            await message.channel.send(f'{link}')
 
-        # Проверка на соответствие формату
-        pattern = r'^[no]\d+$'
-        if re.match(pattern, pr_number):
-            if pr_number.startswith('n'):  # Если номер начинается с 'n'
-                link = f"{link_new}{pr_number[1:]}"  # Убираем 'n' и формируем ссылку
-                await message.channel.send(f"[space_station_ADT PR: {pr_number}]({link})")
-            elif pr_number.startswith('o'):  # Если номер начинается с 'o'
-                link = f"{link_old}{pr_number[1:]}"  # Убираем 'o' и формируем ссылку
-                await message.channel.send(f"[space_station PR: {pr_number}]({link})")
-        else:
-            await message.channel.send("Некорректный формат номера пулл-реквеста. Используйте например [n123] или [o342].")
+    # This line should be outside the 'if match' block, so the bot still processes commands
+    await bot.process_commands(message)
+    
+    
+    # # Проверяем, является ли сообщение текстом в квадратных скобках
+    # if message.content.startswith('[') and message.content.endswith(']'):
+    #     pr_number = message.content[1:-1]  # Убираем квадратные скобки
+
+    #     # Проверка на соответствие формату
+    #     pattern = re.compile(r'\[(s|c|t)(\d+)\]')
+    #     if re.match(pattern, pr_number):
+    #         if pr_number.startswith('n'):  # Если номер начинается с 'n'
+    #             link = f"{link_new}{pr_number[1:]}"  # Убираем 'n' и формируем ссылку
+    #             await message.channel.send(f"[space_station_ADT PR: {pr_number}]({link})")
+    #         elif pr_number.startswith('o'):  # Если номер начинается с 'o'
+    #             link = f"{link_old}{pr_number[1:]}"  # Убираем 'o' и формируем ссылку
+    #             await message.channel.send(f"[space_station PR: {pr_number}]({link})")
+    #     else:
+    #         await message.channel.send("Некорректный формат номера пулл-реквеста. Используйте например [n123] или [o342].")
 
 def main():
     bot.run(DISCORD_KEY)
 
 if __name__ == '__main__':
     main()
-    
-    
-    
-#  possible_questions = ["Когда апстрим?", "Когда апстрим", "когда апстрим", "где апстрим", "когда апстрим?"]
 
-# if message.content.lower() in possible_questions:
-#     await message.channel.send("Через неделю.")
-#     return
