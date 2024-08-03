@@ -1,5 +1,12 @@
-import configparser
+import os
+from dotenv import load_dotenv
 
-config = configparser.ConfigParser()
-config.read('config.ini')
-DISCORD_KEY = config['KEY']['DISCORD_KEY']
+# Загружаем переменные из .env
+load_dotenv()
+
+# Получаем значение DISCORD_KEY из .env
+DISCORD_KEY = os.getenv('DISCORD_KEY')
+
+# Проверяем, установлено ли значение
+if not DISCORD_KEY:
+  raise ValueError("DISCORD_KEY не найден в файле .env")
