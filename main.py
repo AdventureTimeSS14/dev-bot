@@ -169,14 +169,23 @@ async def user_role(ctx, role_name: str):
         await ctx.send(f'Нет пользователей с ролью {role.name}.')
 
 @bot.command()
-async def gpt(ctx, *promt): # получение промта из аргументов
+async def gpt(ctx, *promt):
     """Команда для использования gpt 3.5 turbo."""
-    client = Client()
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo", # выбор модели
-        messages=[{"role": "user", "content":  promt}],)
-    # Вывод результата
-    await ctx.send(response.choices[0].message.content)
+    # Вайт лист на роли
+    whitelist_gpt = ["Разработка", "Создатель проекта🔑", "Куратор Проекта", "Дискорд Модератор"]
+    # Получение списка разрешенных ролей из настроек сервера
+    allowed_roles = [role.id for role in ctx.guild.roles if role.name in whitelist_gpt]
+    # Проверка, имеет ли пользователь хотя бы одну разрешенную роль
+    if any(role.id in allowed_roles for role in ctx.author.roles):
+        client = Client()
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content":  promt}],
+        )
+        # Вывод результата
+        await ctx.send(response.choices[0].message.content)
+    else:
+        await ctx.send("У вас нет доступа к этой команде.")
    
 @bot.event
 async def on_message(message):
