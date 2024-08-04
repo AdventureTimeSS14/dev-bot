@@ -4,6 +4,7 @@ import re
 import discord
 from discord.ext import commands
 from fuzzywuzzy import fuzz
+from g4f.client import Client
 
 from consts import DISCORD_KEY
 
@@ -86,6 +87,7 @@ async def help_command(ctx):
         🏓 &pong - Ответит 'Pong!'.
         🔄 &echo <сообщение> - Повторить ваше сообщение.
         🎭 &user_role "<роль>" - Показать список пользователей с указанной ролью.
+        🤖 &gpt <промт> - ChatGPT 3.5 turbo
         """,
         inline=False
     )
@@ -153,7 +155,17 @@ async def user_role(ctx, role_name: str):
         await ctx.send(f'Пользователи с ролью {role.name}: {", ".join(members_with_role)}')
     else:
         await ctx.send(f'Нет пользователей с ролью {role.name}.')
-        
+
+@bot.command()
+async def gpt(ctx, *promt): # получение промта из аргументов
+    """Команда для использования gpt 3.5 turbo."""
+    client = Client()
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo", # выбор модели
+        messages=[{"role": "user", "content":  promt}],)
+    # Вывод результата
+    await ctx.send(response.choices[0].message.content)
+   
 @bot.event
 async def on_message(message):
     # Игнорируем сообщения от самого бота
