@@ -68,7 +68,7 @@ def check_github_issue_or_pr(repo_code, number):
     issue_url = f'{base_url}/issues/{number}'
     pr_url = f'{base_url}/pull/{number}'
     
-    return f'[{repo_name} {number}]({pr_url})'  # You were returning the repository name and number, not the URL
+    return f'[{repo_name} {number}]({pr_url})'
 
 @bot.event
 async def on_ready():
@@ -129,7 +129,7 @@ async def help_command(ctx):
 @bot.command(name='echo')
 async def echo(ctx, *, message: str):
     # Список ID пользователей, которым разрешено использовать команду
-    whitelist = [328502766622474240]  # Замените на реальные ID пользователей
+    whitelist = [328502766622474240] 
 
     # Проверяем, есть ли пользователь в белом списке
     if ctx.author.id not in whitelist:
@@ -224,7 +224,6 @@ async def on_message(message):
         if link:
             await message.channel.send(f'{link}')
 
-    # This line should be outside the 'if match' block, so the bot still processes commands
     await bot.process_commands(message)
     
     
