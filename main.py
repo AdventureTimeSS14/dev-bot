@@ -1,3 +1,4 @@
+# TODO: Рефайторинг кода, выести многое по отдельным файлам, что-то можно в константы
 import asyncio
 import re
 
@@ -76,6 +77,7 @@ async def on_ready():
 
 @bot.command(name='help')
 async def help_command(ctx):
+    # TODO: Сделать отдельный например файл .json с описанием всех команд
     embed = discord.Embed(
         title="📚 Помощь по командам",
         color=discord.Color.dark_green()
@@ -169,14 +171,20 @@ async def user_role(ctx, role_name: str):
         await ctx.send(f'Нет пользователей с ролью {role.name}.')
 
 @bot.command()
-async def gpt(ctx, *promt):
+async def gpts(ctx, *promt): 
+    # TODO: Добавить гугл переводы, а то он базарит на нерусском
     """Команда для использования gpt 3.5 turbo."""
-    # Вайт лист на роли
-    whitelist_gpt = ["Разработка", "Создатель проекта🔑", "Куратор Проекта", "Дискорд Модератор"]
-    # Получение списка разрешенных ролей из настроек сервера
-    allowed_roles = [role.id for role in ctx.guild.roles if role.name in whitelist_gpt]
+    # Вайт лист на роли (ID ролей) 
+    # TODO: Вынести в отдельный файл
+    whitelist_gpt = [
+        1060191651538145420,  # ID роли "Разработка"
+        1116612861993689251,  # ID роли "Создатель проекта🔑"
+        1060264704838209586,  # ID роли "Куратор Проекта"
+        1054908932868538449  # ID роли "Дискорд Модератор"
+    ]
+
     # Проверка, имеет ли пользователь хотя бы одну разрешенную роль
-    if any(role.id in allowed_roles for role in ctx.author.roles):
+    if any(role.id in whitelist_gpt for role in ctx.author.roles):
         client = Client()
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
@@ -225,23 +233,7 @@ async def on_message(message):
             await message.channel.send(f'{link}')
 
     await bot.process_commands(message)
-    
-    
-    # # Проверяем, является ли сообщение текстом в квадратных скобках
-    # if message.content.startswith('[') and message.content.endswith(']'):
-    #     pr_number = message.content[1:-1]  # Убираем квадратные скобки
 
-    #     # Проверка на соответствие формату
-    #     pattern = re.compile(r'\[(s|c|t)(\d+)\]')
-    #     if re.match(pattern, pr_number):
-    #         if pr_number.startswith('n'):  # Если номер начинается с 'n'
-    #             link = f"{link_new}{pr_number[1:]}"  # Убираем 'n' и формируем ссылку
-    #             await message.channel.send(f"[space_station_ADT PR: {pr_number}]({link})")
-    #         elif pr_number.startswith('o'):  # Если номер начинается с 'o'
-    #             link = f"{link_old}{pr_number[1:]}"  # Убираем 'o' и формируем ссылку
-    #             await message.channel.send(f"[space_station PR: {pr_number}]({link})")
-    #     else:
-    #         await message.channel.send("Некорректный формат номера пулл-реквеста. Используйте например [n123] или [o342].")
 
 def main():
     bot.run(DISCORD_KEY)
