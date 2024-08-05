@@ -171,7 +171,7 @@ async def user_role(ctx, role_name: str):
         await ctx.send(f'Нет пользователей с ролью {role.name}.')
 
 @bot.command()
-async def gpts(ctx, *promt): 
+async def gpt(ctx, *promt): 
     # TODO: Добавить гугл переводы, а то он базарит на нерусском
     """Команда для использования gpt 3.5 turbo."""
     # Вайт лист на роли (ID ролей) 
