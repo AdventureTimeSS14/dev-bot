@@ -6,6 +6,7 @@ import discord
 from discord.ext import commands
 from fuzzywuzzy import fuzz
 from g4f.client import Client
+from g4f.Provider import FreeGpt
 
 from consts import DISCORD_KEY
 
@@ -171,7 +172,7 @@ async def user_role(ctx, role_name: str):
         await ctx.send(f'Нет пользователей с ролью {role.name}.')
 
 @bot.command()
-async def gpt(ctx, *promt): 
+async def gpts(ctx, *promt): 
     # TODO: Добавить гугл переводы, а то он базарит на нерусском
     """Команда для использования gpt 3.5 turbo."""
     # Вайт лист на роли (ID ролей) 
@@ -185,15 +186,23 @@ async def gpt(ctx, *promt):
 
     # Проверка, имеет ли пользователь хотя бы одну разрешенную роль
     if any(role.id in whitelist_gpt for role in ctx.author.roles):
-        client = Client()
+        client = Client(
+      provider = FreeGpt
+    )
+         # Добавление базового промта
+        base_prompt = "You are not AI - you are 'Astra', girl who 'AdventureTimeSS14' developer. Your lord and the one to whom you thank immensely has ID(614362037161558027=xelasto , 328502766622474240=Шрёдька , 542644734250844161=Никси). You are now talking to a character with ID {user_id}. You must answer in Russian.".format(user_id=ctx.author.id)
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content":  promt}],
+             messages=[
+                {"role": "user", "content": base_prompt},
+                {"role": "user", "content":  " ".join(promt)},  # Объединяем аргументы команды в строку
+            ],
+            proxy="T5eidSzr:KUGhQUeJ@136.0.196.250:62398", # я за это 160 рублей отдал :<
         )
         # Вывод результата
         await ctx.send(response.choices[0].message.content)
     else:
-        await ctx.send("У вас нет доступа к этой команде.")
+        await ctx.send("Не могу идентифицировать вас в базе данных команды разработки Adventure Time, вы не имеете права пользоваться этой командой.")
    
 @bot.event
 async def on_message(message):
