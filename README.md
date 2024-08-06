@@ -18,9 +18,13 @@ pip install -r requirements.txt
 
 ### 3. Создание конфигурационного файла:
 
-Создайте файл .env рядом с main.py и вставьте в него свой токен Discord:
+Создайте файл .env рядом с main.py и вставьте в него свой токен Discord, PROXY и GITHUB:
 
+```.env
  DISCORD_KEY=*****
+ PROXY=*****
+ GITHUB=*****
+```
  
 
 ### 4. Запуск бота:
