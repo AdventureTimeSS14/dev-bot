@@ -151,8 +151,11 @@ async def pong(ctx):  # должна выводить пинг бота заде
     await ctx.send(f'Pong! Задержка: {latency}ms')
 
 @bot.command()
-async def user_role(ctx, role_name: str):
+async def user_role(ctx, *role_names: str):
     """Команда для получения списка пользователей с заданной ролью по имени."""
+
+    # Объединяем все слова в строку, чтобы получить полное название роли
+    role_name = " ".join(role_names)
 
     # Поиск роли по названию 
     role = discord.utils.get(ctx.guild.roles, name=role_name)
