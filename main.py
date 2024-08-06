@@ -454,7 +454,7 @@ async def get_milestones(repository):
 
             milestones_list.append({
                 "title": milestone.title,
-                "url": milestone.url,  # Изменено на milestone.url
+                "url": milestone.url, 
                 "due_date": milestone.due_on,
                 "completion": f"{completion_percentage:.2f}%",
                 "open_issues": milestone.open_issues,
