@@ -484,12 +484,12 @@ async def milestones(ctx, repo_key: str):
 
         # Делим список milestones на несколько embed, чтобы не превышать ограничение по количеству полей
         embed_list = []
-        current_embed = discord.Embed(title=f"Список Milestones. \nРепозиторий: {repository_name}", color=discord.Color.blue())
+        current_embed = discord.Embed(title=f"Список Milestones. \nРепозиторий: {repository_name}", color=discord.Color.dark_purple())
         
         for i, milestone in enumerate(milestones_list):
             if i % 25 == 0 and i > 0:  # Создаем новый embed каждые 25 milestones
                 embed_list.append(current_embed)
-                current_embed = discord.Embed(title=f"Список Milestones. \nРепозиторий: {repository_name}", color=discord.Color.blue())
+                current_embed = discord.Embed(title=f"Список Milestones. \nРепозиторий: {repository_name}", color=discord.Color.dark_purple())
 
             current_embed.add_field(name=milestone['title'], value=f"Ссылка: {milestone['url']}\nДата завершения: {milestone['due_date']}\nЗакрытые задачи: {milestone['closed_issues']}\nОткрытые задачи: {milestone['open_issues']}\nПроцент выполнения: {milestone['completion']}", inline=False)
 
