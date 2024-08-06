@@ -19,3 +19,4 @@ g4f==0.3.2.3
 nest-asyncio==1.6.0
 curl-cffi==0.7.1
 aiohttp_socks==0.9.0
+PyGithub==2.3.0
