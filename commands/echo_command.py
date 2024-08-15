@@ -1,5 +1,6 @@
 from bot_init import bot
 
+
 @bot.command(name='echo')
 async def echo(ctx, *, message: str):
     # Список ID пользователей, которым разрешено использовать команду

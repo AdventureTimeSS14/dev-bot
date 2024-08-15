@@ -1,5 +1,7 @@
-from bot_init import bot
 import discord
+
+from bot_init import bot
+
 
 @bot.command(name='help')
 async def help_command(ctx):

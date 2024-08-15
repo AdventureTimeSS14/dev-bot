@@ -1,6 +1,8 @@
-from bot_init import bot
 import discord
 from github import Github
+
+from bot_init import bot
+
 
 @bot.command(name='forks')
 async def forks(ctx, repo_key: str):

@@ -1,7 +1,10 @@
-from bot_init import bot
 import time
+
 from g4f.client import Client
 from g4f.Provider import FreeGpt
+
+from bot_init import bot
+
 
 @bot.command()
 async def gpt(ctx, *promt): 

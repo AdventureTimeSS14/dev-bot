@@ -1,6 +1,7 @@
-from bot_init import bot
 import discord
 from github import Github
+
+from bot_init import bot
 
 
 @bot.command(name='milestones')

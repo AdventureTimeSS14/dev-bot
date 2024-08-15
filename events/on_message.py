@@ -1,6 +1,9 @@
-from bot_init import bot
-from fuzzywuzzy import fuzz
 import re
+
+from fuzzywuzzy import fuzz
+
+from bot_init import bot
+
 
 @bot.event
 async def on_message(message):

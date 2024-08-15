@@ -1,6 +1,8 @@
-from bot_init import bot
 import discord
 from github import Github
+
+from bot_init import bot
+
 
 @bot.command(name='review')
 async def review(ctx, repo_key: str):

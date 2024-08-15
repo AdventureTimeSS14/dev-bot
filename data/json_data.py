@@ -1,5 +1,6 @@
 import json
 
+
 class JsonData:
     _instance = None
 
