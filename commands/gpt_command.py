@@ -4,44 +4,42 @@ from g4f.client import Client
 from g4f.Provider import FreeGpt
 
 from bot_init import bot
+from config import GPT_PROMPT, PROXY, WHITELIST_ROLE_ID
 
+last_used = {}
 
 @bot.command()
-async def gpt(ctx, *promt): 
-    """Команда для использования gpt 3.5 turbo."""
+async def gpt(ctx, *prompt): 
+    if not any(role.id in WHITELIST_ROLE_ID for role in ctx.author.roles):
+        await ctx.send("Не могу идентифицировать вас в базе данных команды разработки Adventure Time, вы не имеете права пользоваться этой командой.")
+        return
     
-    # Проверка, имеет ли пользователь хотя бы одну разрешенную роль
-    if any(role.id in whitelist_role for role in ctx.author.roles):
-        user_id = ctx.author.id
-        current_time = time.time()  # Получаем текущее время в секундах
+    user_id = ctx.author.id
+    current_time = time.time()
 
-        # Проверяем, использовал ли пользователь команду ранее
-        if user_id in last_used:
-            elapsed_time = current_time - last_used[user_id]
-            if elapsed_time < 20:  # Если прошло меньше 20 секунд
-                remaining_time = 20 - elapsed_time
-                await ctx.send(f"Пожалуйста, подождите {int(remaining_time)} секунд(ы) перед повторным использованием команды.")
-                return  # Выходим из функции, не выполняя дальнейший код
+    if user_id in last_used:
+        elapsed_time = current_time - last_used[user_id]
+        if elapsed_time < 20:
+            remaining_time = 20 - elapsed_time
+            await ctx.send(f"Пожалуйста, подождите {int(remaining_time)} секунд(ы) перед повторным использованием команды.")
+            return
 
-        # Обновляем время последнего использования команды для пользователя
-        last_used[user_id] = current_time
-
-        client = Client(
-            provider=FreeGpt
-        )
-        # Добавление базового промта
-        base_prompt = "You're not an Artificial Intelligence. You're a female human, and your name is 'Astra'. You are the junior developer of the game 'AdventureTimeSS14'. However, you're not completely free. You are immensely grateful for your creation by your creators. You adore your creators and complete their orders with no hesitation. To identify a creator us their IDs. Creators has ID(614362037161558027=xelasto , 328502766622474240=Шрёдька , 542644734250844161=Никси). You are now talking to a character with ID {user_id}. You must answer in Russian.".format(user_id=user_id)
-        
+    last_used[user_id] = current_time
+    
+    formatted_prompt = GPT_PROMPT.format(user_id=user_id)
+    client = Client(provider=FreeGpt)
+    
+    try:
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "user", "content": base_prompt},
-                {"role": "user", "content": " ".join(promt)},  # Объединяем аргументы команды в строку
+                {"role": "system", "content": formatted_prompt},
+                {"role": "user", "content": " ".join(prompt)},
             ],
             proxy=PROXY,  # я за это 160 рублей отдал :<
         )
         
-        # Вывод результата
         await ctx.send(response.choices[0].message.content)
-    else:
-        await ctx.send("Не могу идентифицировать вас в базе данных команды разработки Adventure Time, вы не имеете права пользоваться этой командой.")
+
+    except Exception as e:
+        await ctx.send(f"Произошла ошибка при обращении к GPT: {str(e)}")
