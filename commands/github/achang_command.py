@@ -37,7 +37,7 @@ async def achang(ctx, repo_key: str):
         discord.Color.dark_gold(),
         lambda pr: {
             "name": pr['title'],
-            "value": f"Автор: {pr['author']}\nЧьё ревью запрашено: {', '.join(pr['requested_by']) if pr['requested_by'] else 'Нет запрашиваемых рецензентов'}\nСсылка: {pr['url']}",
+            "value": f"Автор: {pr['author']}\nЧьё ревью запрошено: {', '.join(pr['requested_by']) if pr['requested_by'] else 'Нет запрашиваемых рецензентов'}\nСсылка: {pr['url']}",
             "inline": False
         }
     )
