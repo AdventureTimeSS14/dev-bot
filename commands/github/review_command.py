@@ -1,8 +1,10 @@
 import discord
-from github_processor import (create_embed_list, fetch_github_data,
-                              send_embeds, validate_repository, validate_user)
+from discord.ext import commands
 
 from bot_init import bot
+
+from .github_processor import (create_embed_list, fetch_github_data,
+                               send_embeds, validate_repository, validate_user)
 
 
 @bot.command(name='review')
@@ -43,3 +45,8 @@ async def review(ctx, repo_key: str):
     )
 
     await send_embeds(ctx, embed_list)
+
+@review.error
+async def review_error(ctx, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send("Вы не указали ключ к репозиторию. Указать ключ к репозиторию можно следующим образом: `&forks n`, `&forks o`")

@@ -1,8 +1,10 @@
 import discord
-from github_processor import (create_embed_list, fetch_github_data,
-                              send_embeds, validate_repository, validate_user)
+from discord.ext import commands
 
 from bot_init import bot
+
+from .github_processor import (create_embed_list, fetch_github_data,
+                               send_embeds, validate_repository, validate_user)
 
 
 @bot.command(name='forks')
@@ -16,7 +18,6 @@ async def forks(ctx, repo_key: str):
 
     url = f"https://api.github.com/repos/{repository_name}/forks"
     forks = await fetch_github_data(url)
-
     if not forks:
         await ctx.send("Форки не найдены.")
         return
@@ -40,6 +41,10 @@ async def forks(ctx, repo_key: str):
             "inline": False
         }
     )
-
     await send_embeds(ctx, embed_list)
 
+@forks.error
+async def forks_error(ctx, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send("Вы не указали ключ к репозиторию. Указать ключ к репозиторию можно следующим образом: `&forks n`, `&forks o`")
+        

@@ -22,13 +22,12 @@ async def validate_repository(ctx, repo_key):
 
 async def fetch_github_data(url, params=None):
     """Fetches data from GitHub API."""
-    headers = {"Authorization": f"token {GITHUB}"}
     try:
-        async with GLOBAL_SESSION.get(url, params=params) as response:
-            if response.status != 200:
-                print(f"Ошибка при получении данных с GitHub: {response.status}")
-                return None
-            return await response.json()
+        response = GLOBAL_SESSION.get(url, params=params)
+        if response.status_code != 200:
+            print(f"Ошибка при получении данных с GitHub: {response.status_code}")
+            return None
+        return response.json()
     except Exception as e:
         print(f"Ошибка при запросе к GitHub API: {e}")
         return None
