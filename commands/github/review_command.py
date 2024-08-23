@@ -49,4 +49,4 @@ async def review(ctx, repo_key: str):
 @review.error
 async def review_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send("Вы не указали ключ к репозиторию. Указать ключ к репозиторию можно следующим образом: `&forks n`, `&forks o`")
+        await ctx.send("Вы не указали ключ к репозиторию. Указать ключ к репозиторию можно следующим образом: `&review n`, `&review o`")

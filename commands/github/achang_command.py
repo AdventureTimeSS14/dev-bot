@@ -49,4 +49,4 @@ async def achang(ctx, repo_key: str):
 @achang.error
 async def achang_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send("Вы не указали ключ к репозиторию. Указать ключ к репозиторию можно следующим образом: `&forks n`, `&forks o`")
+        await ctx.send("Вы не указали ключ к репозиторию. Указать ключ к репозиторию можно следующим образом: `&achang n`, `&achang o`")
