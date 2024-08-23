@@ -1,6 +1,8 @@
 discord.py==2.4.0
 curl_cffi
 fuzzywuzzy==0.18.0
-g4f==0.3.2.3
+g4f==0.3.2.4
+nest-asyncio==1.6.0
 python-dotenv==1.0.1
+python-Levenshtein==0.25.1
 requests==2.32.3
