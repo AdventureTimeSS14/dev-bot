@@ -9,6 +9,8 @@ DISCORD_KEY = os.getenv('DISCORD_KEY')
 # PROXY = os.getenv('PROXY')
 GITHUB = os.getenv('GITHUB')
 
+CHANGELOG_CHANNEL_ID = 1089490875182239754  # ID канала для сообщений чейнжлогов
+
 WHITELIST_ROLE_ID = [
     1060191651538145420,  # ID роли "Разработка"
     1116612861993689251,  # ID роли "Создатель проекта🔑"
