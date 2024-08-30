@@ -24,7 +24,7 @@ async def on_message(message):
     if f"<@{bot.user.id}>" in message.content:
         text_without_mention = message.content.replace(f"<@{bot.user.id}>", "").strip()
         data = JsonData()
-        for variation in data.get_data['hug_variations']:
+        for variation in data.get_data('hug_variations'):
             if fuzz.token_sort_ratio(text_without_mention.lower(), variation) > 80:
                 await message.channel.send("*Обнимает в ответ.*")
                 break
