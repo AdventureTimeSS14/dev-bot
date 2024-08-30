@@ -2,16 +2,11 @@ import re
 import requests
 import asyncio
 from datetime import datetime
-from config import CHANGELOG_CHANNEL_ID, GITHUB
+from config import CHANGELOG_CHANNEL_ID, GITHUB, SS14REPO, SECOND_UPDATE_CHANGELOG
 import discord
 from discord.ext import commands
 
 from bot_init import bot
-
-from .github_processor import (create_embed_list, fetch_github_data,
-                               send_embeds, validate_repository, validate_user)
-
-REPO = 'AdventureTimeSS14/space_station_ADT'
 
 async def fetch_merged_pull_requests():
     headers = {
@@ -19,10 +14,10 @@ async def fetch_merged_pull_requests():
         'Accept': 'application/vnd.github.v3+json',
     }
     
-    last_checked_time = datetime.utcnow()  # Время последней проверки
+    last_checked_time = datetime.utcnow()
 
     while True:
-        response = requests.get(f'https://api.github.com/repos/{REPO}/pulls?state=closed', headers=headers)
+        response = requests.get(f'https://api.github.com/repos/{SS14REPO}/pulls?state=closed', headers=headers)
         if response.status_code == 200:
             pull_requests = response.json()
             for pr in pull_requests:
@@ -31,8 +26,8 @@ async def fetch_merged_pull_requests():
                     if merged_at > last_checked_time:  # Проверяем, был ли PR замержен после последней проверки
                         pr_title = pr['title']
                         pr_url = pr['html_url']
-                        description = pr['body'] if pr['body'] else "Нет описания"
-                        author_name = pr['user']['login']  # Получаем ник автора пулл-реквеста
+                        description = pr.get('body', "Нет описания") 
+                        author_name = pr['user']['login']
                         
                         # Удаляем HTML-комментарии из описания
                         description = re.sub(r'<!--.*?-->', '', description, flags=re.DOTALL).strip()
@@ -40,19 +35,15 @@ async def fetch_merged_pull_requests():
                         # Ищем :cl: и все, что идет после него
                         match = re.search(r'(:cl:.*?)(\n|$)', description, re.DOTALL)
                         if match:
-                            # Получаем текст после :cl:
                             cl_text = match.group(1).strip()
                             
-                            # Извлекаем все строки после :cl:
                             remaining_lines = description[match.end():].strip()
                             
-                            # Объединяем текст :cl: с оставшимися строками
                             if remaining_lines:
                                 description = f"{cl_text}\n{remaining_lines}"
                             else:
                                 description = cl_text
                             
-                            # Создаем Embed-сообщение
                             embed = discord.Embed(
                                 title=f'Пулл-реквест замержен: **{pr_title}**',
                                 color=discord.Color.dark_green()
@@ -63,6 +54,6 @@ async def fetch_merged_pull_requests():
                             channel = bot.get_channel(CHANGELOG_CHANNEL_ID)
                             await channel.send(embed=embed)
 
-            last_checked_time = datetime.utcnow()  # Обновляем время последней проверки
+            last_checked_time = datetime.utcnow()
 
-        await asyncio.sleep(60)  # Проверять каждую минуту
+        await asyncio.sleep(SECOND_UPDATE_CHANGELOG)
