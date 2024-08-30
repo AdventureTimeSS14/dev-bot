@@ -2,7 +2,7 @@ import re
 import requests
 import asyncio
 from datetime import datetime
-from config import CHANGELOG_CHANNEL_ID, GITHUB, SS14REPO, SECOND_UPDATE_CHANGELOG
+from config import CHANGELOG_CHANNEL_ID, GITHUB, SECOND_UPDATE_CHANGELOG, AUTHOR, REPOSITORIES
 import discord
 from discord.ext import commands
 
@@ -17,7 +17,7 @@ async def fetch_merged_pull_requests():
     last_checked_time = datetime.utcnow()
 
     while True:
-        response = requests.get(f'https://api.github.com/repos/{SS14REPO}/pulls?state=closed', headers=headers)
+        response = requests.get(f'https://api.github.com/repos/{AUTHOR}/{REPOSITORIES['n']}/pulls?state=closed', headers=headers)
         if response.status_code == 200:
             pull_requests = response.json()
             for pr in pull_requests:

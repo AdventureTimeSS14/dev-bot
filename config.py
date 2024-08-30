@@ -21,7 +21,6 @@ WHITELIST_ROLE_ID = [
 REPOSITORIES = {"n": "space_station_ADT","o": "space_station"}
 
 AUTHOR = "AdventureTimeSS14"
-SS14REPO = 'AdventureTimeSS14/space_station_ADT'
 
 SECOND_UPDATE_CHANGELOG = 60
 
