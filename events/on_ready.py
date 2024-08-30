@@ -3,5 +3,5 @@ from commands.github.git_fetch_pull import fetch_merged_pull_requests
 
 @bot.event
 async def on_ready():
-    bot.loop.create_task(fetch_merged_pull_requests())
+    fetch_merged_pull_requests.start()
     print(f"Bot {bot.user} is ready to work!")
