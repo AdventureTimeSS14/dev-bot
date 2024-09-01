@@ -1,7 +1,6 @@
 import discord
 
-from config import (AUTHOR, GITHUB, GLOBAL_SESSION, REPOSITORIES,
-                    WHITELIST_ROLE_ID)
+from config import AUTHOR, GLOBAL_SESSION, REPOSITORIES, WHITELIST_ROLE_ID
 
 
 async def validate_user(ctx):
@@ -25,11 +24,11 @@ async def fetch_github_data(url, params=None):
     try:
         response = GLOBAL_SESSION.get(url, params=params)
         if response.status_code != 200:
-            print(f"Ошибка при получении данных с GitHub: {response.status_code}")
+            print(f"Error while fetching data from GitHub: {response.status_code}")
             return None
         return response.json()
     except Exception as e:
-        print(f"Ошибка при запросе к GitHub API: {e}")
+        print(f"Error when making a request to the GitHub API: {e}")
         return None
 
 
