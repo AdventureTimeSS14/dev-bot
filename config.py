@@ -6,11 +6,19 @@ from dotenv import load_dotenv
 load_dotenv()
 
 DISCORD_KEY = os.getenv('DISCORD_KEY')
+if not DISCORD_KEY:
+  raise ValueError("DISCORD_KEY не найден в файле .env")
+
 # PROXY = os.getenv('PROXY')
+# if not PROXY:
+#   raise ValueError("PROXY не найден в файле .env")
+
 GITHUB = os.getenv('GITHUB')
+if not GITHUB:
+  raise ValueError("GITHUB не найден в файле .env")
 
 TEST_CHANNEL_ID = 1141810442721833060
-CHANGELOG_CHANNEL_ID = 1089490875182239754  # ID канала для сообщений чейнжлогов
+CHANGELOG_CHANNEL_ID = 1089490875182239754
 
 WHITELIST_ROLE_ID = [
     1060191651538145420,  # ID роли "Разработка"
@@ -24,15 +32,6 @@ REPOSITORIES = {"n": "space_station_ADT","o": "space_station"}
 AUTHOR = "AdventureTimeSS14"
 
 SECOND_UPDATE_CHANGELOG = 60
-
-if not DISCORD_KEY:
-  raise ValueError("DISCORD_KEY не найден в файле .env")
-
-# if not PROXY:
-#   raise ValueError("PROXY не найден в файле .env")
-
-if not GITHUB:
-  raise ValueError("GITHUB не найден в файле .env")
 
 GLOBAL_SESSION: requests.Session = requests.Session()
 GLOBAL_SESSION.headers.update({'Authorization': f'token {GITHUB}'})
