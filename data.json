@@ -33,6 +33,8 @@
         "name_3": "Доп. информация:",
         "context_3": "✨ Если у вас есть вопросы или вам нужна помощь, обращайтесь к создателю: Шрёдька :з 🖤👾",
         "name_4": "Разработчики:",
-        "context_4": "👨‍💻 Автор: schrodinger71\n👥 Maintainer: schrodinger71, nixsilvam, xelasto\n📡 Хост: nixsilvam"
+        "context_4": "👨‍💻 Автор: schrodinger71\n👥 Maintainer: schrodinger71, nixsilvam, xelasto\n📡 Хост: 🐈‍⬛github-actions[bot]",
+        "name_5": "Репозиторий бота:",
+        "context_5": "https://github.com/AdventureTimeSS14/Dev-bot"
     }
 }
