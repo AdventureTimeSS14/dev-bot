@@ -33,6 +33,11 @@ async def help_command(ctx):
         value=help_command["context_4"],
         inline=False
     )
+    embed.add_field(
+        name=help_command["name_5"],
+        value=help_command["context_5"],
+        inline=False
+    )
 
     await ctx.send(embed=embed)
     
