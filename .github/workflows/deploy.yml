@@ -2,7 +2,7 @@ name: Deploy Discord Bot
 
 on:
   schedule:
-    - cron: '0 */5 * * *'  # Каждые 5 часов
+    - cron: '58 */5 * * *'  # Каждые 5 часов и 58 минут
   push:
     branches:
       - main
