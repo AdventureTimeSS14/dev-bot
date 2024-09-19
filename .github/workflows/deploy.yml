@@ -2,7 +2,8 @@ name: Deploy Discord Bot
 
 on:
   schedule:
-    - cron: '58 */5 * * *'  # Каждые 5 часов и 58 минут
+    # Запускать каждые 6 часов
+    - cron: '0 */6 * * *'
   push:
     branches:
       - main
@@ -12,26 +13,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.11' 
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.11' 
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-    - name: Load Environment Variables
-      run: |
-        echo "DISCORD_KEY=${{ secrets.DISCORD_KEY }}" >> $GITHUB_ENV
-        echo "GITHUB=${{ secrets.GITHUB }}" >> $GITHUB_ENV
+      - name: Load Environment Variables
+        run: |
+          echo "DISCORD_KEY=${{ secrets.DISCORD_KEY }}" >> $GITHUB_ENV
+          echo "GITHUB=${{ secrets.GITHUB }}" >> $GITHUB_ENV
 
-    - name: Run bot
-      env:
-        DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
-      run: |
-        python main.py 
+      - name: Run bot
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+        run: |
+          python main.py
