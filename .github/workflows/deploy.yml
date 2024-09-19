@@ -1,6 +1,8 @@
 name: Deploy Discord Bot
 
 on:
+  schedule:
+    - cron: '0 */5 * * *'  # Каждые 5 часов
   push:
     branches:
       - main
@@ -33,4 +35,3 @@ jobs:
         DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
       run: |
         python main.py 
- 
