@@ -1,3 +1,5 @@
+[![Deploy Discord Bot](https://github.com/AdventureTimeSS14/Dev-bot/actions/workflows/deploy.yml/badge.svg)](https://github.com/AdventureTimeSS14/Dev-bot/actions/workflows/deploy.yml)
+
 ## Дискорд бот от разработки Adventure Time: Установка и Запуск
 
 Этот бот разработан командой Adventure Time SS14 в **образовательных целях** для изучения и тестирования возможностей Discord API и разработки ботов. **Он не предназначен для коммерческого использования.**
