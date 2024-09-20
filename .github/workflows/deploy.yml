@@ -2,11 +2,8 @@ name: Deploy Discord Bot
 
 on:
   schedule:
-    # Запускать каждые 7 часов
-    - cron: '0 */7 * * *'
-#  push:
-#    branches:
-#      - main
+    # Запускать каждые 5 часов
+    - cron: '0 */5 * * *'
 
 jobs:
   deploy:
@@ -31,8 +28,12 @@ jobs:
           echo "DISCORD_KEY=${{ secrets.DISCORD_KEY }}" >> $GITHUB_ENV
           echo "GITHUB=${{ secrets.GITHUB }}" >> $GITHUB_ENV
 
+      - name: Kill previous bot instance (if running)
+        run: |
+          pkill -f main.py || true
+
       - name: Run bot
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
         run: |
-          python main.py
+          python main.py &
