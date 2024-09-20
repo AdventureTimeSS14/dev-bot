@@ -1,0 +1,32 @@
+name: Restart Discord Bot
+
+on:
+  schedule:
+    # Запускать каждые 10 минут
+    - cron: '*/10 * * * *'
+
+jobs:
+  restart:
+    runs-on: ubuntu-latest
+    steps:
+      - name: CheckBotStatus and Restart
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const workflowRuns = await github.actions.listWorkflowRuns({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'deploy'
+            });
+            const lastRun = workflowRuns.data.workflow_runs[0];
+            console.log(lastRun.status);
+            if (lastRun.status === 'completed') {
+              console.log('Bot is already running');
+            } else {
+              await github.actions.createWorkflowDispatch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'deploy',
+              });
+              console.log('Restarting Discord Bot...');
+            }
