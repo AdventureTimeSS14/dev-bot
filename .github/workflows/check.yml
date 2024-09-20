@@ -1,13 +1,14 @@
-name: Restart Discord Bot
+ name: Restart Discord Bot
 
-on:
+ on:
   schedule:
-    # Запускать каждые 10 минут
     - cron: '*/10 * * * *'
 
-jobs:
+ jobs:
   restart:
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
     steps:
       - name: CheckBotStatus and Restart
         uses: actions/github-script@v5
@@ -26,7 +27,8 @@ jobs:
               await github.actions.createWorkflowDispatch({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                workflow_id: 'deploy',
+                workflow_id: 'deploy', 
               });
               console.log('Restarting Discord Bot...');
             }
+ 
