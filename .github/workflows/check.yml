@@ -1,17 +1,20 @@
-name: Check and Deploy Discord Bot
+ name: Check and Deploy Discord Bot
 
-on:
+ on:
   schedule:
     - cron: '*/10 * * * *'
     
   workflow_dispatch:
 
-jobs:
+ jobs:
   check-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: List files
+        run: ls -R
 
       - name: Check running jobs
         id: check_jobs
@@ -30,6 +33,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Deploy
-        if: env.needs_deploy == 'true'
-        uses: ./.github/workflows/deploy.yml
+      - name: Trigger Deploy Workflow (Conditional)
+        uses: actions/github-script@v6
+        if: ${{ env.needs_deploy == 'true' }}
+        with:
+          script: |
+            github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'deploy.yml',
+            });
