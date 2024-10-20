@@ -207,7 +207,7 @@ async def list_team(ctx, error):
     if isinstance(error, commands.CheckFailure):
         await ctx.send("Не могу идентифицировать вас в базе данных команды разработки Adventure Time, вы не имеете права пользоваться этой командой.")
         
-@tasks.loop(hours=3)
+@tasks.loop(hours=12)
 async def list_team_task():
     channel = bot.get_channel(1297158288063987752)
     if channel:
