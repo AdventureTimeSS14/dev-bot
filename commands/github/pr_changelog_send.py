@@ -59,7 +59,8 @@ async def get_pr_info(ctx, pr_number: int):
     )
     embed.add_field(name="Изменения:", value=description, inline=False)
     embed.add_field(name="Автор:", value=author_name, inline=False)
-    embed.add_field(name="Ссылка:", value=f"[PR]({pr_url})", inline=False)
+    pr_number = pr["number"]  # Получаем номер PR
+    embed.add_field(name="Ссылка:", value=f"[PR #{pr_number}]({pr_url})", inline=False)
 
     channel = bot.get_channel(CHANGELOG_CHANNEL_ID)
     if channel is None:
