@@ -1,13 +1,15 @@
-from bot_init import bot
-import mariadb
 import discord
-from config import (USER, PASSWORD, HOST, PORT, DATABASE)
+import mariadb
+
+from bot_init import bot
+from config import DATABASE, HOST, PASSWORD, PORT, USER
+
 
 @bot.command()
 async def db_status(ctx):
     conn = None
     try:
-        port = int(PORT)  # Убедитесь, что PORT - это целое число
+        port = int(PORT)
         
         conn = mariadb.connect(
             user=USER,

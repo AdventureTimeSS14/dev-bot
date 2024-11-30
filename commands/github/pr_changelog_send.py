@@ -1,17 +1,15 @@
-import discord
-from discord.ext import commands
 import re
 from datetime import datetime, timezone
+
+import discord
 import requests
+from discord.ext import commands
 
 from bot_init import bot
+from config import AUTHOR, CHANGELOG_CHANNEL_ID, REPOSITORIES
 
 from .github_processor import (create_embed_list, fetch_github_data,
                                send_embeds, validate_repository, validate_user)
-
-from config import (AUTHOR, CHANGELOG_CHANNEL_ID, REPOSITORIES)
-
-from .github_processor import fetch_github_data
 
 LCT: datetime = None
 

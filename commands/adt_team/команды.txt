@@ -1,0 +1,215 @@
+<!--Команда для добавления в отдел с ограниченным количеством ролей--!>
+
+@bot.command()
+async def new_team(ctx, user: discord.Member, *roles: discord.Role):
+    # Проверка на кол-во введеных ролей
+    if len(roles) != 2:
+        await ctx.send("Должно быть введенно две роли: <роль отдела> <роль должности>.")
+        return
+
+    # Получение ID канала
+    channel = ID канала
+    channel_get = bot.get_channel(channel)
+
+    # Переменные для хранения двух вводимых ролей
+    role_dep, role_job = roles
+
+    # Массив для проверки введенных ролей
+    add_role = []
+
+    # Проверка на присутствие роли у пользователя
+    for role in [role_dep, role_job]:
+        if role in user.roles:
+            await ctx.send(f"{user.name} уже имеет роль {role.name}")
+        else:
+            try:
+                await user.add_roles(role)
+                add_role.append(role)
+                await ctx.send(f"Роль {role.name} успешно добавлена для {user.name}.")
+            except discord.Forbidden:
+                await ctx.send("Недостаточно прав для добавления роли.")
+            except discord.HTTPException:
+                await ctx.send("Не удалось добавить роль.")
+
+    # Отправляем сообщение в админ-состав
+    if channel_get and len(add_role) == 2:
+        embed = discord.Embed(
+            title="Назначение на должность",
+            description=f"{ctx.author.mention} назначает {user.mention}",
+            color=discord.Color.green()
+        )
+        embed.add_field(name=f"Отдел: **{role_dep.name}**", value="", inline=False)
+        embed.add_field(name=f"Должность: **{role_job.name}**", value="", inline=False)
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
+        await channel_get.send(embed=embed)
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+<!--Команда для неограниченного добавления кол-ва ролей--!>
+
+@bot.command()
+async def add_role(ctx, user: discord.Member, *roles: discord.Role):
+
+    # Проверка на присутствие роли у пользователя
+    for role in roles:
+        if role in user.roles:
+            await ctx.send(f"{user.name} уже имеет роль {role.name}")
+        else:
+            try:
+                await user.add_roles(role)
+                await ctx.send(f"Роль **{role}** успешно добавлена для {user.name}.")
+            except discord.Forbidden:
+                await ctx.send("Недостаточно прав для добавления роли.")
+            except discord.HTTPException:
+                await ctx.send("Не удалось добавить роль.")
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+<!--Команда для снятия должности с ограниченным количеством ролей--!>
+
+@bot.command()
+async def remove_team(ctx, user: discord.Member, *roles: discord.Role):
+    # Проверка на кол-во введеных ролей
+    if len(roles) != 2:
+        await ctx.send("Должно быть введенно две роли: <роль отдела> <роль должности>.")
+        return
+
+    # Получение ID канала
+    channel = ID канала
+    channel_get = bot.get_channel(channel)
+
+    # Переменные для хранения двух вводимых ролей
+    role_dep, role_job = roles
+
+    # Массив для проверки введенных ролей
+    add_role = []
+
+    for role in [role_dep, role_job]:
+        if role in user.roles:
+            try:
+                await user.remove_roles(role)
+                add_role.append(role)
+                await ctx.send(f"Роль **{role}** успешно снята у {user.name}.")
+            except discord.Forbidden:
+                await ctx.send("Недостаточно прав для добавления роли.")
+            except discord.HTTPException:
+                await ctx.send("Не удалось добавить роль.")
+        else:
+            await ctx.send(f"У {user.name} нет такой роли {role.name}")
+
+        # Отправляем сообщение в админ-состав
+    if channel_get and len(add_role) == 2:
+        embed = discord.Embed(
+            title="Снятие с должности",
+            description=f"{ctx.author.mention} снимает с должности {user.mention}",
+            color=discord.Color.green()
+        )
+        embed.add_field(name=f"Отдел: **{role_dep.name}**", value="", inline=False)
+        embed.add_field(name=f"Должность: **{role_job.name}**", value="", inline=False)
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
+        await channel_get.send(embed=embed)
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+<!--Команда для снятия роли с любым кол-ом ролей--!>
+
+@bot.command()
+async def remove_role(ctx, user: discord.Member, *roles: discord.Role):
+
+    for role in roles:
+        if role in user.roles:
+            try:
+                await user.remove_roles(role)
+                await ctx.send(f"Роль **{role}** успешно снята у {user.name}.")
+            except discord.Forbidden:
+                await ctx.send("Недостаточно прав для добавления роли.")
+            except discord.HTTPException:
+                await ctx.send("Не удалось добавить роль.")
+        else:
+            await ctx.send(f"У {user.name} нет роли {role.name}")
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+<!--Команда для выдачи роли отпуска--!>
+
+@bot.command()
+async def add_vacation(ctx, user: discord.Member):
+
+    # ID роли отпуска
+    role_vac = ctx.guild.get_role(ID роли)
+
+    # Получение ID канала
+    channel = ID канала
+    channel_get = bot.get_channel(channel)
+
+    if role_vac in ctx.guild.roles:
+        if role_vac in user.roles:
+            await ctx.send(f"{user.name} уже имеет роль {role_vac.name}")
+        else:
+            try:
+                # Добавляем роль указанному пользователю
+                await user.add_roles(role_vac)
+                await ctx.send(f"Роль {role_vac.name} была успешно добавлена {user.name}.")
+
+                # Отправляем сообщение в админ-состав
+                if channel_get:
+                    embed = discord.Embed(
+                        title="Выдача отпуска",
+                        description=f"{ctx.author.mention} выдает отпуск {user.mention}. Хорошего отдыха!",
+                        color=discord.Color.green()
+                    )
+                    embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
+                    await channel_get.send(embed=embed)
+
+            except discord.Forbidden:
+                await ctx.send("У меня нет разрешения на изменение ролей этого пользователя.")
+            except discord.HTTPException:
+                await ctx.send(f"Не удалось добавить роль.")
+    else:
+        await ctx.send("Роль отпуска не найдена")
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+<!--Команда для понижения или повышения роли--!>
+
+@bot.command()
+async def tweak_team(ctx, user: discord.Member, old_role: discord.Role, new_role: discord.Role):
+
+    # Получение ID канала
+    channel = ID канала
+    channel_get = bot.get_channel(channel)
+
+    if channel_get:
+        if old_role in user.roles:
+            try:
+                await user.remove_roles(old_role)
+                await user.add_roles(new_role)
+                await ctx.send(f"Роль **{old_role.name}** была заменена на **{new_role.name}** у {user.name}.")
+
+                if old_role < new_role:
+                    embed_promotion = discord.Embed(
+                        title="Повышение в должности",
+                        description=f"{ctx.author.mention} повышает {user.mention}.",
+                        color=discord.Color.green()
+                    )
+                    embed_promotion.add_field(name=f"Старая должность: **{old_role.name}**", value="", inline=False)
+                    embed_promotion.add_field(name=f"Новая должность: **{new_role.name}**", value="", inline=False)
+                    embed_promotion.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
+                    await channel_get.send(embed=embed_promotion)
+
+                elif old_role > new_role:
+                    embed_promotion = discord.Embed(
+                        title="Понижение в должности",
+                        description=f"{ctx.author.mention} понижает {user.mention}.",
+                        color=discord.Color.green()
+                    )
+                    embed_promotion.add_field(name=f"Старая должность: **{old_role.name}**", value="", inline=False)
+                    embed_promotion.add_field(name=f"Новая должность: **{new_role.name}**", value="", inline=False)
+                    embed_promotion.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
+                    await channel_get.send(embed=embed_promotion)
+
+            except discord.Forbidden:
+                await ctx.send("Недостаточно прав для добавления роли.")
+            except discord.HTTPException:
+                await ctx.send("Не удалось добавить роль.")
+        else:
+            await ctx.send(f"У {user.name} нет роли **{old_role.name}**")

@@ -1,5 +1,7 @@
 import discord
+
 from bot_init import bot
+
 
 @bot.command()
 async def db_help(ctx):
