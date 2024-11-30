@@ -52,7 +52,7 @@ REPOSITORIES = {"n": "space_station_ADT","o": "space_station"}
 
 AUTHOR = "AdventureTimeSS14"
 
-SECOND_UPDATE_CHANGELOG = 60
+SECOND_UPDATE_CHANGELOG = 30
 
 GLOBAL_SESSION: requests.Session = requests.Session()
 GLOBAL_SESSION.headers.update({'Authorization': f'token {GITHUB}'})

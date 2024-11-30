@@ -18,8 +18,8 @@ roles = [
     ("Руководство проекта", 1054908932868538449),
 
     # Администрация
-    ("Главный админ", 1254021066796302366),
-    ("Старший админ", 1223228123370229770),
+    ("Главный администратор", 1254021066796302366),
+    ("Старший администратор", 1223228123370229770),
     ("Инструктор администрации", 1248665270051143721),
     ("Наблюдатель администрации", 1248666127949893747),
     ("Администратор", 1248665281748795392),
@@ -109,8 +109,8 @@ roles_by_category = {
         ("Руководство проекта", 1054908932868538449),
     ],
     "Отдел Администрации": [
-        ("Главный админ", 1254021066796302366),
-        ("Старший админ", 1223228123370229770),
+        ("Главный администратор", 1254021066796302366),
+        ("Старший администратор", 1223228123370229770),
         ("Инструктор администрации", 1248665270051143721),
         ("Наблюдатель администрации", 1248666127949893747),
         ("Администратор", 1248665281748795392),
@@ -207,31 +207,30 @@ async def list_team(ctx, error):
     if isinstance(error, commands.CheckFailure):
         await ctx.send("Не могу идентифицировать вас в базе данных команды разработки Adventure Time, вы не имеете права пользоваться этой командой.")
         
-@tasks.loop(hours=3)
+@tasks.loop(hours=12)
 async def list_team_task():
-    # channel = bot.get_channel(1051449722717606008)
-    # if channel:
-    #     deleted = await channel.purge(limit=100)
+    channel = bot.get_channel(1297158288063987752)
+    if channel:
+        deleted = await channel.purge(limit=100)
 
-    #     for category, roles in roles_by_category.items():
-    #         color = color_map.get(category, 0xFFFFFF)
-    #         print(f"Категория: {category}, Цвет: {hex(color)}")
+        for category, roles in roles_by_category.items():
+            color = color_map.get(category, 0xFFFFFF)
+            print(f"Категория: {category}, Цвет: {hex(color)}")
 
-    #         embed = Embed(title=category, color=color)
+            embed = Embed(title=category, color=color)
 
-    #         for role_name, role_id in roles:
-    #             role = get(channel.guild.roles, id=role_id)
-    #             if role:
-    #                 members = [f"<@{member.id}>" for member in role.members]  # Ping members
-    #                 if members:
-    #                     embed.add_field(name=role_name, value=', '.join(members), inline=False)
-    #                 else:
-    #                     embed.add_field(name=role_name, value='Нет участников', inline=False)
-    #             else:
-    #                 print(f"Роль не найдена: {role_name}")
+            for role_name, role_id in roles:
+                role = get(channel.guild.roles, id=role_id)
+                if role:
+                    members = [f"<@{member.id}>" for member in role.members]  # Ping members
+                    if members:
+                        embed.add_field(name=role_name, value=', '.join(members), inline=False)
+                    else:
+                        embed.add_field(name=role_name, value='Нет участников', inline=False)
+                else:
+                    print(f"Роль не найдена: {role_name}")
 
-    #         await channel.send(embed=embed)
-    pass
+            await channel.send(embed=embed)
 
 # 1116612861993689251 - создатель проекта
 # 1233048689996726378 - хост
