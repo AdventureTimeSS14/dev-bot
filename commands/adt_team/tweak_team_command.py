@@ -1,10 +1,12 @@
 import discord
 
 from bot_init import bot
-from config import ADMIN_TEAM
+from commands.misc.check_roles import has_any_role_by_id
+from config import ADMIN_TEAM, HEAD_ADT_TEAM
 
 
 @bot.command()
+@has_any_role_by_id(HEAD_ADT_TEAM)
 async def tweak_team(ctx, user: discord.Member, old_role: discord.Role, new_role: discord.Role):
 
     # Получение ID канала

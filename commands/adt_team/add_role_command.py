@@ -2,7 +2,11 @@ import discord
 
 from bot_init import bot
 
+from commands.misc.check_roles import has_any_role_by_id
+from config import HEAD_ADT_TEAM
+
 @bot.command()
+@has_any_role_by_id(HEAD_ADT_TEAM)
 async def add_role(ctx, user: discord.Member, *roles: discord.Role):
 
     for role in roles:
