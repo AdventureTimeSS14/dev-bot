@@ -21,6 +21,9 @@ async def remove_team(ctx, user: discord.Member, *roles: discord.Role):
 
     # Массив для проверки введенных ролей
     add_role = []
+    
+    # Получаем цвет роли, и пихаем её в цвет эмбиенда
+    color = role_job.color
 
     for role in [role_dep, role_job]:
         if role in user.roles:
@@ -28,10 +31,8 @@ async def remove_team(ctx, user: discord.Member, *roles: discord.Role):
                 await user.remove_roles(role)
                 add_role.append(role)
                 await ctx.send(f"Роль **{role}** успешно снята у {user.name}.")
-            except discord.Forbidden:
-                await ctx.send("Недостаточно прав для добавления роли.")
-            except discord.HTTPException:
-                await ctx.send("Не удалось добавить роль.")
+            except Exception as e:
+                print("Возникла общая ошибка:", e)
         else:
             await ctx.send(f"У {user.name} нет такой роли {role.name}")
 
@@ -40,7 +41,7 @@ async def remove_team(ctx, user: discord.Member, *roles: discord.Role):
         embed = discord.Embed(
             title="Снятие с должности",
             description=f"{ctx.author.mention} снимает с должности {user.mention}",
-            color=discord.Color.green()
+            color=color
         )
         embed.add_field(name=f"Отдел: **{role_dep.name}**", value="", inline=False)
         embed.add_field(name=f"Должность: **{role_job.name}**", value="", inline=False)

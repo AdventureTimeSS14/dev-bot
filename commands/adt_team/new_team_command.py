@@ -21,7 +21,10 @@ async def new_team(ctx, user: discord.Member, *roles: discord.Role):
 
     # Массив для проверки введенных ролей
     add_role = []
-
+    
+    # Получаем цвет роли, и пихаем её в цвет эмбиенда
+    color = role_job.color
+    
     # Проверка на присутствие роли у пользователя
     for role in [role_dep, role_job]:
         if role in user.roles:
@@ -31,17 +34,15 @@ async def new_team(ctx, user: discord.Member, *roles: discord.Role):
                 await user.add_roles(role)
                 add_role.append(role)
                 await ctx.send(f"Роль {role.name} успешно добавлена для {user.name}.")
-            except discord.Forbidden:
-                await ctx.send("Недостаточно прав для добавления роли.")
-            except discord.HTTPException:
-                await ctx.send("Не удалось добавить роль.")
+            except Exception as e:
+                print("Возникла общая ошибка:", e)
 
     # Отправляем сообщение в админ-состав
     if channel_get and len(add_role) == 2:
         embed = discord.Embed(
             title="Назначение на должность",
             description=f"{ctx.author.mention} назначает {user.mention}",
-            color=discord.Color.green()
+            color=color
         )
         embed.add_field(name=f"Отдел: **{role_dep.name}**", value="", inline=False)
         embed.add_field(name=f"Должность: **{role_job.name}**", value="", inline=False)

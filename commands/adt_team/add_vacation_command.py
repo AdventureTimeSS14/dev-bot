@@ -29,14 +29,12 @@ async def add_vacation(ctx, user: discord.Member):
                     embed = discord.Embed(
                         title="Выдача отпуска",
                         description=f"{ctx.author.mention} выдает отпуск {user.mention}. Хорошего отдыха!",
-                        color=discord.Color.green()
+                        color=discord.Color.purple()
                     )
                     embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
                     await channel_get.send(embed=embed)
 
-            except discord.Forbidden:
-                await ctx.send("У меня нет разрешения на изменение ролей этого пользователя.")
-            except discord.HTTPException:
-                await ctx.send(f"Не удалось добавить роль.")
+            except Exception as e:
+                print("Возникла общая ошибка:", e)
     else:
         await ctx.send("Роль отпуска не найдена")
