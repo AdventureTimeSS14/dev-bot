@@ -209,28 +209,29 @@ async def list_team(ctx, error):
         
 @tasks.loop(hours=3)
 async def list_team_task():
-    channel = bot.get_channel(1297158288063987752)
-    if channel:
-        deleted = await channel.purge(limit=100)
+    # channel = bot.get_channel(1051449722717606008)
+    # if channel:
+    #     deleted = await channel.purge(limit=100)
 
-        for category, roles in roles_by_category.items():
-            color = color_map.get(category, 0xFFFFFF)
-            print(f"Категория: {category}, Цвет: {hex(color)}")
+    #     for category, roles in roles_by_category.items():
+    #         color = color_map.get(category, 0xFFFFFF)
+    #         print(f"Категория: {category}, Цвет: {hex(color)}")
 
-            embed = Embed(title=category, color=color)
+    #         embed = Embed(title=category, color=color)
 
-            for role_name, role_id in roles:
-                role = get(channel.guild.roles, id=role_id)
-                if role:
-                    members = [f"<@{member.id}>" for member in role.members]  # Ping members
-                    if members:
-                        embed.add_field(name=role_name, value=', '.join(members), inline=False)
-                    else:
-                        embed.add_field(name=role_name, value='Нет участников', inline=False)
-                else:
-                    print(f"Роль не найдена: {role_name}")
+    #         for role_name, role_id in roles:
+    #             role = get(channel.guild.roles, id=role_id)
+    #             if role:
+    #                 members = [f"<@{member.id}>" for member in role.members]  # Ping members
+    #                 if members:
+    #                     embed.add_field(name=role_name, value=', '.join(members), inline=False)
+    #                 else:
+    #                     embed.add_field(name=role_name, value='Нет участников', inline=False)
+    #             else:
+    #                 print(f"Роль не найдена: {role_name}")
 
-            await channel.send(embed=embed)
+    #         await channel.send(embed=embed)
+    pass
 
 # 1116612861993689251 - создатель проекта
 # 1233048689996726378 - хост
