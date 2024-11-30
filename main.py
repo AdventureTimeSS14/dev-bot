@@ -3,6 +3,7 @@ from commands import (echo_command, gpt_command, help_command, ping_command,
                       user_role_command, list_team_command)
 from commands.github import (achang_command, forks_command, github_processor,
                              milestones_command, review_command, pr_changelog_send)
+from commands.dbCommand import (info_command, help_command, status_command)
 from config import DISCORD_KEY
 from events import on_message, on_ready, on_error, on_command
 

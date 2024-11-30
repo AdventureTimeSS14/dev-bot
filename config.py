@@ -17,6 +17,26 @@ GITHUB = os.getenv('GITHUB')
 if not GITHUB:
   raise ValueError("GITHUB не найден в файле .env")
 
+USER = os.getenv('USER')
+if not USER:
+  raise ValueError("USER не найден в файле .env")
+
+PASSWORD = os.getenv('PASSWORD')
+if not PASSWORD:
+  raise ValueError("PASSWORD не найден в файле .env")
+
+HOST = os.getenv('HOST')
+if not HOST:
+  raise ValueError("HOST не найден в файле .env")
+
+PORT = os.getenv('PORT')
+if not PORT:
+  raise ValueError("PORT не найден в файле .env")
+
+DATABASE = os.getenv('DATABASE')
+if not DATABASE:
+  raise ValueError("DATABASE не найден в файле .env")
+
 TEST_CHANNEL_ID = 1141810442721833060
 CHANGELOG_CHANNEL_ID = 1089490875182239754
 LOG_CHANNEL_ID = 1141810442721833060
