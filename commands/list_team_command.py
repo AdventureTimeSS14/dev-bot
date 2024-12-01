@@ -192,9 +192,9 @@ async def list_team(ctx):
         for role_name, role_id in roles:
             role = get(ctx.guild.roles, id=role_id)
             if role:
-                members = [f"<@{member.id}>" for member in role.members]  # Пинг участников
+                members = [f"<@{member.name()}>" for member in role.members]  # Пинг участников
                 if members:
-                    embed.add_field(name=role_name, value=', '.join(members), inline=False)
+                    embed.add_field(name=role_name, value=', '.join(members.name), inline=False)
                 else:
                     embed.add_field(name=role_name, value='Нет участников', inline=False)
             else:

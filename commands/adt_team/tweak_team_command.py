@@ -7,7 +7,7 @@ from config import ADMIN_TEAM, HEAD_ADT_TEAM
 
 @bot.command()
 @has_any_role_by_id(HEAD_ADT_TEAM)
-async def tweak_team(ctx, user: discord.Member, old_role: discord.Role, new_role: discord.Role):
+async def tweak_team(ctx, user: discord.Member, old_role: discord.Role, new_role: discord.Role, reason: str):
 
     # Получение ID канала
     channel = ADMIN_TEAM
@@ -31,6 +31,7 @@ async def tweak_team(ctx, user: discord.Member, old_role: discord.Role, new_role
                     embed_promotion.add_field(name=f"Старая должность: **{old_role.name}**", value="", inline=False)
                     embed_promotion.add_field(name=f"Новая должность: **{new_role.name}**", value="", inline=False)
                     embed_promotion.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
+                    embed_promotion.add_field(name=f"Причина: **{reason}**", value="", inline=False)
                     await channel_get.send(embed=embed_promotion)
                     await ctx.send(f"Роль **{old_role.name}** успешно удалена у {user.name}.")
                     await ctx.send(f"Роль **{new_role.name}** успешно добавлена для {user.name}.")
@@ -46,6 +47,7 @@ async def tweak_team(ctx, user: discord.Member, old_role: discord.Role, new_role
                     embed_promotion.add_field(name=f"Старая должность: **{old_role.name}**", value="", inline=False)
                     embed_promotion.add_field(name=f"Новая должность: **{new_role.name}**", value="", inline=False)
                     embed_promotion.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
+                    embed_promotion.add_field(name=f"Причина: **{reason}**", value="", inline=False)
                     await channel_get.send(embed=embed_promotion)
                     await ctx.send(f"Роль **{old_role.name}** успешно удалена у {user.name}.")
                     await ctx.send(f"Роль **{new_role.name}** успешно добавлена для {user.name}.")

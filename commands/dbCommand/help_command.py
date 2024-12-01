@@ -12,4 +12,5 @@ async def db_help(ctx):
     )
     embed.add_field(name="&db_info", value="Выводит всю основную информацию о базе данных.", inline=False)
     embed.add_field(name="&db_status", value="Сообщает статус подключения к MariaDB.", inline=False)
+    embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
     await ctx.send(embed=embed)
