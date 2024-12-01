@@ -1,8 +1,9 @@
+import asyncio
+
 from bot_init import bot
 from commands.github.git_fetch_pull import fetch_merged_pull_requests
 from commands.list_team_command import list_team_task
 from config import LOG_CHANNEL_ID
-import asyncio
 
 
 @bot.event

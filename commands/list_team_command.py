@@ -1,12 +1,12 @@
 import discord
-
-from discord.ext.tasks import loop
-from discord import Embed, Color
-from discord.utils import get  # Убедитесь, что этот импорт присутствует
+from discord import Color, Embed
 from discord.ext import commands, tasks
+from discord.ext.tasks import loop
+from discord.utils import get  # Убедитесь, что этот импорт присутствует
+
 from bot_init import bot
-from config import WHITELIST_ROLE_ID
 from commands.misc.check_roles import has_any_role_by_id
+from config import WHITELIST_ROLE_ID
 
 roles = [
     # Список ролей и их ID
@@ -192,9 +192,9 @@ async def list_team(ctx):
         for role_name, role_id in roles:
             role = get(ctx.guild.roles, id=role_id)
             if role:
-                members = [f"<@{member.id}>" for member in role.members]  # Пинг участников
+                members = [f"<@{member.name()}>" for member in role.members]  # Пинг участников
                 if members:
-                    embed.add_field(name=role_name, value=', '.join(members), inline=False)
+                    embed.add_field(name=role_name, value=', '.join(members.name), inline=False)
                 else:
                     embed.add_field(name=role_name, value='Нет участников', inline=False)
             else:

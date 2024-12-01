@@ -38,6 +38,10 @@ async def help_command(ctx):
         value=help_command["context_5"],
         inline=False
     )
+    embed.set_author(
+        name=ctx.author.name, 
+        icon_url=ctx.author.avatar.url
+    )
 
     await ctx.send(embed=embed)
     
