@@ -31,11 +31,11 @@
         run: |
           echo "DISCORD_KEY=${{ secrets.DISCORD_KEY }}" >> $GITHUB_ENV
           echo "GITHUB=${{ secrets.GITHUB }}" >> $GITHUB_ENV
-          echo "GITHUB=${{ secrets.USER }}" >> $GITHUB_ENV
-          echo "GITHUB=${{ secrets.PASSWORD }}" >> $GITHUB_ENV
-          echo "GITHUB=${{ secrets.HOST }}" >> $GITHUB_ENV
-          echo "GITHUB=${{ secrets.PORT }}" >> $GITHUB_ENV
-          echo "GITHUB=${{ secrets.DATABASE }}" >> $GITHUB_ENV
+          echo "USER=${{ secrets.USER }}" >> $GITHUB_ENV
+          echo "PASSWORD=${{ secrets.PASSWORD }}" >> $GITHUB_ENV
+          echo "HOST=${{ secrets.HOST }}" >> $GITHUB_ENV
+          echo "PORT=${{ secrets.PORT }}" >> $GITHUB_ENV
+          echo "DATABASE=${{ secrets.DATABASE }}" >> $GITHUB_ENV
 
       - name: Run bot
         env:
