@@ -9,4 +9,3 @@ requests==2.32.3
 mariadb-connector-c
 mariadb==1.1.11
 mysql-connector-python==9.1.0
-mariadb-connector-c
