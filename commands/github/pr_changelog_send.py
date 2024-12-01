@@ -5,11 +5,11 @@ from datetime import datetime, timezone
 import requests
 
 from bot_init import bot
-
+from commands.misc.check_roles import has_any_role_by_id
 from .github_processor import (create_embed_list, fetch_github_data,
                                send_embeds, validate_repository, validate_user)
 
-from config import (AUTHOR, CHANGELOG_CHANNEL_ID, REPOSITORIES)
+from config import (AUTHOR, CHANGELOG_CHANNEL_ID, REPOSITORIES, WHITELIST_ROLE_ID)
 
 from .github_processor import fetch_github_data
 
@@ -17,9 +17,9 @@ LCT: datetime = None
 
 @bot.command(name='pr')
 async def get_pr_info(ctx, pr_number: int):
-    if ctx.author.id != 328502766622474240:
-        await ctx.send("У вас нет доступа к этой команде.")
-        return
+    if not(any(role.id in WHITELIST_ROLE_ID for role in ctx.author.roles)):
+      await ctx.send("У вас нет доступа к этой команде.")
+      return
         
     url = f'https://api.github.com/repos/{AUTHOR}/{REPOSITORIES["n"]}/pulls/{pr_number}'
     headers = {"Accept": "application/vnd.github.v3+json"}
