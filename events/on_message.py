@@ -4,7 +4,7 @@ import requests
 from fuzzywuzzy import fuzz
 
 from bot_init import bot
-from config import AUTHOR, GLOBAL_SESSION, REPOSITORIES
+from config import AUTHOR, GLOBAL_SESSION, REPOSITORIES, MY_USER_ID
 from data import JsonData
 
 
@@ -16,10 +16,13 @@ async def on_message(message):
     if message.content.startswith(bot.command_prefix):
         await bot.process_commands(message)
         return
-
-    # if any(fuzz.token_sort_ratio(message.content.lower(), phrase) >= 70 for phrase in phrases):
-    #     await message.channel.send("Через неделю.")
-    #     return
+    
+    # ну типо давай так
+    specific_user_id = MY_USER_ID
+    if message.mentions or message.reference and message.reference.resolved and message.reference.resolved.author.id == specific_user_id:
+        await message.delete()
+        await message.channel.send(f"{message.author.mention}, не беспокоить.")
+        return
     
     if f"<@{bot.user.id}>" in message.content:
         text_without_mention = message.content.replace(f"<@{bot.user.id}>", "").strip()
