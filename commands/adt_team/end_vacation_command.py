@@ -30,7 +30,7 @@ async def end_vacation(ctx, user: discord.Member):
         try:
             # Убираем роль указанному пользователю
             await user.remove_roles(role_vac)
-            await ctx.send(f"Роль {role_vac.name} была успешно добавлена {user.name}.")
+            await ctx.send(f"Роль {role_vac.name} была успешно снята с {user.name}.")
 
             # Отправляем сообщение в админ-состав
             if channel_get:
