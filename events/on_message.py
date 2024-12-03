@@ -17,13 +17,6 @@ async def on_message(message):
         await bot.process_commands(message)
         return
     
-    # ну типо давай так
-    specific_user_id = MY_USER_ID
-    if message.mentions or message.reference and message.reference.resolved and message.reference.resolved.author.id == specific_user_id:
-        await message.delete()
-        await message.channel.send(f"{message.author.mention}, не беспокоить.")
-        return
-    
     if f"<@{bot.user.id}>" in message.content:
         text_without_mention = message.content.replace(f"<@{bot.user.id}>", "").strip()
         data = JsonData()
