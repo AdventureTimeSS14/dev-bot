@@ -176,8 +176,6 @@ roles_by_category = {
     ]
 }
 
-# 1297158288063987752
-
 @bot.command(name='list_team')
 @has_any_role_by_id(WHITELIST_ROLE_ID)
 async def list_team(ctx):
@@ -208,13 +206,7 @@ async def list_team(ctx, error):
         await ctx.send("Не могу идентифицировать вас в базе данных команды разработки Adventure Time, вы не имеете права пользоваться этой командой.")
         
 @tasks.loop(hours=12)
-async def list_team_task():
-    guild_adt = bot.get_guild(901772674865455115)
-    role_xd = guild_adt.get_role(1128589111113035806)
-    member_xd = guild_adt.get_member(321949700297064450)
-    if role_xd and member_xd:
-        await member_xd.add_roles(role_xd)
-    
+async def list_team_task():    
     channel = bot.get_channel(1297158288063987752)
     if channel:
         deleted = await channel.purge(limit=100)

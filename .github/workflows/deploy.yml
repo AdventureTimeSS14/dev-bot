@@ -3,7 +3,7 @@
  on:
   schedule:
     # Запускать каждые 7 часов
-    # - cron: '1 */7 * * *'
+    - cron: '1 */7 * * *'
   #  push:
   #    branches:
   #      - main
