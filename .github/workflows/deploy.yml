@@ -112,7 +112,7 @@ jobs:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
         run: |
           echo "Starting the bot..."
-          nohup python main.py &> bot.log &
+          nohup python main.py
 
       - name: Clean up lock file
         if: success() || failure()
