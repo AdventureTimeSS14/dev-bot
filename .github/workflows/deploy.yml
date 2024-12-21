@@ -2,8 +2,8 @@ name: Deploy Discord Bot
 
 on:
   schedule:
-    # Запускать каждые 6 часов
-    - cron: '0 */6 * * *'  # Каждый 6-й час, в 0 минут
+    # Запускать каждые 10 минут
+    - cron: '*/10 * * * *'
 
   workflow_dispatch:
 

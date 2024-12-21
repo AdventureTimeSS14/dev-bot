@@ -7,12 +7,11 @@ from discord.ext import commands
 
 from bot_init import bot
 from commands.misc.check_roles import has_any_role_by_id
+from config import (AUTHOR, CHANGELOG_CHANNEL_ID, REPOSITORIES,
+                    WHITELIST_ROLE_ID)
+
 from .github_processor import (create_embed_list, fetch_github_data,
                                send_embeds, validate_repository, validate_user)
-
-from config import (AUTHOR, CHANGELOG_CHANNEL_ID, REPOSITORIES, WHITELIST_ROLE_ID)
-
-from .github_processor import fetch_github_data
 
 LCT: datetime = None
 

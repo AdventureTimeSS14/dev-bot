@@ -4,7 +4,7 @@ import requests
 from fuzzywuzzy import fuzz
 
 from bot_init import bot
-from config import AUTHOR, GLOBAL_SESSION, REPOSITORIES, MY_USER_ID
+from config import AUTHOR, GLOBAL_SESSION, MY_USER_ID, REPOSITORIES
 from data import JsonData
 
 
