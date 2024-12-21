@@ -95,11 +95,13 @@ jobs:
           echo "PORT=${{ secrets.PORT }}" >> $GITHUB_ENV
           echo "DATABASE=${{ secrets.DATABASE }}" >> $GITHUB_ENV
 
-      - name: Check if bot is already running # Я надеюсь ._. пжпжпжпжпж
+      - name: Check if bot is already running
         run: |
           if pgrep -f "python main.py" > /dev/null; then
             echo "Bot is already running, skipping start."
             exit 0
+          else
+            echo "Bot is not running, starting it..."
           fi
 
       - name: Run bot
@@ -107,4 +109,4 @@ jobs:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
         run: |
           echo "Starting the bot..."
-          python main.py
+          python main.py &
