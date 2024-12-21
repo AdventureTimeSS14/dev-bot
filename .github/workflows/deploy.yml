@@ -58,8 +58,8 @@ name: Deploy Discord Bot
 
 on:
   schedule:
-    # Запускать каждые 6 минут
-    - cron: '*/6 * * * *'  # Каждые 6 минут
+    # Запускать каждые 10 минут
+    - cron: '*/10 * * * *'  # Каждые 10 минут
   workflow_dispatch:
 
 jobs:
@@ -95,13 +95,18 @@ jobs:
           echo "PORT=${{ secrets.PORT }}" >> $GITHUB_ENV
           echo "DATABASE=${{ secrets.DATABASE }}" >> $GITHUB_ENV
 
-      - name: Check if bot is already running
+      - name: Check if another deployment is running
         run: |
-          if [[ -f "/tmp/bot_running_flag" ]]; then
-            echo "Bot is already running (flag file exists), skipping deployment."
+          CURRENT_RUN_ID=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs?branch=${{ github.ref }}" | \
+            jq -r '.workflow_runs[0].id')
+
+          PREVIOUS_RUN_STATUS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs/${CURRENT_RUN_ID}" | jq -r '.status')
+
+          if [[ "$PREVIOUS_RUN_STATUS" == "in_progress" ]]; then
+            echo "Another bot deployment is in progress, skipping."
             exit 0
-          else
-            echo "No flag file found, proceeding with bot start."
           fi
 
       - name: Run bot
@@ -109,12 +114,6 @@ jobs:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
         run: |
           echo "Starting the bot..."
-          touch /tmp/bot_running_flag
           nohup python main.py
 
-      - name: Clean up flag file after bot stop
-        if: failure()
-        run: |
-          echo "Cleaning up the flag file."
-          rm -f /tmp/bot_running_flag
 
