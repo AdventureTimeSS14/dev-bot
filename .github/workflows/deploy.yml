@@ -59,7 +59,7 @@ name: Deploy Discord Bot
 on:
   schedule:
     # Запускать каждые 10 минут
-    - cron: '*/10 * * * *'  # Каждые 10 минут
+    - cron: '*/10 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -95,25 +95,30 @@ jobs:
           echo "PORT=${{ secrets.PORT }}" >> $GITHUB_ENV
           echo "DATABASE=${{ secrets.DATABASE }}" >> $GITHUB_ENV
 
-      - name: Check if another deployment is running
+      - name: Check if a lock file exists
         run: |
-          CURRENT_RUN_ID=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/actions/runs?branch=${{ github.ref }}" | \
-            jq -r '.workflow_runs[0].id')
-
-          PREVIOUS_RUN_STATUS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/actions/runs/${CURRENT_RUN_ID}" | jq -r '.status')
-
-          if [[ "$PREVIOUS_RUN_STATUS" == "in_progress" ]]; then
-            echo "Another bot deployment is in progress, skipping."
+          if [[ -f "/tmp/bot.lock" ]]; then
+            echo "Another deployment is in progress, skipping bot start."
             exit 0
           fi
+
+      - name: Create lock file
+        run: |
+          echo "Creating lock file..."
+          touch /tmp/bot.lock
 
       - name: Run bot
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
         run: |
           echo "Starting the bot..."
-          nohup python main.py
+          nohup python main.py &> bot.log &
+
+      - name: Clean up lock file
+        if: success() || failure()
+        run: |
+          echo "Cleaning up lock file..."
+          rm -f /tmp/bot.lock
+
 
 
