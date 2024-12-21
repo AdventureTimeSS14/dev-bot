@@ -9,11 +9,11 @@ from config import LOG_CHANNEL_ID
 
 @bot.event
 async def on_ready():
+    await check_workflows.check_workflows() # Завершаем работу, если уже бот запущен на GitGub Action
     if not fetch_merged_pull_requests.is_running():
         fetch_merged_pull_requests.start()
     if not list_team_task.is_running():
         list_team_task.start()
     print(f"Bot {bot.user} is ready to work!")
     channel = bot.get_channel(LOG_CHANNEL_ID)
-    await check_workflows.check_workflows() # Завершаем работу, если уже бот запущен на GitGub Action
     await channel.send(f"{bot.user} активна!")
