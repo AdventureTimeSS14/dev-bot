@@ -95,9 +95,15 @@ jobs:
           echo "PORT=${{ secrets.PORT }}" >> $GITHUB_ENV
           echo "DATABASE=${{ secrets.DATABASE }}" >> $GITHUB_ENV
 
+      - name: List all processes
+        run: |
+          echo "Listing all processes to diagnose..."
+          ps aux
+
       - name: Check if bot is already running
         run: |
-          if pgrep -f "python main.py" > /dev/null; then
+          echo "Checking if bot is already running..."
+          if pgrep -f "python" > /dev/null || pgrep -f "python3" > /dev/null; then
             echo "Bot is already running, skipping start."
             exit 0
           else
@@ -110,3 +116,4 @@ jobs:
         run: |
           echo "Starting the bot..."
           python main.py &
+
