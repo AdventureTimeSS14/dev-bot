@@ -1,7 +1,5 @@
 import sys
-
 import requests
-
 from config import AUTHOR, GITHUB
 
 OWNER = AUTHOR
@@ -18,16 +16,30 @@ headers = {
 def check_workflows():
     try:
         response = requests.get(API_URL, headers=headers)
-        response.raise_for_status()  # Проверяем на ошибки HTTP
+        response.raise_for_status()
 
         workflows = response.json()
 
-        # Если запущены workflow, то завершить процесс
-        if workflows['total_count'] > 0:
-            print("Есть запущенные workflow. Завершаем процесс...")
-            sys.exit(0)
-        else:
-            print("Нет запущенных workflow. Продолжаем работу.")
+        # Проверяем все workflow
+        for run in workflows['workflow_runs']:
+            run_name = run['name']
+            status = run['status']
+            conclusion = run['conclusion']
+            created_at = run['created_at']
+
+            # Если хотя бы один процесс в статусе 'in_progress', завершаем программу
+            if status == 'in_progress':
+                print(f"  - {run_name}")
+                print(f"    Статус: {status}")
+                print(f"    Результат: {conclusion if conclusion else 'Не завершено'}")
+                print(f"    Дата начала: {created_at}")
+                print()
+            
+                print(f"Есть запущенные workflow (статус 'in_progress'). Завершаем процесс...")
+                sys.exit(0)
+
+        # Если все процессы завершены, программа продолжит выполнение
+        print("Нет запущенных workflow в статусе 'in_progress'. Продолжаем работу.")
 
     except requests.exceptions.RequestException as e:
         print(f"Ошибка при подключении к GitHub API: {e}")
