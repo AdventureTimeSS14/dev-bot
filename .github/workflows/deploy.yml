@@ -58,8 +58,8 @@ name: Deploy Discord Bot
 
 on:
   schedule:
-    # Запускать каждые 10 минут
-    - cron: '*/10 * * * *'  # Каждые 10 минут
+    # Запускать каждые 6 минут
+    - cron: '*/6 * * * *'  # Каждые 6 минут
   workflow_dispatch:
 
 jobs:
@@ -97,11 +97,11 @@ jobs:
 
       - name: Check if bot is already running
         run: |
-          if pgrep -f "python.*\.py" > /dev/null; then
-            echo "A Python process (.py) is already running, skipping bot start."
+          if [[ -f "/tmp/bot_running_flag" ]]; then
+            echo "Bot is already running (flag file exists), skipping deployment."
             exit 0
           else
-            echo "No Python process found, starting the bot..."
+            echo "No flag file found, proceeding with bot start."
           fi
 
       - name: Run bot
@@ -109,5 +109,12 @@ jobs:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
         run: |
           echo "Starting the bot..."
-          nohup python main.py &> bot.log &
+          touch /tmp/bot_running_flag
+          nohup python main.py
+
+      - name: Clean up flag file after bot stop
+        if: failure()
+        run: |
+          echo "Cleaning up the flag file."
+          rm -f /tmp/bot_running_flag
 
