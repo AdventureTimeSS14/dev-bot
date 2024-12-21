@@ -1,10 +1,65 @@
+# name: Deploy Discord Bot
+
+# on:
+#   schedule:
+#     # Запускать каждые 6 часов
+#     - cron: '0 */6 * * *'  # Каждый 6-й час, в 0 минут
+
+#   workflow_dispatch:
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+
+#       - name: Set up Python
+#         uses: actions/setup-python@v2
+#         with:
+#           python-version: '3.11'
+
+#       - name: Install MariaDB Connector/C
+#         run: |
+#           sudo apt-get update
+#           sudo apt-get install -y libmariadb-dev
+
+#       - name: Install dependencies
+#         run: |
+#           python -m pip install --upgrade pip
+#           pip install -r requirements.txt
+
+#       - name: Load Environment Variables
+#         run: |
+#           echo "DISCORD_KEY=${{ secrets.DISCORD_KEY }}" >> $GITHUB_ENV
+#           echo "GITHUB=${{ secrets.GITHUB }}" >> $GITHUB_ENV
+#           echo "USER=${{ secrets.USER }}" >> $GITHUB_ENV
+#           echo "PASSWORD=${{ secrets.PASSWORD }}" >> $GITHUB_ENV
+#           echo "HOST=${{ secrets.HOST }}" >> $GITHUB_ENV
+#           echo "PORT=${{ secrets.PORT }}" >> $GITHUB_ENV
+#           echo "DATABASE=${{ secrets.DATABASE }}" >> $GITHUB_ENV
+
+#       - name: Check if bot is already running
+#         run: |
+#           if pgrep -f "python main.py" > /dev/null; then
+#             echo "Bot is already running, skipping start."
+#             exit 0
+#           fi
+
+#       - name: Run bot
+#         env:
+#           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+#         run: |
+#           echo "Starting the bot..."
+#           python main.py
+
 name: Deploy Discord Bot
 
 on:
   schedule:
-    # Запускать каждые 6 часов
-    - cron: '0 */6 * * *'  # Каждый 6-й час, в 0 минут
-
+    # Запускать каждые 10 минут
+    - cron: '*/10 * * * *'  # Каждые 10 минут
   workflow_dispatch:
 
 jobs:
@@ -40,7 +95,7 @@ jobs:
           echo "PORT=${{ secrets.PORT }}" >> $GITHUB_ENV
           echo "DATABASE=${{ secrets.DATABASE }}" >> $GITHUB_ENV
 
-      - name: Check if bot is already running
+      - name: Check if bot is already running # Я надеюсь ._. пжпжпжпжпж
         run: |
           if pgrep -f "python main.py" > /dev/null; then
             echo "Bot is already running, skipping start."
