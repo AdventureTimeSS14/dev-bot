@@ -179,7 +179,7 @@ roles_by_category = {
 @bot.command(name='list_team')
 @has_any_role_by_id(WHITELIST_ROLE_ID)
 async def list_team(ctx):
-    deleted = await ctx.channel.purge(limit=100)
+    deleted = await ctx.channel.purge(limit=15)
     # Обработка каждой категории
     for category, roles in roles_by_category.items():
         color = color_map.get(category, 0xFFFFFF)
@@ -209,7 +209,7 @@ async def list_team(ctx, error):
 async def list_team_task():    
     channel = bot.get_channel(1297158288063987752)
     if channel:
-        deleted = await channel.purge(limit=100)
+        deleted = await channel.purge(limit=15)
 
         for category, roles in roles_by_category.items():
             color = color_map.get(category, 0xFFFFFF)
