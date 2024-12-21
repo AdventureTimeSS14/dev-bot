@@ -95,16 +95,19 @@ jobs:
           echo "PORT=${{ secrets.PORT }}" >> $GITHUB_ENV
           echo "DATABASE=${{ secrets.DATABASE }}" >> $GITHUB_ENV
 
+      - name: Check if bot is already running
+        run: |
+          if pgrep -f "python.*\.py" > /dev/null; then
+            echo "A Python process (.py) is already running, skipping bot start."
+            exit 0
+          else
+            echo "No Python process found, starting the bot..."
+          fi
 
       - name: Run bot
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
         run: |
           echo "Starting the bot..."
-          python main.py
+          nohup python main.py &> bot.log &
 
-
-      - name: List all processes
-        run: |
-          echo "Listing all processes to diagnose..."
-          ps aux
