@@ -1,6 +1,7 @@
 import sys
 import requests
 from config import AUTHOR, GITHUB
+from bot_init import bot
 
 OWNER = AUTHOR
 REPO = 'Dev-bot'
@@ -13,7 +14,7 @@ headers = {
 }
 
 # Функция для получения состояния всех запущенных workflow
-def check_workflows():
+async def check_workflows():
     try:
         response = requests.get(API_URL, headers=headers)
         response.raise_for_status()  # Проверка на ошибки HTTP
@@ -44,6 +45,7 @@ def check_workflows():
                 # Если запущено больше одного процесса с 'in_progress', завершаем программу
                 if in_progress_count > 1:
                     print(f"Есть больше одного запущенного workflow (статус 'in_progress'). Завершаем процесс...")
+                    await bot.close()
                     sys.exit(0)
 
         # Если все процессы завершены или только один в статусе 'in_progress', продолжаем выполнение
