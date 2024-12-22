@@ -1,27 +1,94 @@
 import asyncio
 import time
 import logging
-from datetime import timedelta
+from datetime import timedelta, timezone, datetime
 import aiohttp
 import discord
 from discord.ext import tasks, commands
 from bot_init import bot
 from urllib.parse import urlparse, urlunparse
+import dateutil.parser
 
 # Определение уровней игры для SS14
 SS14_RUN_LEVEL_PREGAME = 0
 SS14_RUN_LEVEL_GAME = 1
 SS14_RUN_LEVEL_POSTGAME = 2
 
-# Настройка команды
 @bot.command(name='status')
 async def get_status_command(ctx):
     """
-    Команда для получения статуса сервера SS14 в чате Discord.
+    Команда для получения статуса сервера SS14 в чате Discord с подробным выводом через Embed.
     """
     ss14_address = "ss14://193.164.18.155"
-    status_message = await get_ss14_server_status(ss14_address)
-    await ctx.send(status_message)
+    
+    # Формируем URL для получения данных о сервере
+    url = get_ss14_status_url(ss14_address)
+    
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url + "/status") as resp:
+                # Получаем данные о статусе сервера
+                json = await resp.json()
+
+        # Создаём Embed сообщение для вывода информации
+        embed = discord.Embed(color=discord.Color.blue())  # Синий цвет
+
+        # Извлекаем информацию о сервере
+        count = json.get("players", "?")
+        countmax = json.get("soft_max_players", "?")
+        name = json.get("name", "Неизвестно")
+        round_id = json.get("round_id", "?")
+        gamemap = json.get("map", "?")
+        preset = json.get("preset", "?")
+        rlevel = json.get("run_level", None)
+
+        # Устанавливаем заголовок Embed
+        embed.title = name
+        embed.set_footer(text=f"Адрес: {ss14_address}")
+
+        # Добавляем количество игроков
+        embed.add_field(name="Игроков", value=f"{count}/{countmax}", inline=False)
+
+        # Определяем статус сервера по run_level
+        if rlevel is not None:
+            status = "Неизвестно"
+            if rlevel == SS14_RUN_LEVEL_PREGAME:
+                status = "Лобби"
+            elif rlevel == SS14_RUN_LEVEL_GAME:
+                status = "Раунд идёт"
+            elif rlevel == SS14_RUN_LEVEL_POSTGAME:
+                status = "Окончание раунда..."
+
+            embed.add_field(name="Статус", value=status, inline=False)
+
+        # Добавляем время раунда, если оно есть
+        starttimestr = json.get("round_start_time")
+        if starttimestr:
+            starttime = dateutil.parser.isoparse(starttimestr)
+            delta = datetime.now(timezone.utc) - starttime
+            time_str = []
+            if delta.days > 0:
+                time_str.append(f"{delta.days} дней")
+            minutes = delta.seconds // 60
+            hours = minutes // 60
+            if hours > 0:
+                time_str.append(f"{hours} часов")
+                minutes %= 60
+            time_str.append(f"{minutes} минут")
+
+            embed.add_field(name="Время раунда", value=", ".join(time_str), inline=False)
+
+        # Добавляем другие поля
+        embed.add_field(name="Раунд", value=round_id, inline=False)
+        embed.add_field(name="Карта", value=gamemap, inline=False)
+        embed.add_field(name="Режим игры", value=preset, inline=False)
+
+        # Отправляем Embed сообщение в канал
+        await ctx.send(embed=embed)
+
+    except Exception as e:
+        print(f"Ошибка при получении статуса с сервера SS14: {e}")
+        await ctx.send("Ошибка при получении статуса с сервера.")
 
 @tasks.loop(seconds=2)  # Обновляем статус каждую секунду или две
 async def update_status():
