@@ -6,15 +6,14 @@ from bot_init import bot
 
 OWNER = AUTHOR
 REPO = 'Dev-bot'  # Название вашего репозитория
-API_URL = f'https://api.github.com/repos/{OWNER}/{REPO}/commits'  # URL для получения коммитов
+API_URL = f'https://api.github.com/repos/{OWNER}/{REPO}/commits'
 
 # Заголовки для аутентификации
 headers = {
-    'Authorization': f'token {GITHUB}',  # Ваш GitHub Token
+    'Authorization': f'token {GITHUB}',
     'Accept': 'application/vnd.github.v3+json',
 }
 
-# Переменная для хранения SHA последнего коммита
 last_commit_sha = None
 
 # Функция для получения состояния последнего коммита
@@ -82,7 +81,7 @@ async def check_for_new_commit():
         sys.exit(1)
 
 
-# Задача для проверки новых коммитов каждую минуту
+# Проверка о получении новых коммитах
 @tasks.loop(seconds=30)
 async def monitor_commits():
     new_commit_found, commit_data = await check_for_new_commit()
@@ -100,7 +99,6 @@ async def monitor_commits():
         committer = commit_data['committer']
         coauthors = commit_data['coauthors']
 
-        # Формируем красивое сообщение для Discord
         message = f"**Обнаружен новый коммит!** Перезапуск бота для обновления...\n\n"
         message += f"**Сообщение коммита**: {commit_message}\n"
         message += f"**SHA**: {commit_sha}\n"
@@ -124,5 +122,5 @@ async def monitor_commits():
             await channel.send(f"{bot.user} завершает свою работу! Ожидайте перезапуска в течении 10 минут.")
 
         # Завершаем работу бота
-        await bot.close()  # Закрываем текущий процесс бота
+        await bot.close()
         sys.exit(0)
