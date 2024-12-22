@@ -31,7 +31,7 @@ async def get_status_command(ctx):
                 json = await resp.json()
 
         # Создаём Embed сообщение для вывода информации
-        embed = discord.Embed(color=discord.Color.blue())  # Синий цвет
+        embed = discord.Embed(color=discord.Color.dark_blue())  # Синий цвет
 
         # Извлекаем информацию о сервере
         count = json.get("players", "?")
@@ -94,7 +94,6 @@ async def get_status_command(ctx):
 async def update_status():
     if not hasattr(bot, 'start_time') or bot.start_time is None:
         return  # Если время старта не задано, пропускаем обновление
-
     # Закомментировано обновление времени работы бота
     # # Вычисляем прошедшее время с момента старта
     # elapsed_time = time.time() - bot.start_time
@@ -103,14 +102,42 @@ async def update_status():
     # remaining_time = (5 * 3600 + 57 * 60) - elapsed_time
     # remaining_time_str = str(timedelta(seconds=int(remaining_time)))
 
-    # Получаем статус с сервера SS14
     ss14_address = "ss14://193.164.18.155"
-    status_message = await get_ss14_server_status(ss14_address)
+    url = get_ss14_status_url(ss14_address)
+    
+    try:
+        # Получаем статус с сервера SS14
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url + "/status") as resp:
+                json = await resp.json()
 
-    # Обновляем статус бота (выводим только статус игры на сервере)
-    await bot.change_presence(activity=discord.Game(
-        name=status_message
-    ))
+        # Извлекаем данные о статусе сервера
+        count = json.get("players", "?")
+        countmax = json.get("soft_max_players", "?")
+        name = json.get("name", "Неизвестно")
+        rlevel = json.get("run_level", None)
+        round_id = json.get("round_id", "?")
+        preset = json.get("preset", "?")
+
+        # Определяем статус сервера по run_level
+        status = "Неизвестно"
+        if rlevel == SS14_RUN_LEVEL_PREGAME:
+            status = "Лобби"
+        elif rlevel == SS14_RUN_LEVEL_GAME:
+            status = "Раунд идёт"
+        elif rlevel == SS14_RUN_LEVEL_POSTGAME:
+            status = "Окончание раунда..."
+
+        # Формируем строку для статуса бота
+        status_message = f"{name}\n"  # Название сервера
+        status_message += f"*Игроков: {count}/{countmax} | Режим: {status} | Раунд: {round_id}*"  # Мелким шрифтом
+
+        # Обновляем статус бота
+        await bot.change_presence(activity=discord.Game(name=status_message))
+
+    except Exception as e:
+        print(f"Ошибка при получении статуса с сервера SS14: {e}")
+        await bot.change_presence(activity=discord.Game(name="Ошибка при получении статуса"))
 
 async def get_ss14_server_status(address: str) -> str:
     """
