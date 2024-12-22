@@ -41,6 +41,7 @@ async def get_status_command(ctx):
         gamemap = json.get("map", "?")
         preset = json.get("preset", "?")
         rlevel = json.get("run_level", None)
+        bunker = json.get("panic_bunker", "?")
 
         # Устанавливаем заголовок Embed
         embed.title = name
@@ -82,6 +83,7 @@ async def get_status_command(ctx):
         embed.add_field(name="Раунд", value=round_id, inline=False)
         embed.add_field(name="Карта", value=gamemap, inline=False)
         embed.add_field(name="Режим игры", value=preset, inline=False)
+        embed.add_field(name="Бункер", value=bunker, inline=False)
 
         # Отправляем Embed сообщение в канал
         await ctx.send(embed=embed)
