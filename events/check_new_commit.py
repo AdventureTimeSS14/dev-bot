@@ -112,7 +112,7 @@ async def monitor_commits():
             message += f"**Соавторы**:\n" + "\n".join(coauthors) + "\n"
         
         message += f"\n**Изменения**:\n"
-        message += f"```dif\n"
+        message += f"```diff\n"
         message += f"+ Добавлено строк: {additions}\n"
         message += f"- Удалено строк: {deletions}\n"
         message += f"```"
