@@ -16,3 +16,13 @@ if __name__ == '__main__':
     bot.run(DISCORD_KEY)
 
 #TODO: Add logging: @nixsilvam404
+# Настройка логирования, сохраняем логи в файл
+# Настройка глобального логирования
+# logging.basicConfig(
+#     level=logging.DEBUG,  # Логируем все сообщения с уровня DEBUG и выше
+#     format='%(asctime)s - %(levelname)s - %(message)s',  # Формат логов
+#     handlers=[
+#         logging.FileHandler("bot_logs.log"),  # Записываем логи в файл bot_logs.log
+#         logging.StreamHandler(sys.stdout)     # Также выводим логи в консоль
+#     ]
+# )
