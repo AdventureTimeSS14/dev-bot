@@ -7,6 +7,7 @@ from commands.list_team_command import list_team_task
 from config import LOG_CHANNEL_ID
 from events.check_new_commit import monitor_commits
 from events.shutdows_after_time import shutdown_after_time
+from events.update_status import update_status
 
 
 @bot.event
@@ -23,6 +24,9 @@ async def on_ready():
         
     if not monitor_commits.is_running():
         monitor_commits.start()
+        
+    if not update_status.is_running():
+        update_status.start()
         
     print(f"Bot {bot.user} is ready to work!")
     
