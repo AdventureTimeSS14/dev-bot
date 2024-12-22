@@ -129,11 +129,15 @@ async def update_status():
             status = "Окончание раунда..."
 
         # Формируем строку для статуса бота
-        status_message = f"{name}\n"  # Название сервера
-        status_message += f"*Игроков: {count}/{countmax} | Режим: {status} | Раунд: {round_id}*"  # Мелким шрифтом
+        status_state = f"Игроков: {count}/{countmax} | Режим: {status} | Раунд: {round_id}"  # Мелким шрифтом
 
+        activity = discord.Activity(
+            type=discord.ActivityType.playing,
+            name=name,
+            state=status_state
+        )
         # Обновляем статус бота
-        await bot.change_presence(activity=discord.Game(name=status_message))
+        await bot.change_presence(activity=activity)
 
     except Exception as e:
         print(f"Ошибка при получении статуса с сервера SS14: {e}")
