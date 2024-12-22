@@ -1,16 +1,18 @@
-
+import time
 
 from bot_init import bot
 from commands.github import check_workflows
 from commands.github.git_fetch_pull import fetch_merged_pull_requests
 from commands.list_team_command import list_team_task
 from config import LOG_CHANNEL_ID
-from events.shutdows_after_time import shutdown_after_time
 from events.check_new_commit import monitor_commits
+from events.shutdows_after_time import shutdown_after_time
 
 
 @bot.event
 async def on_ready():
+    bot.start_time = time.time()  # Сохраняем время старта бота в атрибуте объекта bot
+
     await check_workflows.check_workflows() # Завершаем работу, если уже бот запущен на GitGub Action
     
     if not fetch_merged_pull_requests.is_running():

@@ -1,8 +1,10 @@
 import sys
+
 import requests
 from discord.ext import tasks
-from config import AUTHOR, GITHUB, LOG_CHANNEL_ID
+
 from bot_init import bot
+from config import AUTHOR, GITHUB, LOG_CHANNEL_ID
 
 OWNER = AUTHOR
 REPO = 'Dev-bot'  # Название вашего репозитория

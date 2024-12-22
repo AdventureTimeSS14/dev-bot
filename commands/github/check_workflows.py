@@ -1,7 +1,9 @@
 import sys
+
 import requests
-from config import AUTHOR, GITHUB
+
 from bot_init import bot
+from config import AUTHOR, GITHUB
 
 OWNER = AUTHOR
 REPO = 'Dev-bot'

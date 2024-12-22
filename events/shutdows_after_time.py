@@ -1,10 +1,12 @@
 import asyncio
-import sys
-import discord
 import os
+import sys
+
+import discord
 
 from bot_init import bot
 from config import LOG_CHANNEL_ID
+
 
 async def shutdown_after_time():
     await asyncio.sleep(5 * 3600 + 57 * 60)  # 5 часов и 57 минут в секундах
