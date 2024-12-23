@@ -1,0 +1,101 @@
+# Чейнжлог формат
+# Идентификатор версии (ID): Это уникальный идентификатор для каждой версии. Пример: 1.2.0 — где:
+# - 1 — основная версия (MAJOR),
+# - 2 — минорная версия (MINOR),
+# - 0 — патч-версия (PATCH).
+#
+# Автор: Имя или ник пользователя, который внёс изменения.
+#
+# Дата: Дата, когда изменения были внесены.
+#
+# Изменения: Описание изменений, сделанных в текущем коммите или обновлении.
+
+
+changelog:
+  - version: "Preview"
+    date: "2024-08-03"
+    author: "Schrodinger71"
+    changes:
+      - "Добавлена основа для Discord-бота."
+
+  - version: "Preview"
+    date: "2024-08-04"
+    author: "Xelasto"
+    changes:
+      - "Добавлена поддержка GPT-3.5 Turbo (g4f) (issue #9)."
+
+  - version: "Preview"
+    date: "2024-08-04"
+    author: "Schrodinger71"
+    changes:
+      - "Добавлено ограничение на доступ к команде GPT."
+
+  - version: "Preview"
+    date: "2024-08-04"
+    author: "Xelasto"
+    changes:
+      - "Добавлена недостающая библиотека curl-cffi."
+
+  - version: "Preview"
+    date: "2024-08-06"
+    author: "Schrodinger71"
+    changes:
+      - "Добавлен код для команды &achang (n/o)."
+
+  - version: "Preview"
+    date: "2024-08-07"
+    author: "Schrodinger71"
+    changes:
+      - "Добавлена новая команда &milestones."
+      - "Изменения в рамках задачи main."
+
+  - version: "Preview"
+    date: "2024-08-15"
+    author: "nixsilvam404"
+    changes:
+      - "Использование isort для сортировки импортов в файле moment."
+      - "Исправления в рамках задачи main(#15)."
+
+  - version: "Preview"
+    date: "2024-08-18"
+    author: "nixsilvam404"
+    changes:
+      - "Рефакторинг команды GPT."
+
+  - version: "Preview"
+    date: "2024-09-01"
+    author: "nixsilvam404"
+    changes:
+      - "Улучшено оформление конфигурации."
+
+  - version: "Preview"
+    date: "2024-09-01"
+    author: "Schrodinger71, Nix Silvam"
+    changes:
+      - "Добавлены чейнжлоги в дис (issue #16)."
+      - "Поправлена часть кода."
+      - "Убрана лишняя константа."
+      - "Добавлен tasks.loop."
+      - "Проведены различные правки."
+      - "Рефакторинг pr_changelog."
+
+  - version: "Alpha"
+    date: "2024-12-21"
+    author: "Schrodinger71"
+    changes:
+      - "Обеспечено корректное завершение работы Астры."
+
+  - version: "Alpha"
+    date: "2024-12-22"
+    author: "Schrodinger71"
+    changes:
+      - "Добавлена новая фича: перезапуск при новом коммите в репозитории."
+
+  - version: "1.2.0"
+    date: "2024-12-23"
+    author: "Schrodinger71"
+    changes:
+      - "Добавлено поле причины в команду увольнение из команды (подробности в &team_help)."
+      - "Обновлено отображение времени работы бота."
+      - "Обновлён статус Rich Presence бота."
+      - "Обновлён вывод команды &status."
