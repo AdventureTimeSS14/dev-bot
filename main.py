@@ -13,6 +13,29 @@ from commands.github import (achang_command, check_workflows, forks_command,
 from config import DISCORD_KEY
 from events import on_command, on_error, on_message, on_ready, update_status
 
+import signal
+import asyncio
+from commands.misc.shutdows_deff import shutdown_def
+
+# Функция для обработки сигнала SIGTERM
+async def handle_sigterm():
+    print("Получен сигнал SIGTERM. Отключение бота...")
+    await shutdown_def()
+    # Завершаем работу бота
+    asyncio.create_task(bot.close())
+
+# Функция для обработки SIGINT (Ctrl+C или завершение через терминал)
+async def handle_sigint():
+    print("Получен сигнал SIGINT. Отключение бота...")
+    await shutdown_def()
+    # Завершаем работу бота
+    asyncio.create_task(bot.close())
+
+# Устанавливаем обработчики сигналов
+signal.signal(signal.SIGTERM, lambda *args: handle_sigterm())
+signal.signal(signal.SIGINT, lambda *args: handle_sigint())
+
+
 if __name__ == '__main__':
     bot.run(DISCORD_KEY)
 

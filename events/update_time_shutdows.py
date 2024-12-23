@@ -4,10 +4,10 @@ from datetime import timedelta
 from discord.ext import tasks
 from bot_init import bot
 
-@tasks.loop(seconds=3)  # Обновляем статус каждую 2 секунды
+@tasks.loop(seconds=7)
 async def update_time_shutdows():
     """
-    Задача, которая будет обновлять статус редактируя сообщение каждую секунду или две.
+    Задача, которая будет обновлять статус редактируя сообщение.
     """
 
     channel_id = 1320771026019422329  # ID канала, где нужно редактировать сообщение

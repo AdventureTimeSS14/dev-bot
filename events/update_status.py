@@ -93,7 +93,7 @@ async def get_status_command(ctx):
         print(f"Ошибка при получении статуса с сервера SS14: {e}")
         await ctx.send("Ошибка при получении статуса с сервера.")
 
-@tasks.loop(seconds=5)
+@tasks.loop(seconds=13)
 async def update_status():
     if not hasattr(bot, 'start_time') or bot.start_time is None:
         return
@@ -139,10 +139,10 @@ async def update_status():
         print(f"Ошибка при получении статуса с сервера SS14: {e}")
         await bot.change_presence(activity=discord.Game(name="Ошибка при получении статуса"))
 
-@tasks.loop(seconds=10)  # Обновляем статус каждые 2 секунды
+@tasks.loop(seconds=12) 
 async def update_status_server_message_eddit():
     """
-    Фоновая задача, которая обновляет информацию в сообщении каждые 2 секунды.
+    Фоновая задача, которая обновляет информацию в сообщении.
     """
     channel_id = 1320771026019422329  # ID канала
     message_id = 1320771122433622084  # ID сообщения
