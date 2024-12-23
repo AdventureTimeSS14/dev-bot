@@ -19,4 +19,4 @@ async def uptime(ctx):
     remaining_time = (5 * 3600 + 57 * 60) - elapsed_time
     remaining_time_str = str(timedelta(seconds=int(remaining_time)))
 
-    await ctx.send(f"Время работы: {elapsed_time_str}\nОставшееся время до отключения: {remaining_time_str}")
+    await ctx.send(f"Время работы бота: {elapsed_time_str}\nОставшееся время до отключения: {remaining_time_str}")

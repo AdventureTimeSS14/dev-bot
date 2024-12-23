@@ -84,6 +84,7 @@ async def get_status_command(ctx):
         embed.add_field(name="Карта", value=gamemap, inline=False)
         embed.add_field(name="Режим игры", value=preset, inline=False)
         embed.add_field(name="Бункер", value=bunker, inline=False)
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
 
         # Отправляем Embed сообщение в канал
         await ctx.send(embed=embed)
@@ -131,7 +132,7 @@ async def update_status():
             status = "Окончание раунда..."
 
         # Формируем строку для статуса бота
-        status_state = f"Игроков: {count}/{countmax} | Режим: {status} | Раунд: {round_id}"  # Мелким шрифтом
+        status_state = f"Игроков: {count}/{countmax} | Режим: {preset} | Раунд: {round_id} | Статус: {status}"  # Мелким шрифтом
 
         activity = discord.Activity(
             type=discord.ActivityType.playing,
