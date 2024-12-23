@@ -139,56 +139,113 @@ async def update_status():
         print(f"Ошибка при получении статуса с сервера SS14: {e}")
         await bot.change_presence(activity=discord.Game(name="Ошибка при получении статуса"))
 
-@tasks.loop(seconds=2)  # Обновляем статус каждую секунду
+@tasks.loop(seconds=2)  # Обновляем статус каждые 2 секунды
 async def update_status_server_message_eddit():
     """
-    Фоновая задача, которая обновляет информацию в сообщении каждую секунду.
+    Фоновая задача, которая обновляет информацию в сообщении каждые 2 секунды.
     """
-    channel = bot.get_channel(1320771026019422329)  # Укажите свой канал, где будет редактироваться сообщение
+    channel_id = 1320771026019422329  # ID канала
+    message_id = 1320771122433622084  # ID сообщения
+    ss14_address = "ss14://193.164.18.155"
+
+    # Получаем канал
+    channel = bot.get_channel(channel_id)
     if channel is None:
         print("Не удалось найти канал!")
         return
-    
+
     try:
         # Получаем сообщение с помощью ID
-        message = await channel.fetch_message(1320771122433622084)  # Ваш ID сообщения
+        message = await channel.fetch_message(message_id)
         
-        # Получаем статус с сервера SS14
-        ss14_address = "ss14://193.164.18.155"  # Адрес вашего сервера
-        status_message = await get_ss14_server_status(ss14_address)  # Получаем статус через функцию get_ss14_server_status()
+        # Формируем URL для обращения к серверу
+        url = get_ss14_status_url(ss14_address)
 
-        # Если статус не получен (например, ошибка), заполняем поля как Error!
-        if status_message is None:
-            embed = discord.Embed(color=discord.Color.dark_blue())
-            embed.add_field(name="Игроков", value="Error!/Error!", inline=False)
+        try:
+            # Запрашиваем данные о сервере
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url + "/status") as resp:
+                    if resp.status == 200:  # Успешный ответ
+                        json = await resp.json()
+
+                        # Извлекаем данные о сервере
+                        count = json.get("players", "?")
+                        countmax = json.get("soft_max_players", "?")
+                        name = json.get("name", "Неизвестно")
+                        round_id = json.get("round_id", "?")
+                        gamemap = json.get("map", "?")
+                        preset = json.get("preset", "?")
+                        rlevel = json.get("run_level", None)
+                        bunker = json.get("panic_bunker", "?")
+
+                        # Создаем Embed сообщение
+                        embed = discord.Embed(color=discord.Color.dark_blue())
+                        embed.title = name
+                        embed.set_footer(text=f"Адрес: {ss14_address}")
+
+                        # Добавляем поля в Embed
+                        embed.add_field(name="Игроков", value=f"{count}/{countmax}", inline=False)
+
+                        # Определяем статус сервера
+                        if rlevel is not None:
+                            status = "Неизвестно"
+                            if rlevel == SS14_RUN_LEVEL_PREGAME:
+                                status = "Лобби"
+                            elif rlevel == SS14_RUN_LEVEL_GAME:
+                                status = "Раунд идёт"
+                            elif rlevel == SS14_RUN_LEVEL_POSTGAME:
+                                status = "Окончание раунда..."
+                            embed.add_field(name="Статус", value=status, inline=False)
+
+                        # Добавляем время раунда, если оно есть
+                        starttimestr = json.get("round_start_time")
+                        if starttimestr:
+                            starttime = dateutil.parser.isoparse(starttimestr)
+                            delta = datetime.now(timezone.utc) - starttime
+                            time_str = []
+                            if delta.days > 0:
+                                time_str.append(f"{delta.days} дней")
+                            minutes = delta.seconds // 60
+                            hours = minutes // 60
+                            if hours > 0:
+                                time_str.append(f"{hours} часов")
+                                minutes %= 60
+                            time_str.append(f"{minutes} минут")
+                            embed.add_field(name="Время раунда", value=", ".join(time_str), inline=False)
+
+                        # Добавляем другие данные
+                        embed.add_field(name="Раунд", value=round_id, inline=False)
+                        embed.add_field(name="Карта", value=gamemap, inline=False)
+                        embed.add_field(name="Режим игры", value=preset, inline=False)
+                        embed.add_field(name="Бункер", value=bunker, inline=False)
+
+                        # Обновляем сообщение
+                        await message.edit(embed=embed)
+
+                    else:
+                        raise Exception(f"Получен некорректный статус ответа: {resp.status}")
+
+        except Exception as e:
+            # Если произошла ошибка, выводим сообщение об ошибке
+            print(f"Ошибка при запросе данных: {e}")
+            embed = discord.Embed(color=discord.Color.red())
+            embed.title = "Ошибка получения данных"
+            embed.add_field(name="Игроков", value="Error!", inline=False)
             embed.add_field(name="Статус", value="Error!", inline=False)
             embed.add_field(name="Время раунда", value="Error!", inline=False)
             embed.add_field(name="Раунд", value="Error!", inline=False)
             embed.add_field(name="Карта", value="Error!", inline=False)
             embed.add_field(name="Режим игры", value="Error!", inline=False)
             embed.add_field(name="Бункер", value="Error!", inline=False)
+            embed.set_footer(text=f"Адрес: {ss14_address}")
             await message.edit(embed=embed)
-            return
-
-        # Если статус получен корректно, создаем Embed
-        embed = discord.Embed(color=discord.Color.dark_red())
-        embed.title = "Статус сервера SS14"
-        embed.set_footer(text=f"Адрес: {ss14_address}")
-
-        # Обновляем Embed с данными статуса
-        embed.add_field(name="Статус сервера", value=status_message, inline=False)
-
-        # Редактируем сообщение с обновленным Embed
-        await message.edit(embed=embed)
 
     except discord.NotFound:
-        print("Сообщение не найдено!")
+        print(f"Сообщение с ID {message_id} не найдено!")
     except discord.Forbidden:
-        print("Бот не имеет прав для редактирования сообщения!")
+        print("У бота нет прав для редактирования сообщения!")
     except Exception as e:
         print(f"Ошибка при обновлении сообщения: {e}")
-
-
 
 async def get_ss14_server_status(address: str) -> str:
     """
@@ -243,3 +300,35 @@ def get_ss14_status_url(url: str) -> str:
     scheme = "http"
 
     return urlunparse((scheme, f"{parsed.hostname}:{port}", parsed.path, parsed.params, parsed.query, parsed.fragment))
+
+
+async def get_ss14_server_status_second(address: str) -> dict:
+    """
+    Получает статус игры с сервера SS14 по адресу.
+    """
+    # Формируем правильный URL
+    url = get_ss14_status_url(address)
+    print(f"Запрос статуса SS14 на {url}")
+
+    # Получаем статус сервера
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url + "/status") as resp:
+                json = await resp.json()  # Возвращаем результат как JSON (словарь)
+
+        # Возвращаем словарь с нужными данными
+        return {
+            "players": json.get("players", "?"),
+            "soft_max_players": json.get("soft_max_players", "?"),
+            "name": json.get("name", "Неизвестно"),
+            "run_level": json.get("run_level"),
+            "round_id": json.get("round_id", "?"),
+            "preset": json.get("preset", "?"),
+            "map": json.get("map", "Неизвестно"),
+            "panic_bunker": json.get("panic_bunker", "Неизвестно"),
+            "round_start_time": json.get("round_start_time")
+        }
+
+    except Exception as e:
+        print(f"Ошибка при получении статуса с сервера SS14: {e}")
+        return None  # Возвращаем None в случае ошибки
