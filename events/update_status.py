@@ -96,15 +96,8 @@ async def get_status_command(ctx):
 @tasks.loop(seconds=2)  # Обновляем статус каждую секунду или две
 async def update_status():
     if not hasattr(bot, 'start_time') or bot.start_time is None:
-        return  # Если время старта не задано, пропускаем обновление
-    # Закомментировано обновление времени работы бота
-    # # Вычисляем прошедшее время с момента старта
-    # elapsed_time = time.time() - bot.start_time
-    # elapsed_time_str = str(timedelta(seconds=int(elapsed_time)))
-    # # Оставшееся время до отключения
-    # remaining_time = (5 * 3600 + 57 * 60) - elapsed_time
-    # remaining_time_str = str(timedelta(seconds=int(remaining_time)))
-
+        return
+    
     ss14_address = "ss14://193.164.18.155"
     url = get_ss14_status_url(ss14_address)
     
@@ -145,6 +138,98 @@ async def update_status():
     except Exception as e:
         print(f"Ошибка при получении статуса с сервера SS14: {e}")
         await bot.change_presence(activity=discord.Game(name="Ошибка при получении статуса"))
+
+@tasks.loop(seconds=2)  # Обновляем статус каждую секунду
+async def update_status_server_message_eddit():
+    """
+    Фоновая задача, которая обновляет информацию в сообщении каждую секунду.
+    """
+    channel = bot.get_channel(1320771026019422329)  # Укажите свой канал, где будет редактироваться сообщение
+    if channel is None:
+        print("Не удалось найти канал!")
+        return
+    
+    try:
+        # Получаем сообщение с помощью ID
+        message = await channel.fetch_message(1320771122433622084)  # Ваш ID сообщения
+        
+        # Получаем статус с сервера SS14
+        ss14_address = "ss14://193.164.18.155"  # Адрес вашего сервера
+        status_message = await get_ss14_server_status(ss14_address)  # Получаем статус через функцию get_ss14_server_status()
+
+        # Если статус не получен (например, ошибка), заполняем поля как Error!
+        if status_message is None:
+            embed = discord.Embed(color=discord.Color.dark_blue())
+            embed.add_field(name="Игроков", value="Error!/Error!", inline=False)
+            embed.add_field(name="Статус", value="Error!", inline=False)
+            embed.add_field(name="Время раунда", value="Error!", inline=False)
+            embed.add_field(name="Раунд", value="Error!", inline=False)
+            embed.add_field(name="Карта", value="Error!", inline=False)
+            embed.add_field(name="Режим игры", value="Error!", inline=False)
+            embed.add_field(name="Бункер", value="Error!", inline=False)
+            await message.edit(embed=embed)
+            return
+
+        # Получаем данные из status_message
+        count = status_message.get("players", "Error!")
+        countmax = status_message.get("soft_max_players", "Error!")
+        name = status_message.get("name", "Error!")
+        round_id = status_message.get("round_id", "Error!")
+        gamemap = status_message.get("map", "Error!")
+        preset = status_message.get("preset", "Error!")
+        rlevel = status_message.get("run_level", None)
+        bunker = status_message.get("panic_bunker", "Error!")
+
+        # Создаем Embed сообщение с обновленными данными
+        embed = discord.Embed(color=discord.Color.dark_blue())
+        embed.title = name
+        embed.set_footer(text=f"Адрес: {ss14_address}")
+
+        embed.add_field(name="Игроков", value=f"{count}/{countmax}", inline=False)
+
+        # Определяем статус сервера по run_level
+        status = "Error!"
+        if rlevel is not None:
+            if rlevel == SS14_RUN_LEVEL_PREGAME:
+                status = "Лобби"
+            elif rlevel == SS14_RUN_LEVEL_GAME:
+                status = "Раунд идёт"
+            elif rlevel == SS14_RUN_LEVEL_POSTGAME:
+                status = "Окончание раунда..."
+        embed.add_field(name="Статус", value=status, inline=False)
+
+        # Добавляем время раунда
+        starttimestr = status_message.get("round_start_time")
+        if starttimestr:
+            starttime = dateutil.parser.isoparse(starttimestr)
+            delta = datetime.now(timezone.utc) - starttime
+            time_str = []
+            if delta.days > 0:
+                time_str.append(f"{delta.days} дней")
+            minutes = delta.seconds // 60
+            hours = minutes // 60
+            if hours > 0:
+                time_str.append(f"{hours} часов")
+                minutes %= 60
+            time_str.append(f"{minutes} минут")
+            embed.add_field(name="Время раунда", value=", ".join(time_str), inline=False)
+
+        # Добавляем другие поля
+        embed.add_field(name="Раунд", value=round_id, inline=False)
+        embed.add_field(name="Карта", value=gamemap, inline=False)
+        embed.add_field(name="Режим игры", value=preset, inline=False)
+        embed.add_field(name="Бункер", value=bunker, inline=False)
+
+        # Редактируем сообщение с обновленным Embed
+        await message.edit(embed=embed)
+
+    except discord.NotFound:
+        print("Сообщение не найдено!")
+    except discord.Forbidden:
+        print("Бот не имеет прав для редактирования сообщения!")
+    except Exception as e:
+        print(f"Ошибка при обновлении сообщения: {e}")
+
 
 async def get_ss14_server_status(address: str) -> str:
     """

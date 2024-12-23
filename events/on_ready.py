@@ -7,7 +7,7 @@ from commands.list_team_command import list_team_task
 from config import LOG_CHANNEL_ID
 from events.check_new_commit import monitor_commits
 from events.shutdows_after_time import shutdown_after_time
-from events.update_status import update_status
+from events.update_status import update_status, update_status_server_message_eddit
 from events.update_time_shutdows import update_time_shutdows
 
 
@@ -28,7 +28,10 @@ async def on_ready():
         
     if not update_status.is_running():
         update_status.start()
-        
+     
+    if not update_status_server_message_eddit.is_running():
+        update_status_server_message_eddit.start()
+           
     if not update_time_shutdows.is_running():
         update_time_shutdows.start()
         
