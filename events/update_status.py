@@ -44,6 +44,11 @@ async def get_status_command(ctx):
         preset = json.get("preset", "?")
         rlevel = json.get("run_level", None)
         bunker = json.get("panic_bunker", "?")
+        
+        if bunker == True:
+            bunker = "Включен"
+        elif bunker == False:
+            bunker = "Отключен"
 
         # Устанавливаем заголовок Embed
         embed.title = name
@@ -179,6 +184,11 @@ async def update_status_server_message_eddit():
                         preset = json.get("preset", "?")
                         rlevel = json.get("run_level", None)
                         bunker = json.get("panic_bunker", "?")
+                        
+                        if bunker == True:
+                            bunker = "Включен"
+                        elif bunker == False:
+                            bunker = "Отключен"
 
                         # Создаем Embed сообщение
                         embed = discord.Embed(color=discord.Color.dark_blue())
