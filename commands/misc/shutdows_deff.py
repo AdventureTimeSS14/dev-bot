@@ -28,3 +28,13 @@ async def shutdown_def():
     embed.add_field(name="Бункер", value="Error!", inline=False)
     embed.set_footer(text=f"Адрес: {ss14_address}")
     await message.edit(embed=embed)
+    
+    name = "Отключена!"
+    status_state = f"Игроков: ERROR! | Режим: ERROR! | Раунд: ERROR! | Статус: ERROR!"  # Мелким шрифтом
+    activity = discord.Activity(
+        type=discord.ActivityType.unknown,
+        name=name,
+        state=status_state
+    )
+    # Обновляем статус бота
+    await bot.change_presence(activity=activity)
