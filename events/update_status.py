@@ -1,13 +1,15 @@
 import asyncio
-import time
 import logging
-from datetime import timedelta, timezone, datetime
-import aiohttp
-import discord
-from discord.ext import tasks, commands
-from bot_init import bot
+import time
+from datetime import datetime, timedelta, timezone
 from urllib.parse import urlparse, urlunparse
+
+import aiohttp
 import dateutil.parser
+import discord
+from discord.ext import commands, tasks
+
+from bot_init import bot
 
 # Определение уровней игры для SS14
 SS14_RUN_LEVEL_PREGAME = 0

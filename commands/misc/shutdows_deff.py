@@ -2,6 +2,7 @@ import discord
 
 from bot_init import bot
 
+
 async def shutdown_def():
     channel_id = 1320771026019422329  # ID канала, где нужно редактировать сообщение
     message_id = 1320771150938243195  # ID сообщения, которое нужно редактировать

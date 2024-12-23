@@ -5,8 +5,8 @@ import sys
 import discord
 
 from bot_init import bot
-from config import LOG_CHANNEL_ID
 from commands.misc.shutdows_deff import shutdown_def
+from config import LOG_CHANNEL_ID
 
 
 async def shutdown_after_time():

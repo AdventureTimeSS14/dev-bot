@@ -1,8 +1,11 @@
 import time
-import discord
 from datetime import timedelta
+
+import discord
 from discord.ext import tasks
+
 from bot_init import bot
+
 
 @tasks.loop(seconds=7)
 async def update_time_shutdows():

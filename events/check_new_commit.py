@@ -4,6 +4,7 @@ import requests
 from discord.ext import tasks
 
 from bot_init import bot
+from commands.misc.shutdows_deff import shutdown_def
 from config import AUTHOR, GITHUB, LOG_CHANNEL_ID
 
 OWNER = AUTHOR
@@ -122,6 +123,8 @@ async def monitor_commits():
         if channel:
             await channel.send(message)
             await channel.send(f"{bot.user} завершает свою работу! Ожидайте перезапуска в течении 10 минут.")
+
+        await shutdown_def()
 
         # Завершаем работу бота
         await bot.close()
