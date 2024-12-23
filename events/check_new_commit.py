@@ -85,7 +85,7 @@ async def check_for_new_commit():
 
 
 # Проверка о получении новых коммитах
-@tasks.loop(seconds=30)
+@tasks.loop(seconds=50)
 async def monitor_commits():
     new_commit_found, commit_data = await check_for_new_commit()
 

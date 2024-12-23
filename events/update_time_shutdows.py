@@ -7,7 +7,7 @@ from discord.ext import tasks
 from bot_init import bot
 
 
-@tasks.loop(seconds=7)
+@tasks.loop(seconds=11)
 async def update_time_shutdows():
     """
     Задача, которая будет обновлять статус редактируя сообщение.
