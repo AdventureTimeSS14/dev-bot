@@ -8,6 +8,7 @@ from config import LOG_CHANNEL_ID
 from events.check_new_commit import monitor_commits
 from events.shutdows_after_time import shutdown_after_time
 from events.update_status import update_status
+from events.update_time_shutdows import update_time_shutdows
 
 
 @bot.event
@@ -27,6 +28,9 @@ async def on_ready():
         
     if not update_status.is_running():
         update_status.start()
+        
+    if not update_time_shutdows.is_running():
+        update_time_shutdows.start()
         
     print(f"Bot {bot.user} is ready to work!")
     

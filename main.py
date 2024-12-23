@@ -1,7 +1,7 @@
 from bot_init import bot
 from commands import (echo_command, gpt_command, help_command,
                       list_team_command, ping_command, uptime_command,
-                      user_role_command)
+                      user_role_command, shutdows_command)
 from commands.adt_team import (add_role_command, add_vacation_command,
                                end_vacation_command, new_team_command,
                                remove_role_command, remove_team_command,
