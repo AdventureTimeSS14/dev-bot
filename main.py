@@ -3,7 +3,7 @@ import signal
 
 from bot_init import bot
 from commands import (echo_command, gpt_command, help_command,
-                      list_team_command, ping_command, shutdows_command,
+                      list_team_command, ping_command, restart_command,
                       uptime_command, user_role_command)
 from commands.adt_team import (add_role_command, add_vacation_command,
                                end_vacation_command, new_team_command,
