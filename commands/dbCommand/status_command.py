@@ -3,7 +3,7 @@ import mariadb
 from discord.ext import commands
 
 from bot_init import bot
-from config import DATABASE, HOST, PASSWORD, PORT, USER, LOG_CHANNEL_ID
+from config import DATABASE, HOST, LOG_CHANNEL_ID, PASSWORD, PORT, USER
 
 
 @bot.command(name="db_status")
@@ -33,9 +33,6 @@ async def db_status(ctx):
             value="Соединение открыто" if conn.open else "Соединение закрыто",
             inline=False,
         )
-        embed.add_field(name="Хост", value=HOST, inline=True)
-        embed.add_field(name="Порт", value=PORT, inline=True)
-        embed.add_field(name="База данных", value=DATABASE, inline=True)
 
         # Отправляем сообщение в канал
         await ctx.send(embed=embed)

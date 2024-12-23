@@ -1,8 +1,7 @@
 import discord
 
 from bot_init import bot
-from config import (CHANNEL_ID_UPDATE_STATUS, MESSAGE_ID_TIME_SHUTDOWS,
-                    SS14_ADDRESS)
+from config import CHANNEL_ID_UPDATE_STATUS, MESSAGE_ID_TIME_SHUTDOWS, SS14_ADDRESS, LOG_CHANNEL_ID
 
 
 async def shutdown_def():
@@ -10,6 +9,7 @@ async def shutdown_def():
     Выполняет действия перед завершением работы бота:
     - Обновляет текст сообщения, информируя о завершении работы.
     - Обновляет статус и Embed-сообщение для ошибок.
+    - Логирует событие в лог-канал.
     """
     try:
         # Обновляем сообщение с информацией об отключении
@@ -20,6 +20,9 @@ async def shutdown_def():
 
         # Устанавливаем статус бота на "Отключена"
         await update_bot_presence()
+
+        # Отправляем сообщение в лог-канал
+        await send_to_log_channel()
 
         print("✅ Завершение работы успешно выполнено.")
     except Exception as e:
@@ -37,7 +40,14 @@ async def update_shutdown_message():
             return
 
         message = await channel.fetch_message(MESSAGE_ID_TIME_SHUTDOWS)
-        await message.edit(content=f"{bot.user} отключена!")
+        await message.edit(
+            content=(
+                f"⚠️ **{bot.user.name} временно отключена.**\n\n"
+                f"🔻 **Статус:** Отключение завершено.\n"
+                "⏳ **Ожидайте повторного включения.**\n"
+                "🔔 Следите за обновлениями!"
+            )
+        )
         print("✅ Сообщение об отключении обновлено.")
     except discord.NotFound:
         print(f"❌ Сообщение с ID {MESSAGE_ID_TIME_SHUTDOWS} не найдено.")
@@ -97,3 +107,19 @@ async def update_bot_presence():
         print("✅ Статус бота обновлён на 'Отключена'.")
     except Exception as e:
         print(f"❌ Ошибка при обновлении статуса бота: {e}")
+
+
+async def send_to_log_channel(message: str):
+    """
+    Отправляет сообщение в лог-канал.
+    """
+    try:
+        channel = bot.get_channel(LOG_CHANNEL_ID)
+        if channel:
+            await channel.send(
+                "⚠️ {bot.user} завершает свою работу! Перезапуск начнётся в течение 10 минут."
+                )
+        else:
+            print(f"❌ Лог-канал с ID {LOG_CHANNEL_ID} не найден.")
+    except Exception as e:
+        print(f"❌ Ошибка при отправке сообщения в лог-канал: {e}")

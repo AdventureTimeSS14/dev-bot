@@ -4,9 +4,9 @@ from datetime import datetime, timezone
 import discord
 import requests
 from discord.ext import commands
-from misc.check_roles import has_any_role_by_id
 
 from bot_init import bot
+from commands.misc.check_roles import has_any_role_by_id
 from config import AUTHOR, CHANGELOG_CHANNEL_ID, HEAD_ADT_TEAM, REPOSITORIES
 
 

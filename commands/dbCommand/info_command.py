@@ -3,7 +3,7 @@ import mariadb
 from discord.ext import commands
 
 from bot_init import bot
-from config import DATABASE, HOST, PASSWORD, PORT, USER, LOG_CHANNEL_ID
+from config import DATABASE, HOST, LOG_CHANNEL_ID, PASSWORD, PORT, USER
 
 COLOR = discord.Color.dark_purple()
 
@@ -25,6 +25,8 @@ async def db_info(ctx):
         )
 
         # Создаем embed для ответа
+        avatar_url = ctx.author.avatar.url if ctx.author.avatar else None
+        embed.set_author(name=ctx.author.name, icon_url=avatar_url)
         embed = discord.Embed(
             title="Информация о базе данных",
             description=f"Подключение к базе данных {DATABASE} выполнено успешно!",
@@ -40,10 +42,6 @@ async def db_info(ctx):
         embed.add_field(name="Хост", value=HOST, inline=True)
         embed.add_field(name="Порт", value=PORT, inline=True)
         embed.add_field(name="Имя пользователя", value=USER, inline=True)
-
-        # Получаем информацию о сервере
-        embed.add_field(name="Информация о сервере", value=conn.server_info, inline=False)
-        embed.add_field(name="Версия сервера", value=conn.server_version, inline=False)
 
         # Выполняем запросы к базе данных
         cursor = conn.cursor()
