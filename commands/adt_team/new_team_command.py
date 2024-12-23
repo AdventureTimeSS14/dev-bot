@@ -8,44 +8,46 @@ from config import ADMIN_TEAM, HEAD_ADT_TEAM
 @bot.command()
 @has_any_role_by_id(HEAD_ADT_TEAM)
 async def new_team(ctx, user: discord.Member, *roles: discord.Role):
-    # Проверка на кол-во введеных ролей
+    """
+    Команда для назначения пользователя на должность в команде.
+    Требует две роли: <роль отдела> и <роль должности>.
+    """
     if len(roles) != 2:
-        await ctx.send("Должно быть введенно две роли: <роль отдела> <роль должности>.")
+        await ctx.send("Ошибка: Укажите ровно две роли: <роль отдела> и <роль должности>.")
         return
 
-    # Получение ID канала
-    channel = ADMIN_TEAM
-    channel_get = bot.get_channel(channel)
+    # Получаем роли
+    role_department, role_position = roles
+    assigned_roles = []
+    errors = []
 
-    # Переменные для хранения двух вводимых ролей
-    role_dep, role_job = roles
-
-    # Массив для проверки введенных ролей
-    add_role = []
-    
-    # Получаем цвет роли, и пихаем её в цвет эмбиенда
-    color = role_job.color
-    
-    # Проверка на присутствие роли у пользователя
-    for role in [role_dep, role_job]:
+    # Проверяем и добавляем роли
+    for role in [role_department, role_position]:
         if role in user.roles:
-            await ctx.send(f"{user.name} уже имеет роль {role.name}")
+            errors.append(f"Роль **{role.name}** уже есть у {user.mention}.")
         else:
             try:
                 await user.add_roles(role)
-                add_role.append(role)
-                await ctx.send(f"Роль {role.name} успешно добавлена для {user.name}.")
+                assigned_roles.append(role.name)
             except Exception as e:
-                print("Возникла общая ошибка:", e)
+                errors.append(f"Ошибка при добавлении роли **{role.name}**: {str(e)}")
 
-    # Отправляем сообщение в админ-состав
-    if channel_get and len(add_role) == 2:
+    # Отправляем сообщение о результатах
+    if assigned_roles:
+        await ctx.send(f"Роли успешно добавлены для {user.mention}: {', '.join(assigned_roles)}")
+    if errors:
+        await ctx.send("Возникли ошибки:\n" + "\n".join(errors))
+
+    # Отправляем Embed в канал для уведомлений
+    admin_channel = bot.get_channel(ADMIN_TEAM)
+    if admin_channel and len(assigned_roles) == 2:
         embed = discord.Embed(
             title="Назначение на должность",
             description=f"{ctx.author.mention} назначает {user.mention}",
-            color=color
+            color=role_position.color,
         )
-        embed.add_field(name=f"Отдел: **{role_dep.name}**", value="", inline=False)
-        embed.add_field(name=f"Должность: **{role_job.name}**", value="", inline=False)
+        embed.add_field(name="Отдел", value=f"**{role_department.name}**", inline=False)
+        embed.add_field(name="Должность", value=f"**{role_position.name}**", inline=False)
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
-        await channel_get.send(embed=embed)
+
+        await admin_channel.send(embed=embed)
