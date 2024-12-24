@@ -1,10 +1,12 @@
 import re
+
 import discord
 import requests
 from fuzzywuzzy import fuzz
 
 from bot_init import bot
-from config import ADMIN_TEAM, AUTHOR, GLOBAL_SESSION, LOG_CHANNEL_ID, REPOSITORIES
+from config import (ADMIN_TEAM, AUTHOR, GLOBAL_SESSION, LOG_CHANNEL_ID,
+                    REPOSITORIES)
 from data import JsonData
 
 
