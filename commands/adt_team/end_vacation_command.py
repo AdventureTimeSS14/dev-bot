@@ -1,48 +1,56 @@
 import discord
+from discord.ext import commands
 
 from bot_init import bot
 from commands.misc.check_roles import has_any_role_by_id
 from config import ADMIN_TEAM, HEAD_ADT_TEAM, VACATION_ROLE
 
-# import mariadb
-# from config import DATABASE, HOST, PASSWORD, PORT, USER
 
 @bot.command()
 @has_any_role_by_id(HEAD_ADT_TEAM)
 async def end_vacation(ctx, user: discord.Member):
-    # port = int(PORT) 
-    # conn = mariadb.connect(
-    #     user=USER,
-    #     password=PASSWORD,
-    #     host=HOST,
-    #     port=port,
-    #     database=DATABASE
-    # )
+    """
+    Завершает отпуск указанного пользователя, удаляя роль отпуска.
+    """
+    # Получаем роль отпуска
+    role_vacation = ctx.guild.get_role(VACATION_ROLE)
+    if not role_vacation:
+        await ctx.send("Ошибка: Роль отпуска не найдена на сервере.")
+        return
 
-    # ID роли отпуска
-    role_vac = ctx.guild.get_role(VACATION_ROLE)
+    # Проверяем, есть ли роль отпуска у пользователя
+    if role_vacation not in user.roles:
+        await ctx.send(f"У {user.mention} нет роли {role_vacation.name}.")
+        return
 
-    # Получение ID канала
-    channel = ADMIN_TEAM
-    channel_get = bot.get_channel(channel)
+    # Получаем канал для уведомлений
+    admin_channel = bot.get_channel(ADMIN_TEAM)
+    if not admin_channel:
+        await ctx.send("Ошибка: Канал уведомлений не найден.")
+        return
 
-    if role_vac in ctx.guild.roles:
-        try:
-            # Убираем роль указанному пользователю
-            await user.remove_roles(role_vac)
-            await ctx.send(f"Роль {role_vac.name} была успешно снята с {user.name}.")
+    try:
+        # Удаляем роль отпуска у пользователя
+        await user.remove_roles(role_vacation)
+        await ctx.send(f"Роль {role_vacation.name} успешно снята с {user.mention}.")
 
-            # Отправляем сообщение в админ-состав
-            if channel_get:
-                embed = discord.Embed(
-                    title="Окончание отпуска",
-                    description=f"{ctx.author.mention} закрывает отпуск {user.mention}.",
-                    color=discord.Color.purple()
-                )
-                embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
-                await channel_get.send(embed=embed)
+        # Создаем Embed для уведомления в админ-канал
+        embed = discord.Embed(
+            title="Окончание отпуска",
+            description=f"{ctx.author.mention} завершил(а) отпуск для {user.mention}.",
+            color=discord.Color.purple(),
+        )
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
+        embed.add_field(name="Пользователь", value=user.mention, inline=False)
+        embed.add_field(name="Действие", value="Закрытие отпуска", inline=False)
 
-        except Exception as e:
-            print("Возникла общая ошибка:", e)
-    else:
-        await ctx.send("Роль отпуска не найдена")
+        # Отправляем Embed в админ-канал
+        await admin_channel.send(embed=embed)
+
+    except discord.Forbidden:
+        await ctx.send("Ошибка: У бота недостаточно прав для снятия роли.")
+    except discord.HTTPException as e:
+        await ctx.send(f"Ошибка: Не удалось снять роль. Подробнее: {e}")
+    except Exception as e:
+        print(f"Неожиданная ошибка: {e}")
+        await ctx.send("Произошла непредвиденная ошибка.")

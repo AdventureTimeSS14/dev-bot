@@ -6,11 +6,11 @@ import discord
 
 from bot_init import bot
 from commands.misc.shutdows_deff import shutdown_def
-from config import LOG_CHANNEL_ID
+from config import LOG_CHANNEL_ID, TIME_SHUTDOWSE
 
 
 async def shutdown_after_time():
-    await asyncio.sleep(5 * 3600 + 57 * 60)  # 5 часов и 57 минут в секундах
+    await asyncio.sleep(TIME_SHUTDOWSE)  # 5 часов и 57 минут в секундах
     print(f"Время истекло. Завершаем работу {bot.user}.")
     
     channel = bot.get_channel(LOG_CHANNEL_ID)

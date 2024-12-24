@@ -1,58 +1,68 @@
 import discord
+from discord.ext import commands
 
 from bot_init import bot
 from commands.misc.check_roles import has_any_role_by_id
 from config import ADMIN_TEAM, HEAD_ADT_TEAM
 
 
-@bot.command()
+@bot.command(name="tweak_team")
 @has_any_role_by_id(HEAD_ADT_TEAM)
-async def tweak_team(ctx, user: discord.Member, old_role: discord.Role, new_role: discord.Role, reason: str):
+async def tweak_team(
+    ctx: commands.Context,
+    user: discord.Member,
+    old_role: discord.Role,
+    new_role: discord.Role,
+    reason: str,
+):
+    """
+    Команда для изменения роли пользователя.
+    Позволяет заменить одну роль другой с указанием причины.
+    """
 
-    # Получение ID канала
-    channel = ADMIN_TEAM
-    channel_get = bot.get_channel(channel)
+    # Получение канала для логирования
+    admin_channel = bot.get_channel(ADMIN_TEAM)
+    if admin_channel is None:
+        await ctx.send("Не удалось найти канал для логирования.")
+        return
 
-    if channel_get:
-        if old_role in user.roles:
-            try:
-                await user.remove_roles(old_role)
-                await user.add_roles(new_role)
-                await ctx.send(f"Роль **{old_role.name}** была заменена на **{new_role.name}** у {user.name}.")
-                
-                if old_role < new_role:
-                    # Получаем цвет роли, и пихаем её в цвет эмбиенда
-                    color = new_role.color
-                    embed_promotion = discord.Embed(
-                        title="Повышение в должности",
-                        description=f"{ctx.author.mention} повышает {user.mention}.",
-                        color=color
-                    )
-                    embed_promotion.add_field(name=f"Старая должность: **{old_role.name}**", value="", inline=False)
-                    embed_promotion.add_field(name=f"Новая должность: **{new_role.name}**", value="", inline=False)
-                    embed_promotion.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
-                    embed_promotion.add_field(name=f"Причина: **{reason}**", value="", inline=False)
-                    await channel_get.send(embed=embed_promotion)
-                    await ctx.send(f"Роль **{old_role.name}** успешно удалена у {user.name}.")
-                    await ctx.send(f"Роль **{new_role.name}** успешно добавлена для {user.name}.")
+    # Проверка наличия старой роли у пользователя
+    if old_role not in user.roles:
+        await ctx.send(f"У {user.name} нет роли **{old_role.name}**.")
+        return
 
-                elif old_role > new_role:
-                    # Получаем цвет роли, и пихаем её в цвет эмбиенда
-                    color = new_role.color
-                    embed_promotion = discord.Embed(
-                        title="Понижение в должности",
-                        description=f"{ctx.author.mention} понижает {user.mention}.",
-                        color=color
-                    )
-                    embed_promotion.add_field(name=f"Старая должность: **{old_role.name}**", value="", inline=False)
-                    embed_promotion.add_field(name=f"Новая должность: **{new_role.name}**", value="", inline=False)
-                    embed_promotion.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
-                    embed_promotion.add_field(name=f"Причина: **{reason}**", value="", inline=False)
-                    await channel_get.send(embed=embed_promotion)
-                    await ctx.send(f"Роль **{old_role.name}** успешно удалена у {user.name}.")
-                    await ctx.send(f"Роль **{new_role.name}** успешно добавлена для {user.name}.")
+    try:
+        # Удаление старой роли и добавление новой
+        await user.remove_roles(old_role, reason=reason)
+        await user.add_roles(new_role, reason=reason)
 
-            except Exception as e:
-                print("Возникла общая ошибка:", e)
-        else:
-            await ctx.send(f"У {user.name} нет роли **{old_role.name}**")
+        # Определяем тип действия: повышение или понижение
+        action = "Повышение в должности" if old_role < new_role else "Понижение в должности"
+        action_description = (
+            f"{ctx.author.mention} {'повышает' if old_role < new_role else 'понижает'} {user.mention}."
+        )
+        color = new_role.color  # Цвет для Embed сообщения
+
+        # Создаем Embed сообщение
+        embed = discord.Embed(
+            title=action,
+            description=action_description,
+            color=color,
+        )
+        embed.add_field(name="Старая должность", value=f"**{old_role.name}**", inline=False)
+        embed.add_field(name="Новая должность", value=f"**{new_role.name}**", inline=False)
+        embed.add_field(name="Причина", value=f"**{reason}**", inline=False)
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
+        embed.set_footer(text=f"Изменение роли произведено {ctx.author}", icon_url=ctx.guild.icon.url if ctx.guild.icon else None)
+
+        # Отправляем Embed в лог-канал и подтверждение в канал команды
+        await admin_channel.send(embed=embed)
+        await ctx.send(f"Роль **{old_role.name}** была заменена на **{new_role.name}** у {user.name}.")
+
+    except discord.Forbidden:
+        await ctx.send("У бота нет прав для изменения ролей.")
+    except discord.HTTPException as e:
+        await ctx.send(f"Произошла ошибка при изменении ролей: {e}")
+    except Exception as e:
+        await ctx.send(f"Возникла ошибка: {e}")
+        print("Ошибка при выполнении команды tweak_team:", e)

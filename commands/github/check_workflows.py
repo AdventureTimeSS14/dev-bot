@@ -1,6 +1,6 @@
 import sys
 
-import requests
+import aiohttp
 
 from bot_init import bot
 from config import AUTHOR, GITHUB
@@ -10,52 +10,61 @@ REPO = 'Dev-bot'
 API_URL = f'https://api.github.com/repos/{OWNER}/{REPO}/actions/runs'
 
 # Заголовки для аутентификации
-headers = {
+HEADERS = {
     'Authorization': f'token {GITHUB}',
     'Accept': 'application/vnd.github.v3+json',
 }
 
-# Функция для получения состояния всех запущенных workflow
+
 async def check_workflows():
+    """
+    Проверяет состояние запущенных GitHub Actions workflows и завершает работу бота,
+    если обнаружено более одного процесса с состоянием 'in_progress'.
+    """
     try:
-        response = requests.get(API_URL, headers=headers)
-        response.raise_for_status()  # Проверка на ошибки HTTP
+        async with aiohttp.ClientSession(headers=HEADERS) as session:
+            async with session.get(API_URL) as response:
+                if response.status != 200:
+                    print(f"❌ Ошибка при подключении к GitHub API. Статус: {response.status}")
+                    sys.exit(1)
 
-        workflows = response.json()
+                workflows = await response.json()
 
-        # Переменная для подсчета процессов с состоянием 'in_progress'
-        in_progress_count = 0
+        in_progress_count = 0  # Количество процессов со статусом 'in_progress'
 
-        # Проверяем все workflow
-        for run in workflows['workflow_runs']:
-            run_name = run['name']
-            status = run['status']
-            conclusion = run['conclusion']
-            created_at = run['created_at']
+        # Проверяем все workflows
+        for run in workflows.get('workflow_runs', []):
+            run_name = run.get('name', 'Неизвестно')
+            status = run.get('status', 'Неизвестно')
+            conclusion = run.get('conclusion', 'Не завершено')
+            created_at = run.get('created_at', 'Неизвестно')
 
-            # Если процесс в статусе 'in_progress', увеличиваем счетчик
+            # Увеличиваем счетчик, если процесс в статусе 'in_progress'
             if status == 'in_progress':
                 in_progress_count += 1
 
-                # Выводим информацию о процессе
-                print(f"  - {run_name}")
+                # Логируем информацию о процессе
+                print(f"  - Название: {run_name}")
                 print(f"    Статус: {status}")
-                print(f"    Результат: {conclusion if conclusion else 'Не завершено'}")
+                print(f"    Результат: {conclusion}")
                 print(f"    Дата начала: {created_at}")
                 print()
 
-                # Если запущено больше одного процесса с 'in_progress', завершаем программу
+                # Если больше одного процесса в статусе 'in_progress', завершаем работу
                 if in_progress_count > 1:
-                    print(f"Есть больше одного запущенного workflow (статус 'in_progress'). Завершаем процесс...")
+                    print("❌ Обнаружено более одного запущенного workflow. Завершаем процесс...")
                     await bot.close()
                     sys.exit(0)
 
-        # Если все процессы завершены или только один в статусе 'in_progress', продолжаем выполнение
+        # Логируем результат проверки
         if in_progress_count == 0:
-            print("Нет запущенных workflow в статусе 'in_progress'. Продолжаем работу.")
+            print("✅ Нет запущенных workflow в статусе 'in_progress'. Продолжаем работу.")
         else:
-            print(f"Есть {in_progress_count} процесс(ов) в статусе 'in_progress'. Продолжаем работу.")
+            print(f"⚠️ Обнаружено {in_progress_count} запущенный(ых) workflow в статусе 'in_progress'. Продолжаем работу.")
 
-    except requests.exceptions.RequestException as e:
-        print(f"Ошибка при подключении к GitHub API: {e}")
+    except aiohttp.ClientError as e:
+        print(f"❌ Ошибка при подключении к GitHub API: {e}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"❌ Неизвестная ошибка: {e}")
         sys.exit(1)

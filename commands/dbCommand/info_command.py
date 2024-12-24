@@ -1,57 +1,103 @@
 import discord
 import mariadb
+from discord.ext import commands
 
 from bot_init import bot
-from config import DATABASE, HOST, PASSWORD, PORT, USER
+from config import DATABASE, HOST, LOG_CHANNEL_ID, PASSWORD, PORT, USER
 
-color = discord.Color.dark_purple()
+COLOR = discord.Color.dark_purple()
 
-@bot.command()
+
+@bot.command(name="db_info")
 async def db_info(ctx):
+    """
+    Команда для получения информации о базе данных MariaDB.
+    """
     conn = None
     try:
-        # Преобразование порта в целое число
-        port = int(PORT) 
-        
+        # Устанавливаем соединение с базой данных
         conn = mariadb.connect(
             user=USER,
             password=PASSWORD,
             host=HOST,
-            port=port,
-            database=DATABASE
+            port=int(PORT),
+            database=DATABASE,
         )
 
+        # Создаем embed для ответа
+        avatar_url = ctx.author.avatar.url if ctx.author.avatar else None
+        embed.set_author(name=ctx.author.name, icon_url=avatar_url)
         embed = discord.Embed(
             title="Информация о базе данных",
-            color=color
+            description=f"Подключение к базе данных {DATABASE} выполнено успешно!",
+            color=COLOR,
         )
-        embed.add_field(name="База данных", value=DATABASE)
-        
-        # Получаем информацию о сервере
-        cur = conn.cursor()
-        cur.execute("SELECT VERSION()")  # Запрос для получения версии сервера
-        server_version = cur.fetchone()[0]
-        embed.add_field(name="Статус сервера", value="Соединение открыто" if conn.open else "Соединение закрыто")
-        embed.add_field(name="Информация о сервере", value=conn.server_info)
-        embed.add_field(name="Версия сервера", value=conn.server_version)
 
-        cur.execute("SHOW TABLES")
-        tables = cur.fetchall()
+        # Добавляем общую информацию
+        embed.add_field(
+            name="Статус соединения",
+            value="Соединение открыто" if conn.open else "Соединение закрыто",
+            inline=False,
+        )
+        embed.add_field(name="Хост", value=HOST, inline=True)
+        embed.add_field(name="Порт", value=PORT, inline=True)
+        embed.add_field(name="Имя пользователя", value=USER, inline=True)
 
-        if not tables:
-            embed.add_field(name="База данных пуста", value="В базе данных нет таблиц")
+        # Выполняем запросы к базе данных
+        cursor = conn.cursor()
+
+        # Запрос версии сервера
+        cursor.execute("SELECT VERSION()")
+        server_version = cursor.fetchone()
+        embed.add_field(name="Версия MariaDB", value=server_version[0], inline=False)
+
+        # Запрос списка таблиц
+        cursor.execute("SHOW TABLES")
+        tables = cursor.fetchall()
+
+        if tables:
+            table_list = "\n".join([table[0] for table in tables])
+            embed.add_field(name="Список таблиц", value=table_list, inline=False)
         else:
-            embed.add_field(name="Список таблиц в базе данных:", value="\n".join([table[0] for table in tables]))
+            embed.add_field(name="Список таблиц", value="В базе данных нет таблиц.", inline=False)
 
+        # Отправляем embed-ответ
         await ctx.send(embed=embed)
-    except Exception as e:
-        print(f"Ошибка: {e}")  # Вывод ошибки в консоль
-        embed = discord.Embed(
-            title="Ошибка",
-            description=str(e),
-            color=discord.Color.red()
+
+    except mariadb.Error as db_error:
+        # Обработка ошибок базы данных
+        error_embed = discord.Embed(
+            title="Ошибка подключения к базе данных",
+            description=str(db_error),
+            color=discord.Color.red(),
         )
-        await ctx.send(embed=embed)
+        await ctx.send(embed=error_embed)
+
+        # Логируем ошибку в лог-канал
+        log_channel = bot.get_channel(LOG_CHANNEL_ID)
+        if log_channel:
+            await log_channel.send(
+                f"❌ Ошибка подключения к базе данных: {db_error}. Запрошено пользователем {ctx.author}."
+            )
+
+    except Exception as e:
+        # Общая обработка ошибок
+        error_embed = discord.Embed(
+            title="Ошибка",
+            description=f"Произошла непредвиденная ошибка: {e}",
+            color=discord.Color.red(),
+        )
+        await ctx.send(embed=error_embed)
+
+        # Логируем ошибку в лог-канал
+        log_channel = bot.get_channel(LOG_CHANNEL_ID)
+        if log_channel:
+            await log_channel.send(
+                f"❌ Непредвиденная ошибка при выполнении команды db_info: {e}. Запрошено пользователем {ctx.author}."
+            )
+
     finally:
-        if conn:  # Проверка, было ли установлено соединение
+        # Закрываем соединение с базой данных
+        if conn and conn.open:
             conn.close()
+            print("Соединение с базой данных закрыто.")
