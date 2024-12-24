@@ -41,5 +41,5 @@ def format_command_log_message(ctx, current_time):
         f"📄 **Канал:** {ctx.channel} (ID: {ctx.channel.id})\n"
         f"⏰ **Время:** {current_time}\n"
         f"🔗 **Ссылка на сообщение:** [Перейти к сообщению]"
-        f"(https://discord.com/channels/{ctx.guild.id}/{ctx.channel.id}/{ctx.message.id})\n"
+        f"(https://discord.com/channels/{ctx.guild.id}/{ctx.channel.id}/{ctx.message.id})\n_ _"
     )
