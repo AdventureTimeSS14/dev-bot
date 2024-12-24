@@ -15,24 +15,24 @@ async def add_vacation(ctx, user: discord.Member, end_date: str, reason: str):
     # Получаем роль отпуска
     role_vacation = ctx.guild.get_role(VACATION_ROLE)
     if not role_vacation:
-        await ctx.send("Ошибка: Роль отпуска не найдена на сервере.")
+        await ctx.send("❌ Ошибка: Роль отпуска не найдена на сервере.")
         return
 
     # Проверяем, есть ли у пользователя уже роль отпуска
     if role_vacation in user.roles:
-        await ctx.send(f"{user.mention} уже имеет роль {role_vacation.name}.")
+        await ctx.send(f"❌ {user.mention} уже имеет роль {role_vacation.name}.")
         return
 
     # Получаем канал для уведомлений
     admin_channel = bot.get_channel(ADMIN_TEAM)
     if not admin_channel:
-        await ctx.send("Ошибка: Канал уведомлений не найден.")
+        await ctx.send("❌ Ошибка: Канал уведомлений не найден.")
         return
 
     try:
         # Добавляем роль отпуска пользователю
         await user.add_roles(role_vacation)
-        await ctx.send(f"Роль {role_vacation.name} успешно добавлена {user.mention}.")
+        await ctx.send(f"✅ Роль {role_vacation.name} успешно добавлена {user.mention}.")
 
         # Создаем Embed для уведомления в админ-канале
         embed = discord.Embed(
@@ -50,9 +50,9 @@ async def add_vacation(ctx, user: discord.Member, end_date: str, reason: str):
         await admin_channel.send(embed=embed)
 
     except discord.Forbidden:
-        await ctx.send("Ошибка: У бота недостаточно прав для добавления роли.")
+        await ctx.send("⚠️ Ошибка: У бота недостаточно прав для добавления роли.")
     except discord.HTTPException as e:
-        await ctx.send(f"Ошибка: Не удалось добавить роль. Подробнее: {e}")
+        await ctx.send(f"❌ Ошибка: Не удалось добавить роль. Подробнее: {e}")
     except Exception as e:
         print(f"Неожиданная ошибка: {e}")
-        await ctx.send("Произошла непредвиденная ошибка.")
+        await ctx.send("❌ Произошла непредвиденная ошибка.")

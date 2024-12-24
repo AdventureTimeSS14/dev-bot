@@ -15,24 +15,24 @@ async def end_vacation(ctx, user: discord.Member):
     # Получаем роль отпуска
     role_vacation = ctx.guild.get_role(VACATION_ROLE)
     if not role_vacation:
-        await ctx.send("Ошибка: Роль отпуска не найдена на сервере.")
+        await ctx.send("❌ Ошибка: Роль отпуска не найдена на сервере.")
         return
 
     # Проверяем, есть ли роль отпуска у пользователя
     if role_vacation not in user.roles:
-        await ctx.send(f"У {user.mention} нет роли {role_vacation.name}.")
+        await ctx.send(f"❌ У {user.mention} нет роли {role_vacation.name}.")
         return
 
     # Получаем канал для уведомлений
     admin_channel = bot.get_channel(ADMIN_TEAM)
     if not admin_channel:
-        await ctx.send("Ошибка: Канал уведомлений не найден.")
+        await ctx.send("❌ Ошибка: Канал уведомлений не найден.")
         return
 
     try:
         # Удаляем роль отпуска у пользователя
         await user.remove_roles(role_vacation)
-        await ctx.send(f"Роль {role_vacation.name} успешно снята с {user.mention}.")
+        await ctx.send(f"✅ Роль {role_vacation.name} успешно снята с {user.mention}.")
 
         # Создаем Embed для уведомления в админ-канал
         embed = discord.Embed(
@@ -48,9 +48,9 @@ async def end_vacation(ctx, user: discord.Member):
         await admin_channel.send(embed=embed)
 
     except discord.Forbidden:
-        await ctx.send("Ошибка: У бота недостаточно прав для снятия роли.")
+        await ctx.send("⚠️ Ошибка: У бота недостаточно прав для снятия роли.")
     except discord.HTTPException as e:
-        await ctx.send(f"Ошибка: Не удалось снять роль. Подробнее: {e}")
+        await ctx.send(f"❌ Ошибка: Не удалось снять роль. Подробнее: {e}")
     except Exception as e:
         print(f"Неожиданная ошибка: {e}")
-        await ctx.send("Произошла непредвиденная ошибка.")
+        await ctx.send("❌ Произошла непредвиденная ошибка.")

@@ -14,22 +14,23 @@ async def add_role(ctx, user: discord.Member, *role_names: str):
     Добавляет одну или несколько ролей указанному пользователю.
     """
     if not role_names:
-        await ctx.send("Пожалуйста, укажите хотя бы одну роль для добавления.")
+        await ctx.send("❌ Пожалуйста, укажите хотя бы одну роль для добавления.")
         return
 
     # Переменная для подсчета успешно добавленных ролей
     added_roles = []
+    errors = []
 
     for role_name in role_names:
         # Ищем роль по имени
         role = get(ctx.guild.roles, name=role_name)
 
         if not role:
-            await ctx.send(f"❌ Роль '{role_name}' не найдена на сервере.")
+            errors.append(f"❌ Роль '{role_name}' не найдена на сервере.")
             continue
 
         if role in user.roles:
-            await ctx.send(f"ℹ️ {user.mention} уже имеет роль '{role.name}'.")
+            errors.append(f"ℹ️ {user.mention} уже имеет роль '{role.name}'.")
             continue
 
         try:
@@ -37,16 +38,20 @@ async def add_role(ctx, user: discord.Member, *role_names: str):
             await user.add_roles(role)
             added_roles.append(role.name)
         except discord.Forbidden:
-            await ctx.send(f"❌ У меня недостаточно прав для добавления роли '{role.name}' пользователю {user.mention}.")
+            errors.append(f"⚠️ У бота недостаточно прав для добавления роли '{role.name}' пользователю {user.mention}.")
         except discord.HTTPException as e:
             print(f"Ошибка при добавлении роли '{role.name}': {e}")
-            await ctx.send(f"❌ Не удалось добавить роль '{role.name}' для {user.mention} из-за ошибки.")
+            errors.append(f"❌ Не удалось добавить роль '{role.name}' для {user.mention} из-за ошибки: {e}")
 
     # Если добавлены роли, выводим итоговое сообщение
     if added_roles:
         roles_list = ", ".join(added_roles)
         await ctx.send(f"✅ Роли ({roles_list}) успешно добавлены для {user.mention}.")
 
+    # Если есть ошибки
+    if errors:
+        await ctx.send("\n".join(errors))
+
     # Если не удалось добавить ни одной роли
-    if not added_roles and role_names:
+    if not added_roles and not errors:
         await ctx.send(f"❌ Не удалось добавить ни одной роли для {user.mention}. Проверьте права и правильность ввода ролей.")

@@ -15,11 +15,31 @@ async def remove_team(ctx, user: discord.Member, role_dep: discord.Role, role_jo
     # Проверяем, существует ли канал для логирования
     channel_get = bot.get_channel(ADMIN_TEAM)
     if not channel_get:
-        await ctx.send("Не удалось найти канал для логирования действий.")
+        await ctx.send("❌ Не удалось найти канал для логирования действий.")
         return
 
     removed_roles = []
     errors = []
+
+    # Проверка существования участника
+    if not user:
+        await ctx.send("❌ Не смогла найти участника. Пожалуйста, убедитесь, что имя пользователя указано правильно.")
+        return
+
+    # Проверка существования ролей
+    invalid_roles = []
+    for role in [role_dep, role_job]:
+        if role not in ctx.guild.roles:
+            invalid_roles.append(role.name)
+
+    if invalid_roles:
+        await ctx.send(f"❌ Не удалось найти роль(и): **{', '.join(invalid_roles)}**. Убедитесь, что роли существуют на сервере.")
+        return
+
+    # Проверка причины
+    if not reason or len(reason.strip()) < 5:
+        await ctx.send("❌ Причина должна быть указана и содержать хотя бы 5 символов.")
+        return
 
     # Проверяем и удаляем роли у пользователя
     for role in [role_dep, role_job]:
@@ -28,19 +48,20 @@ async def remove_team(ctx, user: discord.Member, role_dep: discord.Role, role_jo
                 await user.remove_roles(role)
                 removed_roles.append(role)
             except Exception as e:
-                errors.append(f"Ошибка при удалении роли **{role.name}**: {str(e)}")
+                errors.append(f"❌ Ошибка при удалении роли **{role.name}**: {str(e)}")
         else:
-            errors.append(f"У {user.name} нет роли **{role.name}**.")
+            errors.append(f"❌ У {user.name} нет роли **{role.name}**.")
 
     # Обрабатываем результаты
     if removed_roles:
         role_names = ", ".join([role.name for role in removed_roles])
-        await ctx.send(f"Роли успешно сняты: {role_names}")
+        await ctx.send(f"✅ Роль(и) успешно сняты: {role_names}")
+    
     if errors:
         for error in errors:
             await ctx.send(error)
 
-    # Если обе роли успешно удалены, отправляем Embed в лог-канал
+    # Если обе роли успешно удалены, отправляем Embed в тот же канал
     if len(removed_roles) == 2:
         embed = discord.Embed(
             title="Снятие с должности",
@@ -52,6 +73,6 @@ async def remove_team(ctx, user: discord.Member, role_dep: discord.Role, role_jo
         embed.add_field(name="Причина:", value=f"**{reason}**", inline=False)
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
 
-        await channel_get.send(embed=embed)
+        await ctx.send(embed=embed)
     else:
-        await ctx.send("Не удалось снять все указанные роли.")
+        await ctx.send("❌ Не удалось снять все указанные роли.")

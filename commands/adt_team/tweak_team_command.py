@@ -19,16 +19,26 @@ async def tweak_team(
     Команда для изменения роли пользователя.
     Позволяет заменить одну роль другой с указанием причины.
     """
-
-    # Получение канала для логирования
+    
+    # Проверка канала для логирования
     admin_channel = bot.get_channel(ADMIN_TEAM)
-    if admin_channel is None:
-        await ctx.send("Не удалось найти канал для логирования.")
+    if not admin_channel:
+        await ctx.send("❌ Не удалось найти канал для логирования.")
+        return
+
+    # Проверка на существование участника
+    if not user:
+        await ctx.send("❌ Не смогла найти участника. Пожалуйста, убедитесь, что имя пользователя указано правильно.")
         return
 
     # Проверка наличия старой роли у пользователя
     if old_role not in user.roles:
-        await ctx.send(f"У {user.name} нет роли **{old_role.name}**.")
+        await ctx.send(f"❌ У {user.name} нет роли **{old_role.name}**. Убедитесь, что роль указана верно.")
+        return
+
+    # Проверка на допустимость причины
+    if not reason or len(reason.strip()) < 5:
+        await ctx.send("❌ Причина должна быть указана и содержать хотя бы 5 символов.")
         return
 
     try:
@@ -43,7 +53,7 @@ async def tweak_team(
         )
         color = new_role.color  # Цвет для Embed сообщения
 
-        # Создаем Embed сообщение
+        # Создаем Embed сообщение для лог-канала
         embed = discord.Embed(
             title=action,
             description=action_description,
@@ -57,12 +67,13 @@ async def tweak_team(
 
         # Отправляем Embed в лог-канал и подтверждение в канал команды
         await admin_channel.send(embed=embed)
-        await ctx.send(f"Роль **{old_role.name}** была заменена на **{new_role.name}** у {user.name}.")
+        await ctx.send(f"✅ Роль **{old_role.name}** была успешно заменена на **{new_role.name}** у {user.name}. Причина: {reason}")
 
     except discord.Forbidden:
-        await ctx.send("У бота нет прав для изменения ролей.")
+        await ctx.send("⚠️ У бота нет прав для изменения ролей. Пожалуйста, проверьте права бота.")
     except discord.HTTPException as e:
-        await ctx.send(f"Произошла ошибка при изменении ролей: {e}")
+        await ctx.send(f"❌ Произошла ошибка при изменении ролей: {e}")
+        print(f"Ошибка при изменении ролей: {e}")
     except Exception as e:
-        await ctx.send(f"Возникла ошибка: {e}")
+        await ctx.send(f"❌ Возникла ошибка: {e}")
         print("Ошибка при выполнении команды tweak_team:", e)
