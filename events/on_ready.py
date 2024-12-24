@@ -34,6 +34,10 @@ async def on_ready():
     logging.info("Connected to Discord successfully.")
     logging.info(f"Guilds: {[guild.name for guild in bot.guilds]}")  # Выводит список серверов, к которым подключен бот.
     
+    print(f"✅ Bot {bot.user.name} (ID: {bot.user.id}) is ready to work!")
+    print(f"✅ Connected to Discord successfully.")
+    print(f"✅ Guilds: {[guild.name for guild in bot.guilds]}")  # Выводит список серверов, к которым подключен бот.
+    
     bot.start_time = time.time()  # Сохраняем время старта бота
 
     # Проверка workflows на случай повторного запуска на GitHub Actions
