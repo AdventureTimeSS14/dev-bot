@@ -1,7 +1,8 @@
 import discord
 
 from bot_init import bot
-from config import CHANNEL_ID_UPDATE_STATUS, MESSAGE_ID_TIME_SHUTDOWS, SS14_ADDRESS, LOG_CHANNEL_ID
+from config import (CHANNEL_ID_UPDATE_STATUS, LOG_CHANNEL_ID,
+                    MESSAGE_ID_TIME_SHUTDOWS, SS14_ADDRESS)
 
 
 async def shutdown_def():
@@ -109,16 +110,14 @@ async def update_bot_presence():
         print(f"❌ Ошибка при обновлении статуса бота: {e}")
 
 
-async def send_to_log_channel(message: str):
+async def send_to_log_channel():
     """
     Отправляет сообщение в лог-канал.
     """
     try:
         channel = bot.get_channel(LOG_CHANNEL_ID)
         if channel:
-            await channel.send(
-                "⚠️ {bot.user} завершает свою работу! Перезапуск начнётся в течение 10 минут."
-                )
+            await channel.send(f"⚠️ {bot.user} завершает свою работу! Перезапуск начнётся в течение 10 минут.")
         else:
             print(f"❌ Лог-канал с ID {LOG_CHANNEL_ID} не найден.")
     except Exception as e:

@@ -1,13 +1,7 @@
 import asyncio
+import logging
 import signal
 import sys
-import logging
-
-from config import DISCORD_KEY
-from commands.misc.shutdows_deff import shutdown_def  # Для выполнения завершающих операций
-
-
-
 
 from bot_init import bot
 from commands import (echo_command, gpt_command, help_command, ping_command,
@@ -21,8 +15,10 @@ from commands.dbCommand import help_command, info_command, status_command
 from commands.github import (achang_command, check_workflows, forks_command,
                              github_processor, milestones_command,
                              pr_changelog_send, review_command)
+from commands.misc.shutdows_deff import \
+    shutdown_def  # Для выполнения завершающих операций
+from config import DISCORD_KEY
 from events import on_command, on_error, on_message, on_ready, update_status
-
 
 # Настраиваем глобальное логирование
 logging.basicConfig(
@@ -78,4 +74,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    bot.run(DISCORD_KEY)
+    asyncio.run(main())

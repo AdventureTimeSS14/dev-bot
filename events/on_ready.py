@@ -1,5 +1,5 @@
-import time
 import logging
+import time
 
 from bot_init import bot
 from commands.github import check_workflows
