@@ -37,7 +37,7 @@ async def help_command(ctx):
         "name_4": "Разработчики:",
         "context_4": "👨‍💻 Автор: schrodinger71\n👥 Maintainer: schrodinger71, nixsilvam, xelasto, mskaktus\n📡 Хост: 🐈‍⬛github-actions[bot]",
         "name_5": "Репозиторий бота:",
-        "context_5": "https://github.com/AdventureTimeSS14/Dev-bot"
+        "context_5": "🔗 GitHub: https://github.com/AdventureTimeSS14/Dev-bot"
     }
 
     # Создаем embed-сообщение
