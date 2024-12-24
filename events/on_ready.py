@@ -33,8 +33,7 @@ async def on_ready():
     logging.info(f"Bot {bot.user.name} (ID: {bot.user.id}) is ready to work!")
     logging.info("Connected to Discord successfully.")
     logging.info(f"Guilds: {[guild.name for guild in bot.guilds]}")  # Выводит список серверов, к которым подключен бот.
-    
-    print(f"✅ Bot {bot.user.name} (ID: {bot.user.id}) is ready to work!")
+
     print(f"✅ Connected to Discord successfully.")
     print(f"✅ Guilds: {[guild.name for guild in bot.guilds]}")  # Выводит список серверов, к которым подключен бот.
     
@@ -50,8 +49,8 @@ async def on_ready():
     await start_task_if_not_running(update_status_presence, "update_status_presence")
     await start_task_if_not_running(update_status_server_message_eddit, "update_status_server_message_eddit")
     await start_task_if_not_running(update_time_shutdows, "update_time_shutdows")
-
-    print(f"Bot {bot.user} is ready to work!")  # Лог в консоль
+ 
+    print(f"✅ Bot {bot.user.name} (ID: {bot.user.id}) is ready to work!")
 
     # Уведомляем в лог-канале, что бот активен
     channel = bot.get_channel(LOG_CHANNEL_ID)
