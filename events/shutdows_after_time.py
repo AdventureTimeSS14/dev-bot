@@ -14,7 +14,7 @@ async def shutdown_after_time():
     print(f"Время истекло. Завершаем работу {bot.user}.")
     
     channel = bot.get_channel(LOG_CHANNEL_ID)
-    await channel.send(f"{bot.user} завершает свою работу! Ожидайте перезапуска в течении 10 минут.")
+    # await channel.send(f"{bot.user} завершает свою работу! Ожидайте перезапуска в течении 10 минут.")
     await shutdown_def()
     
     # # Получаем путь к файлу в папке выше
