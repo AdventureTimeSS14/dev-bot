@@ -36,10 +36,10 @@ def format_command_log_message(ctx, current_time):
     Форматирует сообщение для логирования информации о выполненной команде.
     """
     return (
-        f"**Команда выполнена:** `{ctx.command.name}`\n"
-        f"**Пользователь:** {ctx.author} (ID: {ctx.author.id})\n"
-        f"**Канал:** {ctx.channel} (ID: {ctx.channel.id})\n"
-        f"**Время:** {current_time}\n"
-        f"**Ссылка на сообщение:** [Перейти к сообщению]"
-        f"(https://discord.com/channels/{ctx.guild.id}/{ctx.channel.id}/{ctx.message.id})"
+        f"🎯 **Команда выполнена:** `{ctx.command.name}`\n"
+        f"🙋 **Пользователь:** {ctx.author} (ID: {ctx.author.id})\n"
+        f"📄 **Канал:** {ctx.channel} (ID: {ctx.channel.id})\n"
+        f"⏰ **Время:** {current_time}\n"
+        f"🔗 **Ссылка на сообщение:** [Перейти к сообщению]"
+        f"(https://discord.com/channels/{ctx.guild.id}/{ctx.channel.id}/{ctx.message.id})\n"
     )
