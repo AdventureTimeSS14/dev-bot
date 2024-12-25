@@ -12,6 +12,23 @@ from config import (AUTHOR, CHANGELOG_CHANNEL_ID, LOG_CHANNEL_ID, REPOSITORIES,
 # Переменная для отслеживания последнего времени проверки
 LAST_CHECK_TIME: datetime = None
 
+MAX_FIELD_LENGTH = 1024  # Максимальный размер поля для Embed
+
+def smart_truncate(text, max_length):
+    """Умная обрезка текста: обрезает до максимальной длины, не разрывая слова или предложения."""
+    if len(text) <= max_length:
+        return text
+    
+    # Ищем последнее завершенное предложение перед обрезкой
+    truncated_text = text[:max_length]
+    last_period = truncated_text.rfind(".")
+    
+    if last_period == -1:  # Если нет точки, обрезаем просто по лимиту
+        truncated_text = truncated_text[:max_length]
+    else:
+        truncated_text = truncated_text[:last_period + 1]
+    
+    return truncated_text.strip() + "..."  # Добавляем многоточие
 
 @tasks.loop(seconds=SECOND_UPDATE_CHANGELOG)
 async def fetch_merged_pull_requests():
@@ -64,6 +81,9 @@ async def fetch_merged_pull_requests():
             cl_text = match.group(1).strip()
             remaining_lines = description[match.end():].strip()
             description = f"{cl_text}\n{remaining_lines}" if remaining_lines else cl_text
+
+            # Умная обрезка текста, если описание слишком длинное
+            description = smart_truncate(description, MAX_FIELD_LENGTH)
 
             # Создаем Embed-сообщение
             embed = discord.Embed(

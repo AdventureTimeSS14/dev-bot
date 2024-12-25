@@ -7,11 +7,28 @@ from discord.ext import commands
 
 from bot_init import bot
 from commands.misc.check_roles import has_any_role_by_id
-from config import AUTHOR, CHANGELOG_CHANNEL_ID, HEAD_ADT_TEAM, REPOSITORIES
+from config import AUTHOR, CHANGELOG_CHANNEL_ID, WHITELIST_ROLE_ID, REPOSITORIES
 
+MAX_FIELD_LENGTH = 1024  # Максимальный размер поля для Embed
+
+def smart_truncate(text, max_length):
+    """Умная обрезка текста: обрезает до максимальной длины, не разрывая слова или предложения."""
+    if len(text) <= max_length:
+        return text
+    
+    # Ищем последнее завершенное предложение перед обрезкой
+    truncated_text = text[:max_length]
+    last_period = truncated_text.rfind(".")
+    
+    if last_period == -1:  # Если нет точки, обрезаем просто по лимиту
+        truncated_text = truncated_text[:max_length]
+    else:
+        truncated_text = truncated_text[:last_period + 1]
+    
+    return truncated_text.strip() + "..."  # Добавляем многоточие
 
 @bot.command(name="pr", help="Получить информацию о замерженном пулл-реквесте по его номеру.")
-@has_any_role_by_id(HEAD_ADT_TEAM) # Проверяем, есть ли у пользователя доступ к выполнению команды
+@has_any_role_by_id(WHITELIST_ROLE_ID)  # Проверяем, есть ли у пользователя доступ к выполнению команды
 async def get_pr_info(ctx, pr_number: int):
     """
     Команда для получения информации о замерженном пулл-реквесте из GitHub.
@@ -53,6 +70,9 @@ async def get_pr_info(ctx, pr_number: int):
     cl_text = match.group(1).strip()
     remaining_lines = description[match.end():].strip()
     description = f"{cl_text}\n{remaining_lines}" if remaining_lines else cl_text
+
+    # Умная обрезка текста, если описание слишком длинное
+    description = smart_truncate(description, MAX_FIELD_LENGTH)
 
     # Формируем Embed для отображения данных
     embed = discord.Embed(
