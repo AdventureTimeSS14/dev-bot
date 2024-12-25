@@ -90,7 +90,7 @@ async def fetch_merged_pull_requests():
 
             # Создаем Embed-сообщение
             embed = discord.Embed(
-                title=f"✅ Пулл-реквест замержен: {pr_title}",
+                title=f"Пулл-реквест замержен: {pr_title}",
                 color=discord.Color.dark_green(),
                 timestamp=merged_at,
             )

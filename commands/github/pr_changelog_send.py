@@ -79,7 +79,7 @@ async def get_pr_info(ctx, pr_number: int):
 
     # Формируем Embed для отображения данных
     embed = discord.Embed(
-        title=f"✅ Пулл-реквест замержен: {pr_title}",
+        title=f"Пулл-реквест замержен: {pr_title}",
         color=discord.Color.dark_green(),
         timestamp=merged_at,
     )
