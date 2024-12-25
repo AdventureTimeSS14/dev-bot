@@ -73,6 +73,6 @@ async def remove_team(ctx, user: discord.Member, role_dep: discord.Role, role_jo
         embed.add_field(name="Причина:", value=f"**{reason}**", inline=False)
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
 
-        await ctx.send(embed=embed)
+        await channel_get.send(embed=embed)
     else:
         await ctx.send("❌ Не удалось снять все указанные роли.")
