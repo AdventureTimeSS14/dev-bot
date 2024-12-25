@@ -68,6 +68,9 @@ async def fetch_merged_pull_requests():
             pr_url = pr["html_url"]
             description = pr.get("body", "").strip()
             author_name = pr["user"]["login"]
+            
+            # Получаем данные о соавторах, если они есть
+            coauthors = pr.get('coauthors', [])
 
             # Очищаем описание от HTML-комментариев и ищем описание изменений
             description = re.sub(r"<!--.*?-->", "", description, flags=re.DOTALL)
@@ -94,11 +97,11 @@ async def fetch_merged_pull_requests():
             embed.add_field(name="Изменения:", value=description, inline=False)
             embed.add_field(name="Автор:", value=author_name, inline=False)
             pr_number = pr["number"]  # Номер пулл-реквеста
-            embed.add_field(
-                name="Ссылка:",
-                value=f"[Открыть PR #{pr_number}]({pr_url})",
-                inline=False,
-            )
+            embed.add_field(name="Ссылка:", value=f"[PR #{pr_number}]({pr_url})", inline=False)
+            # Добавляем соавторов, если они есть
+            if coauthors:
+                coauthors_str = "\n".join(coauthors)
+                embed.add_field(name="Соавторы:", value=coauthors_str, inline=False)
             embed.set_footer(text="Дата мержа")
 
             # Публикуем Embed в канале CHANGELOG

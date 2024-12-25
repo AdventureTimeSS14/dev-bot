@@ -58,6 +58,9 @@ async def get_pr_info(ctx, pr_number: int):
     pr_url = pr["html_url"]
     description = pr.get("body", "").strip()
     author_name = pr["user"]["login"]
+    
+    # Получаем данные о соавторах, если они есть
+    coauthors = pr.get('coauthors', [])
 
     # Очищаем описание от комментариев и ищем текст изменений
     description = re.sub(r"<!--.*?-->", "", description, flags=re.DOTALL)
@@ -80,9 +83,17 @@ async def get_pr_info(ctx, pr_number: int):
         color=discord.Color.dark_green(),
         timestamp=merged_at,
     )
+
+    # Добавляем поля в Embed
     embed.add_field(name="Изменения:", value=description, inline=False)
     embed.add_field(name="Автор:", value=author_name, inline=False)
     embed.add_field(name="Ссылка:", value=f"[PR #{pr_number}]({pr_url})", inline=False)
+    
+    # Добавляем соавторов, если они есть
+    if coauthors:
+        coauthors_str = "\n".join(coauthors)
+        embed.add_field(name="Соавторы:", value=coauthors_str, inline=False)
+
     embed.set_footer(text="Дата мержа")
 
     # Отправляем Embed в канал с changelog
@@ -93,7 +104,7 @@ async def get_pr_info(ctx, pr_number: int):
 
     try:
         await channel.send(embed=embed)
-        await ctx.send(f"✅ Информация о пулл-реквесте успешно отправлена в канал <#{CHANGELOG_CHANNEL_ID}>.")
+        await ctx.send(f"Информация о пулл-реквесте успешно отправлена в канал <#{CHANGELOG_CHANNEL_ID}>.")
     except discord.Forbidden:
         await ctx.send("❌ У бота нет прав для отправки сообщений в указанный канал.")
     except discord.HTTPException as e:
