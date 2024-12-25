@@ -185,53 +185,87 @@ roles_by_category = {
 @bot.command(name='list_team')
 @has_any_role_by_id(HEAD_ADT_TEAM)
 async def list_team(ctx):
-    await ctx.channel.purge(limit=15)  # Очистка канала до начала выполнения команды
+    await ctx.channel.purge(limit=15)  # Очистка канала перед отправкой сообщения
     
     # Обработка каждой категории
     for category, roles in roles_by_category.items():
-        color = color_map.get(category, 0xFFFFFF)
-        embed = Embed(title=category, color=color)
+        color = color_map.get(category, 0xFFFFFF)  # Выбор цвета
+        embed = Embed(title=category, color=color, description=f"**👑 Состав команды в категории: {category}**")
         
+        # Добавляем иконку или изображение для каждой категории
+        embed.set_thumbnail(url="https://example.com/your_icon.png")  # Замените на свой URL изображения
+
+        # Заголовок с эмодзи и стилями
+        embed.add_field(name=f"**🌟 {category} Роли**", value="Все участники в данной категории:", inline=False)
+
         for role_name, role_id in roles:
             role = get(ctx.guild.roles, id=role_id)
             if role:
-                members = [f"<@{member.id}>" for member in role.members]  # Получаем id членов роли для упоминания
-                if members:
-                    embed.add_field(name=role_name, value=', '.join(members), inline=False)
+                # Получаем URL иконки роли (если она есть)
+                role_icon_url = role.icon.url if role.icon else None
+
+                members = [f"<@{member.id}>" for member in role.members]
+                members_count = len(members)
+                
+                if members_count > 1:
+                    field_value = ', '.join(members)
+                    embed.add_field(name=f"**{role_name}** ({members_count})", value=field_value, inline=False)
+                elif members_count == 1:
+                    field_value = members[0]
+                    embed.add_field(name=f"**{role_name}**", value=f"{field_value}", inline=False)
                 else:
-                    embed.add_field(name=role_name, value='Нет участников', inline=False)
+                    embed.add_field(name=f"**❌ {role_name}**", value='Нет участников', inline=False)
+                
+                # Если есть значок роли, добавляем его как изображение
+                if role_icon_url:
+                    embed.set_thumbnail(url=role_icon_url)
+
             else:
-                embed.add_field(name=role_name, value='Роль не найдена', inline=False)
+                embed.add_field(name=f"**❌ {role_name}**", value='Роль не найдена', inline=False)
 
         await ctx.send(embed=embed)
 
 @list_team.error
 async def list_team_error(ctx, error):
     if isinstance(error, commands.CheckFailure):
-        await ctx.send("У вас нет прав на использование этой команды.")
+        await ctx.send("🚫 У вас нет прав на использование этой команды.")
     else:
-        await ctx.send(f"Произошла ошибка: {error}")
+        await ctx.send(f"❗ Произошла ошибка: {error}")
 
 @tasks.loop(hours=12)
-async def list_team_task():    
-    channel = bot.get_channel(1297158288063987752)
+async def list_team_task():
+    channel = bot.get_channel(1297158288063987752)  # ID канала
     if channel:
         await channel.purge(limit=15)
 
         for category, roles in roles_by_category.items():
-            color = color_map.get(category, 0xFFFFFF)
-            embed = Embed(title=category, color=color)
+            color = color_map.get(category, 0xFFFFFF)  # Выбор цвета
+            embed = Embed(title=category, color=color, description=f"**👑 Состав команды в категории: {category}**")
+            
+            embed.set_thumbnail(url="https://example.com/your_icon.png")  # Замените на свой URL изображения
+
+            # Добавляем поле для заголовка
+            embed.add_field(name=f"**🌟 {category} Роли**", value="Все участники в данной категории:", inline=False)
 
             for role_name, role_id in roles:
                 role = get(channel.guild.roles, id=role_id)
                 if role:
-                    members = [f"<@{member.id}>" for member in role.members]  # Ping members
-                    if members:
-                        embed.add_field(name=role_name, value=', '.join(members), inline=False)
+                    role_icon_url = role.icon.url if role.icon else None
+                    members = [f"<@{member.id}>" for member in role.members]
+                    members_count = len(members)
+                    
+                    if members_count > 1:
+                        embed.add_field(name=f"**{role_name}** ({members_count})", value=', '.join(members), inline=False)
+                    elif members_count == 1:
+                        embed.add_field(name=f"**{role_name}**", value=f"{members[0]}", inline=False)
                     else:
-                        embed.add_field(name=role_name, value='Нет участников', inline=False)
+                        embed.add_field(name=f"**❌ {role_name}**", value='Нет участников', inline=False)
+
+                    if role_icon_url:
+                        embed.set_thumbnail(url=role_icon_url)  # Добавляем иконку роли
+
                 else:
-                    embed.add_field(name=role_name, value='Роль не найдена', inline=False)
+                    embed.add_field(name=f"**❌ {role_name}**", value='Роль не найдена', inline=False)
 
             await channel.send(embed=embed)
 
