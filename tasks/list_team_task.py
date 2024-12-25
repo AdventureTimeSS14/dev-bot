@@ -6,7 +6,7 @@ from discord.utils import get  # Убедитесь, что этот импор�
 
 from bot_init import bot
 from commands.misc.check_roles import has_any_role_by_id
-from config import WHITELIST_ROLE_ID
+from config import HEAD_ADT_TEAM
 
 roles = [
     # Список ролей и их ID
@@ -183,44 +183,43 @@ roles_by_category = {
 }
 
 @bot.command(name='list_team')
-@has_any_role_by_id(WHITELIST_ROLE_ID)
+@has_any_role_by_id(HEAD_ADT_TEAM)
 async def list_team(ctx):
-    deleted = await ctx.channel.purge(limit=15)
+    await ctx.channel.purge(limit=15)  # Очистка канала до начала выполнения команды
+    
     # Обработка каждой категории
     for category, roles in roles_by_category.items():
         color = color_map.get(category, 0xFFFFFF)
-        print(f"Категория: {category}, Цвет: {hex(color)}")  # Логирование цвета
-        
         embed = Embed(title=category, color=color)
         
         for role_name, role_id in roles:
             role = get(ctx.guild.roles, id=role_id)
             if role:
-                members = [f"<@{member.name()}>" for member in role.members]  # Пинг участников
+                members = [f"<@{member.id}>" for member in role.members]  # Получаем id членов роли для упоминания
                 if members:
-                    embed.add_field(name=role_name, value=', '.join(members.name), inline=False)
+                    embed.add_field(name=role_name, value=', '.join(members), inline=False)
                 else:
                     embed.add_field(name=role_name, value='Нет участников', inline=False)
             else:
-                print(f"Роль не найдена: {role_name}")
+                embed.add_field(name=role_name, value='Роль не найдена', inline=False)
 
         await ctx.send(embed=embed)
 
 @list_team.error
-async def list_team(ctx, error):
+async def list_team_error(ctx, error):
     if isinstance(error, commands.CheckFailure):
-        await ctx.send("Не могу идентифицировать вас в базе данных команды разработки Adventure Time, вы не имеете права пользоваться этой командой.")
-        
+        await ctx.send("У вас нет прав на использование этой команды.")
+    else:
+        await ctx.send(f"Произошла ошибка: {error}")
+
 @tasks.loop(hours=12)
 async def list_team_task():    
     channel = bot.get_channel(1297158288063987752)
     if channel:
-        deleted = await channel.purge(limit=15)
+        await channel.purge(limit=15)
 
         for category, roles in roles_by_category.items():
             color = color_map.get(category, 0xFFFFFF)
-            print(f"Категория: {category}, Цвет: {hex(color)}")
-
             embed = Embed(title=category, color=color)
 
             for role_name, role_id in roles:
@@ -232,7 +231,7 @@ async def list_team_task():
                     else:
                         embed.add_field(name=role_name, value='Нет участников', inline=False)
                 else:
-                    print(f"Роль не найдена: {role_name}")
+                    embed.add_field(name=role_name, value='Роль не найдена', inline=False)
 
             await channel.send(embed=embed)
 
