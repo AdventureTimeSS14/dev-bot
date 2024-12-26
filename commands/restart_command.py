@@ -1,3 +1,6 @@
+"""
+Команда для безопасного перезапуска бота.
+"""
 import sys
 
 from bot_init import bot
