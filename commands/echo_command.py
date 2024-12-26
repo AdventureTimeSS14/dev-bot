@@ -17,7 +17,9 @@ async def echo(ctx, *, message: str):
     """
     # Проверка прав доступа
     if ctx.author.id != MY_USER_ID:
-        await ctx.reply("❌ У вас нет доступа к этой команде.", mention_author=False)
+        await ctx.reply(
+            "❌ У вас нет доступа к этой команде.", mention_author=False
+        )
         return
 
     try:
@@ -29,8 +31,13 @@ async def echo(ctx, *, message: str):
 
     except discord.Forbidden:
         # Если бот не имеет прав на удаление сообщений
-        await ctx.reply("⚠️ У меня нет прав для удаления сообщений.", mention_author=False)
+        await ctx.reply(
+            "⚠️ У меня нет прав для удаления сообщений.", mention_author=False
+        )
     except discord.DiscordException as e:
         # Логирование других ошибок, связанных с Discord
         print(f"❌ Произошла ошибка в команде 'echo': {e}")
-        await ctx.reply("❌ Произошла ошибка при выполнении команды. Проверьте логи.", mention_author=False)
+        await ctx.reply(
+            "❌ Произошла ошибка при выполнении команды. Проверьте логи.",
+            mention_author=False,
+        )
