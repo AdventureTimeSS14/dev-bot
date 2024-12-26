@@ -134,12 +134,16 @@ async def fetch_pr_data(token, repo, pr_number):
         else:
             lines = []
 
+        found_cl = False  # Флаг, указывающий, что :cl: был найден в PR
+
         for line in lines:
             if line.lower().startswith("no cl"):
                 logging.info(f"PR #{number} has 'no cl' instruction. Skipping.")
                 return None
 
             if line.startswith(":cl:"):
+                found_cl = True
+                logging.info(f"Found ':cl:' in PR #{number}: {line}")
                 potential_author = line[4:].strip()
                 if potential_author:
                     author = potential_author
@@ -150,6 +154,10 @@ async def fetch_pr_data(token, repo, pr_number):
                 if line.startswith(prefix):
                     changes.append({"message": line[len(prefix):].strip(), "type": change_type})
                     break
+
+        # Логируем PR, если в нем найдено ':cl:'
+        if found_cl:
+            logging.info(f"PR #{number} contains ':cl:'. Author: {author}. Changes: {changes}")
 
         return {"author": author, "changes": changes, "time": pr_info["merged_at"]} if changes else None
 
