@@ -9,7 +9,9 @@ from bot_init import bot
 from config import MY_USER_ID
 
 
-@bot.command(name="echo", help="Повторяет переданное сообщение. Доступна только для владельца бота.")
+@bot.command(name="echo",
+             help="Повторяет переданное сообщение. Доступна только для владельца бота."
+)
 async def echo(ctx, *, message: str):
     """
     Команда для повторения сообщения.
