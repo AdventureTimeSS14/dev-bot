@@ -27,7 +27,7 @@ jobs:
         python-version: '3.x'
 
     - name: Install requirements
-      run: pip install aiohttp pyyaml
+      run: pip install aiohttp pyyaml asyncio
 
     - name: Run post-merge script
       env:
