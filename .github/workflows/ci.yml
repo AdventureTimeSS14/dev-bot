@@ -18,15 +18,15 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: '3.11'
 
       - name: Cache Python dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-cache-${{ hashFiles('**/requirements.txt') }}
@@ -50,18 +50,18 @@ jobs:
       - name: Run Pylint
         run: |
           pip install pylint
-          pylint **/*.py
+          pylint **/*.py > pylint-report.txt
 
       - name: Upload test results
         if: failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: test-report
           path: test-report.xml
 
       - name: Upload Pylint report
         if: failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: pylint-report
           path: pylint-report.txt
