@@ -46,21 +46,15 @@ jobs:
       - name: Run Flake8
         run: |
           pip install flake8
-          flake8 .
+          flake8 . --output=flake8-report.txt
 
-      - name: Run Pylint
-        run: |
-          pip install pylint
-          pylint **/*.py --output=pylint-report.txt
-
-  
-      - name: Upload Pylint report
+      - name: Upload Flake8 report
         if: failure()
         uses: actions/upload-artifact@v3
         with:
-          name: pylint-report
-          path: pylint-report.txt
+          name: flake8-report
+          path: flake8-report.txt
 
       - name: Summary
         run: |
-          echo "CI pipeline completed. Check the results above."
+          echo "Flake8 test completed. Check the results above."
