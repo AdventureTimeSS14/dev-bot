@@ -127,18 +127,22 @@ async def fetch_pr_data(token, repo, pr_number):
             return None
 
         body, author, changes = pr_info.get("body", ""), pr_info["user"]["login"], []
-        lines = [line.strip() for line in body.splitlines()]
         
+        # Проверяем, что body не None перед разделением на строки
+        if body:
+            lines = [line.strip() for line in body.splitlines()]
+        else:
+            lines = []
+
         for line in lines:
             if line.lower().startswith("no cl"):
                 logging.info(f"PR #{number} has 'no cl' instruction. Skipping.")
                 return None
-            
+
             if line.startswith(":cl:"):
                 potential_author = line[4:].strip()
                 if potential_author:
                     author = potential_author
-                
                 continue
 
             change_types = {"- add:": "Add", "- remove:": "Remove", "- tweak:": "Tweak", "- fix:": "Fix"}
@@ -154,7 +158,7 @@ async def fetch_pr_data(token, repo, pr_number):
         for result in await asyncio.gather(*tasks):
             if result:
                 pr_data.append(result)
-
+                
     pr_data.sort(key=lambda x: x["time"])
     return pr_data
 
