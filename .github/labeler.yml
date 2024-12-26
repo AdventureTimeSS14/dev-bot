@@ -34,3 +34,7 @@
 "Changes: No Python":
 - changed-files:
     - all-globs-to-all-files: "!**/*.py"
+
+"Changes: GitHub":
+  - changed-files:
+      - any-glob-to-any-file: '**/.github/**'

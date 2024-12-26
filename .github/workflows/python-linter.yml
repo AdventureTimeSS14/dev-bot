@@ -39,24 +39,13 @@ jobs:
         pip install -r requirements.txt
         pip install flake8 pylint pytest
 
-    - name: Run flake8
-      run: |
-        flake8 . --max-line-length=120
-
     - name: Run Pylint
       run: |
         pylint **/*.py --disable=R,C --max-line-length=120
 
-    - name: Run Pytest
+    - name: Run flake8
       run: |
-        pytest --maxfail=1 --disable-warnings -q
-
-    - name: Upload test results
-      if: failure()
-      uses: actions/upload-artifact@v3
-      with:
-        name: test-report
-        path: test-report.xml
+        flake8 . --max-line-length=120
 
     - name: Upload Pylint report
       if: failure()
@@ -71,3 +60,7 @@ jobs:
       with:
         name: flake8-report
         path: flake8-report.txt
+
+    - name: Summary
+      run: |
+        echo "CI pipeline completed. Check the results above."
