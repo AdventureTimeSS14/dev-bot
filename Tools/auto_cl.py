@@ -1,3 +1,4 @@
+# pylint: skip-file
 # TODO: AUTO CL (fixme) — необходимо доработать автоматические чейнжлоги.
 # import asyncio
 # import logging
