@@ -1,3 +1,7 @@
+"""
+Модуль для запуска бота.
+"""
+# pylint: skip-file
 import asyncio
 import logging
 import signal
@@ -12,46 +16,46 @@ from commands.adt_team import (add_role_command, add_vacation_command,
                                new_team_command, remove_role_command,
                                remove_team_command, team_help_command,
                                tweak_team_command)
-from commands.dbCommand import help_command, info_command, status_command
+from commands.dbCommand import info_command, status_command
 from commands.github import (achang_command, check_workflows, forks_command,
                              github_processor, milestones_command,
                              pr_changelog_send, review_command)
-from commands.misc.shutdows_deff import \
-    shutdown_def  # Для выполнения завершающих операций
+from commands.misc.shutdows_deff import shutdown_def  # Для выполнения завершающих операций
 from config import DISCORD_KEY
 from events import on_command, on_error, on_message, on_ready, update_status
 
-# Настраиваем глобальное логирование
+# Настройка логирования
 logging.basicConfig(
-    level=logging.INFO,  # Устанавливаем уровень логирования
-    format="%(asctime)s - %(levelname)s - %(message)s",
+    level=logging.INFO,  # Уровень логирования
+    format="%(asctime)s - %(levelname)s - %(message)s",  # Формат сообщений
     handlers=[
-        logging.FileHandler("bot_logs.log"),  # Сохраняем логи в файл
-        logging.StreamHandler(sys.stdout),  # Отображаем логи в консоли
+        logging.FileHandler("bot_logs.log"),  # Логирование в файл
+        logging.StreamHandler(sys.stdout),  # Логирование в консоль
     ],
 )
 
 
 async def shutdown(signal_type=None):
     """
-    Завершение работы бота при получении сигнала или исключении.
+    Завершаем работу бота, выполняя все необходимые завершающие операции.
+    
+    :param signal_type: Тип сигнала, если он передан
     """
-    logging.info(f"Получен сигнал: {signal_type.name if signal_type else 'Manual Exit'}. Завершаем работу...")
+    logging.info("Получен сигнал: %s. Завершаем работу...", signal_type.name if signal_type else 'Manual Exit')
     try:
-        await shutdown_def()  # Выполняем пользовательские действия перед завершением работы
-        await bot.close()  # Закрываем соединение бота
+        await shutdown_def()  # Выполнение завершающих операций
+        await bot.close()  # Закрытие соединения бота
     except Exception as e:
-        logging.error(f"Ошибка при завершении работы бота: {e}")
+        logging.error("Ошибка при завершении работы бота: %s", e)
     finally:
-        sys.exit(0)  # Принудительно завершаем процесс
+        sys.exit(0)  # Принудительное завершение процесса
 
 
 def setup_signal_handlers():
     """
-    Настройка обработчиков сигналов для корректного завершения работы.
+    Настроить обработчики сигналов для корректного завершения работы бота.
     """
     if sys.platform == "win32":
-        # Windows не поддерживает сигналы SIGINT/SIGTERM для asyncio
         logging.warning("Сигналы SIGINT и SIGTERM не поддерживаются на Windows.")
     else:
         loop = asyncio.get_event_loop()
@@ -61,16 +65,16 @@ def setup_signal_handlers():
 
 async def main():
     """
-    Основная функция запуска бота.
+    Основная функция для запуска бота.
     """
     try:
-        setup_signal_handlers()  # Настраиваем обработчики сигналов
+        setup_signal_handlers()  # Настройка обработчиков сигналов
         logging.info("Запуск бота...")
-        await bot.start(DISCORD_KEY)  # Запускаем бота с токеном
+        await bot.start(DISCORD_KEY)  # Запуск бота с токеном
     except (KeyboardInterrupt, SystemExit):
-        await shutdown()  # Обрабатываем принудительное завершение
+        await shutdown()  # Обработка принудительного завершения
     except Exception as e:
-        logging.error(f"Неожиданная ошибка при запуске бота: {e}")
+        logging.error("Неожиданная ошибка при запуске бота: %s", e)
         await shutdown()
 
 
