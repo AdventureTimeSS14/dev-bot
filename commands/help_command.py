@@ -1,3 +1,6 @@
+'''
+Модуль вызова помощи и подсказок
+'''
 import discord
 
 from bot_init import bot
@@ -5,8 +8,13 @@ from bot_init import bot
 
 @bot.command(name='help')
 async def help_command(ctx):
+    '''
+    Просто вызвается пользователем &help
+    И отправляет embed
+    '''
     # Данные для команды help
-    help_command = {
+    # pylint: disable=C0301
+    help_command_text = {
         "title": "📚 Помощь по командам",
         "name_1": "Основные команды:",
         "context_1": (
@@ -44,36 +52,36 @@ async def help_command(ctx):
 
     # Создаем embed-сообщение
     embed = discord.Embed(
-        title=help_command["title"],
+        title=help_command_text["title"],
         color=discord.Color.dark_green()
     )
     embed.add_field(
-        name=help_command["name_1"],
-        value=help_command["context_1"],
+        name=help_command_text["name_1"],
+        value=help_command_text["context_1"],
         inline=False
     )
     embed.add_field(
-        name=help_command["name_2"],
-        value=help_command["context_2"],
+        name=help_command_text["name_2"],
+        value=help_command_text["context_2"],
         inline=False
     )
     embed.add_field(
-        name=help_command["name_3"],
-        value=help_command["context_3"],
+        name=help_command_text["name_3"],
+        value=help_command_text["context_3"],
         inline=False
     )
     embed.add_field(
-        name=help_command["name_4"],
-        value=help_command["context_4"],
+        name=help_command_text["name_4"],
+        value=help_command_text["context_4"],
         inline=False
     )
     embed.add_field(
-        name=help_command["name_5"],
-        value=help_command["context_5"],
+        name=help_command_text["name_5"],
+        value=help_command_text["context_5"],
         inline=False
     )
     embed.set_author(
-        name=ctx.author.name, 
+        name=ctx.author.name,
         icon_url=ctx.author.avatar.url
     )
 
