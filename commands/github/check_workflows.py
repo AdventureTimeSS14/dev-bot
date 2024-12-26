@@ -28,7 +28,7 @@ async def check_workflows():
 
                 workflows = await response.json()
 
-        in_progress_count = 1  # Количество процессов со статусом 'in_progress'
+        in_progress_count = 0  # Количество процессов со статусом 'in_progress'
 
         # Проверяем все workflows
         for run in workflows.get('workflow_runs', []):
