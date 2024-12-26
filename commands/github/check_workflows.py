@@ -56,7 +56,6 @@ async def check_workflows():
                 # Если больше одного процесса в статусе 'in_progress', завершаем работу
                 if in_progress_count > 1:
                     print("❌ Обнаружено более одного запущенного workflow 'Deploy Discord-Bot'. Завершаем процесс...")
-                    await shutdown_def()
                     await bot.close()
                     sys.exit(0)
 
