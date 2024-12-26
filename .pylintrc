@@ -1,0 +1,5 @@
+[MESSAGES CONTROL]
+disable=C0103
+
+[MASTER]
+init-hook='import sys; sys.path.append("C:/Develop/dis/Dev-bot")'
