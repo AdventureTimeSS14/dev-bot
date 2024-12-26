@@ -28,15 +28,15 @@ async def check_workflows():
 
                 workflows = await response.json()
 
-        in_progress_count = 0  # Количество процессов со статусом 'in_progress'
+        in_progress_count = 1  # Количество процессов со статусом 'in_progress'
 
         # Проверяем все workflows
         for run in workflows.get('workflow_runs', []):
             run_name = run.get('name', 'Неизвестно')
             
             # Проверяем, что имя процесса соответствует 'Deploy Discord-Bot'
-            if run_name != 'Deploy Discord-Bot':
-                continue
+            if run_name == 'Deploy Discord-Bot':
+                in_progress_count += 1
 
             status = run.get('status', 'Неизвестно')
             conclusion = run.get('conclusion', 'Не завершено')
@@ -44,6 +44,7 @@ async def check_workflows():
 
             # Увеличиваем счетчик, если процесс в статусе 'in_progress'
             if status == 'in_progress':
+                
 
                 # Логируем информацию о процессе
                 print(f"  - Название: {run_name}")
