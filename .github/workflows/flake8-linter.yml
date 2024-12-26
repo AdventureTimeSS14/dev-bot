@@ -13,7 +13,7 @@ on:
       - dev
 
 jobs:
-  test:
+  flake8:
     runs-on: ubuntu-latest
     
     steps:
@@ -46,14 +46,14 @@ jobs:
       - name: Run Flake8
         run: |
           pip install flake8
-          flake8 . --output=flake8-report.txt
+          flake8 .
 
-      - name: Upload Flake8 report
-        if: failure()
-        uses: actions/upload-artifact@v3
-        with:
-          name: flake8-report
-          path: flake8-report.txt
+      # - name: Upload Flake8 report
+      #   if: failure()
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: flake8-report
+      #     path: flake8-report.txt
 
       - name: Summary
         run: |

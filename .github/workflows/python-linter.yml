@@ -46,14 +46,14 @@ jobs:
     - name: Run Pylint
       run: |
         pip install pylint
-        pylint **/*.py --output=pylint-report.txt
+        pylint **/*.py
 
-    - name: Upload Pylint report
-      if: failure()
-      uses: actions/upload-artifact@v3
-      with:
-        name: pylint-report
-        path: pylint-report.txt
+    # - name: Upload Pylint report
+    #   if: failure()
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: pylint-report
+    #     path: pylint-report.txt
 
     - name: Summary
       run: |
