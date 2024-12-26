@@ -29,11 +29,14 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
-
+    
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+    
+    - name: Install pylint
+      run: pip install pylint
 
     - name: Cache Python dependencies
       uses: actions/cache@v3
@@ -43,23 +46,16 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-cache-
 
-    # - name: Install dependencies
-    #   run: |
-    #     python -m pip install --upgrade pip
-    #     pip install -r requirements.txt
-    #     pip install asyncio logging aiohttp pyyaml
+    - name: Set PYTHONPATH
+      run: |
+        echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
+
+    - name: List files
+      run: ls -R
 
     - name: Run Pylint
       run: |
-        pip install pylint
         pylint **/*.py
-
-    # - name: Upload Pylint report
-    #   if: failure()
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: pylint-report
-    #     path: pylint-report.txt
 
     - name: Summary
       run: |
