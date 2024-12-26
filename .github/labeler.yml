@@ -1,0 +1,40 @@
+"Changes: Python":
+- changed-files:
+    - any-glob-to-any-file: '**/*.py'
+
+"Changes: Documentation":
+- changed-files:
+    - any-glob-to-any-file: '**/*.md'
+    - any-glob-to-any-file: '**/*.rst'
+    - any-glob-to-any-file: '**/*.txt'
+
+"Changes: Tests":
+- changed-files:
+    - any-glob-to-any-file: '**/tests/**/*.py'
+    - any-glob-to-any-file: '**/test_*.py'
+
+"Changes: Requirements":
+- changed-files:
+    - any-glob-to-any-file: '**/requirements.txt'
+    - any-glob-to-any-file: '**/Pipfile'
+    - any-glob-to-any-file: '**/Pipfile.lock'
+
+"Changes: Config":
+- changed-files:
+    - any-glob-to-any-file: '**/*.yaml'
+    - any-glob-to-any-file: '**/*.yml'
+    - any-glob-to-any-file: '**/*.ini'
+    - any-glob-to-any-file: '**/*.json'
+
+"Changes: Docs Generator":
+- changed-files:
+    - any-glob-to-any-file: '**/*.rst'
+    - any-glob-to-any-file: '**/*.md'
+
+"Changes: No Python":
+- changed-files:
+    - all-globs-to-all-files: "!**/*.py"
+
+"Changes: GitHub":
+  - changed-files:
+      - any-glob-to-any-file: '**/.github/**'

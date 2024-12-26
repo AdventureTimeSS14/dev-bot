@@ -1,0 +1,109 @@
+Entries:
+  - author: Schrodinger71
+    changes:
+      - {message: Добавлена основа для Discord-бота, type: Add}
+    id: 1
+    time: '2024-08-03T00:00:00.0000000+00:00'
+  - author: Xelasto
+    changes:
+      - {message: Добавлена поддержка GPT-3.5 Turbo (g4f) (issue #9), type: Add}
+    id: 2
+    time: '2024-08-04T00:00:00.0000000+00:00'
+  - author: Schrodinger71
+    changes:
+      - {message: Добавлено ограничение на доступ к команде GPT, type: Add}
+    id: 3
+    time: '2024-08-04T00:00:00.0000000+00:00'
+  - author: Xelasto
+    changes:
+      - {message: Добавлена недостающая библиотека curl-cffi, type: Add}
+    id: 4
+    time: '2024-08-04T00:00:00.0000000+00:00'
+  - author: Schrodinger71
+    changes:
+      - {message: Добавлен код для команды &achang (n/o), type: Add}
+    id: 5
+    time: '2024-08-06T00:00:00.0000000+00:00'
+  - author: Schrodinger71
+    changes:
+      - {message: Добавлена новая команда &milestones, type: Add}
+      - {message: Изменения в рамках задачи main, type: Fix}
+    id: 6
+    time: '2024-08-07T00:00:00.0000000+00:00'
+  - author: nixsilvam404
+    changes:
+      - {message: Использование isort для сортировки импортов в файле moment, type: Fix}
+      - {message: Исправления в рамках задачи main (#15), type: Fix}
+    id: 7
+    time: '2024-08-15T00:00:00.0000000+00:00'
+  - author: nixsilvam404
+    changes:
+      - {message: Рефакторинг команды GPT, type: Refactor}
+    id: 8
+    time: '2024-08-18T00:00:00.0000000+00:00'
+  - author: nixsilvam404
+    changes:
+      - {message: Улучшено оформление конфигурации, type: Improvement}
+    id: 9
+    time: '2024-09-01T00:00:00.0000000+00:00'
+  - author: Schrodinger71, Nix Silvam
+    changes:
+      - {message: Добавлены чейнжлоги в дис (issue #16), type: Add}
+      - {message: Поправлена часть кода, type: Fix}
+      - {message: Убрана лишняя константа, type: Fix}
+      - {message: Добавлен tasks.loop, type: Add}
+      - {message: Проведены различные правки, type: Fix}
+      - {message: Рефакторинг pr_changelog, type: Refactor}
+    id: 10
+    time: '2024-09-01T00:00:00.0000000+00:00'
+  - author: Schrodinger71
+    changes:
+      - {message: Обеспечено корректное завершение работы Астры, type: Fix}
+    id: 11
+    time: '2024-12-21T00:00:00.0000000+00:00'
+  - author: Schrodinger71
+    changes:
+      - {message: Добавлена новая фича: перезапуск при новом коммите в репозитории, type: Add}
+    id: 12
+    time: '2024-12-22T00:00:00.0000000+00:00'
+  - author: Schrodinger71
+    changes:
+      - {message: Добавлено поле причины в команду увольнение из команды (подробности в &team_help), type: Add}
+      - {message: Обновлено отображение времени работы бота, type: Improvement}
+      - {message: Обновлён статус Rich Presence бота, type: Improvement}
+      - {message: Обновлён вывод команды &status, type: Improvement}
+    id: 13
+    time: '2024-12-23T00:00:00.0000000+00:00'
+  - author: Schrodinger71
+    changes:
+      - {message: Добавлена команда перезапуска бота (&restart), type: Add}
+      - {message: Добавлена задача для обновления времени работы бота, редактируя сообщение каждые 2 секунды, type: Add}
+      - {message: Обновлен файл инициализации бота для поддержки новых функций, type: Update}
+    id: 14
+    time: '2024-12-23T00:00:00.0000000+00:00'
+  - author: Schrodinger71
+    changes:
+      - {message: Проведен глобальный рефакторинг структуры проекта, type: Refactor}
+      - {message: Удалены лишние импорты и упрощена структура модулей, type: Refactor}
+      - {message: Добавлено глобальное логирование (в файл bot_logs.log и консоль), type: Add}
+      - {message: Реализована кросс-платформенная обработка сигналов завершения (SIGINT/SIGTERM), type: Add}
+      - {message: Обновлена функция завершения работы бота shutdown_def для выполнения всех завершающих операций, type: Update}
+      - {message: Исправлена работа статуса бота при завершении, добавлено обновление Embed-сообщений с информацией об ошибках, type: Fix}
+      - {message: Обновлено сообщение о завершении работы бота. Теперь оно более информативное и красиво оформлено, type: Improvement}
+      - {message: Добавлена команда &uptime для отображения времени работы бота, type: Add}
+      - {message: Оптимизированы команды для работы с пользователями и ролями: &tweak_team, &new_team, &remove_team, &add_role, &remove_role, type: Improvement}
+      - {message: Улучшена работа команд для управления сотрудниками: все сообщения отправляются в канал админов в виде Embed, type: Improvement}
+      - {message: Команды для взаимодействия с GitHub (&review, &forks, &achang) теперь делят вывод на страницы (чтобы избежать лимитов Discord), type: Improvement}
+      - {message: Добавлена валидация пользователей и репозиториев для всех GitHub-команд, type: Add}
+      - {message: Обновлены команды MariaDB: &db_info, &db_status, &db_help с красивым выводом в формате Embed, type: Update}
+      - {message: Фоновая задача для обновления статуса сервера теперь обновляет сообщения в реальном времени и учитывает ошибки, type: Improvement}
+      - {message: Добавлено уведомление в лог-канал (LOG_CHANNEL_ID) при перезапуске и завершении работы бота, type: Add}
+      - {message: Команда &restart теперь полностью интегрирована с новой системой завершения работы бота, type: Update}
+      - {message: Оптимизированы и стандартизированы все сообщения бота в Embed-формате, type: Improvement}
+    id: 15
+    time: '2024-12-24T00:00:00.0000000+00:00'
+  - author: Schrodinger71
+    changes:
+      - {message: Добавлены эмодзи в форматирование логов команд. Теперь каждый элемент логов (команда, пользователь, канал, время, ссылка) сопровождается соответствующим эмодзи для удобства восприятия, type: Improvement}
+    id: 16
+    time: '2024-12-24T00:00:00.0000000+00:00'
