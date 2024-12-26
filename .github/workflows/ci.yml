@@ -46,20 +46,20 @@ jobs:
       - name: Run Flake8
         run: |
           pip install flake8
-          flake8 .
+          flake8 . --output-file=flake8-report.txt
 
       - name: Run Pylint
         run: |
           pip install pylint
-          pylint **/*.py > pylint-report.txt
+          pylint **/*.py --output=pylint-report.txt
 
-      - name: Upload test results
+      - name: Upload Flake8 report
         if: failure()
         uses: actions/upload-artifact@v3
         with:
-          name: test-report
-          path: test-report.xml
-
+          name: flake8-report
+          path: flake8-report.txt
+  
       - name: Upload Pylint report
         if: failure()
         uses: actions/upload-artifact@v3
