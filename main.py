@@ -20,7 +20,8 @@ from commands.dbCommand import info_command, status_command
 from commands.github import (achang_command, check_workflows, forks_command,
                              github_processor, milestones_command,
                              pr_changelog_send, review_command)
-from commands.misc.shutdows_deff import shutdown_def  # Для выполнения завершающих операций
+from commands.misc.shutdows_deff import \
+    shutdown_def  # Для выполнения завершающих операций
 from config import DISCORD_KEY
 from events import on_command, on_error, on_message, on_ready, update_status
 

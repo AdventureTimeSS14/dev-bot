@@ -2,6 +2,7 @@
 Этот модуль содержит все основные конфигурации Dev-bot.
 """
 import os
+
 import requests
 from dotenv import load_dotenv
 
