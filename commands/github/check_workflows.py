@@ -44,7 +44,6 @@ async def check_workflows():
 
             # Увеличиваем счетчик, если процесс в статусе 'in_progress'
             if status == 'in_progress':
-                in_progress_count += 1
 
                 # Логируем информацию о процессе
                 print(f"  - Название: {run_name}")
