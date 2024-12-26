@@ -1,5 +1,9 @@
-import discord
+"""
+Этот модуль содержит команду 'echo', которая повторяет переданное сообщение,
+если пользователь является владельцем бота.
+"""
 
+import discord
 from bot_init import bot
 from config import MY_USER_ID
 
@@ -25,7 +29,7 @@ async def echo(ctx, *, message: str):
     except discord.Forbidden:
         # Если бот не имеет прав на удаление сообщений
         await ctx.reply("⚠️ У меня нет прав для удаления сообщений.", mention_author=False)
-    except Exception as e:
-        # Логирование других ошибок
+    except discord.DiscordException as e:
+        # Логирование других ошибок, связанных с Discord
         print(f"❌ Произошла ошибка в команде 'echo': {e}")
         await ctx.reply("❌ Произошла ошибка при выполнении команды. Проверьте логи.", mention_author=False)
