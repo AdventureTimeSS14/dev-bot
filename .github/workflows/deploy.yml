@@ -1,4 +1,4 @@
-name: Deploy Discord Bot Second
+name: Deploy Discord-Bot
 
 on:
   schedule:
