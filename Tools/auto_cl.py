@@ -6,11 +6,18 @@ from datetime import datetime, timezone
 import aiohttp
 import yaml
 
+"""
+This module fetches GitHub PR data and updates the changelog file.
+"""
+
 FILE_PATH = Path(__file__).resolve()
 CHANGELOG_PATH = FILE_PATH.parents[2] / "Resources" / "Changelog" / "Changelog.yml"
 OLD_CHANGELOG_PATH = FILE_PATH.parent / "cl_old.yml"
 
 class NoDatesSafeLoader(yaml.SafeLoader):
+    """
+    Custom YAML loader that removes timestamp implicit resolvers.
+    """
     @classmethod
     def remove_implicit_resolver(cls, tag_to_remove):
         if "yaml_implicit_resolvers" not in cls.__dict__:
@@ -24,6 +31,9 @@ class NoDatesSafeLoader(yaml.SafeLoader):
 NoDatesSafeLoader.remove_implicit_resolver("tag:yaml.org,2002:timestamp")
 
 class MyDumper(yaml.SafeDumper):
+    """
+    Custom YAML dumper that formats compact dictionaries and multiline strings.
+    """
     def increase_indent(self, flow=False, indentless=False):
         return super(MyDumper, self).increase_indent(flow, False)
 
