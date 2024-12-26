@@ -20,6 +20,11 @@ jobs:
       with:
         python-version: '3.11'
 
+    - name: Install MariaDB Connector/C
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libmariadb-dev
+
     - name: Cache Python dependencies
       uses: actions/cache@v3
       with:
