@@ -48,20 +48,6 @@ jobs:
         pip install flake8
         flake8 . --max-line-length=120
 
-    - name: Upload Pylint report
-      if: failure()
-      uses: actions/upload-artifact@v3
-      with:
-        name: pylint-report
-        path: pylint-report.txt
-
-    - name: Upload Flake8 report
-      if: failure()
-      uses: actions/upload-artifact@v3
-      with:
-        name: flake8-report
-        path: flake8-report.txt
-
     - name: Summary
       run: |
         echo "Python Linter completed. Check the results above."
