@@ -3,7 +3,7 @@ name: Linter Python Code
 on:
   pull_request:
     branches:
-      - dev  # Отслеживаем пулл реквесты в ветку dev
+      - main  # Отслеживаем пулл реквесты в ветку dev
 
 jobs:
   lint:
