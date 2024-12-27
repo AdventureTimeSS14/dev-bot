@@ -65,7 +65,8 @@ async def check_workflows():
         if in_progress_count > 1:
             print("❌ Обнаружено более одного запущенного workflow "
                   "'Deploy Discord-Bot'. Завершаем процесс... "
-                  f"in_progress_count = {in_progress_count}")
+                  f"in_progress_count = {in_progress_count}\n"
+                  f"Список запущенных:\n{deploy_workflows}")
             # Закрываем бота и завершаем выполнение скрипта
             await bot.close()
             sys.exit(0)
