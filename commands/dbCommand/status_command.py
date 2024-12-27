@@ -15,7 +15,11 @@ async def db_status(ctx):
     try:
         # Подключаемся к базе данных
         conn = mariadb.connect(
-            user=USER, password=PASSWORD, host=HOST, port=int(PORT), database=DATABASE
+            user=USER,
+            password=PASSWORD,
+            host=HOST,
+            port=int(PORT),
+            database=DATABASE,
         )
 
         # Создаем embed для успешного подключения

@@ -46,7 +46,9 @@ async def check_reason(ctx, reason):
     Проверяет, что причина указана и ее длина больше 5 символов.
     """
     if not reason or len(reason.strip()) < 5:
-        await ctx.send("❌ Причина должна быть указана и содержать хотя бы 5 символов.")
+        await ctx.send(
+            "❌ Причина должна быть указана и содержать хотя бы 5 символов."
+        )
         return False
     return True
 
@@ -63,7 +65,9 @@ async def remove_roles_from_user(user, roles):
                 await user.remove_roles(role)
                 removed_roles.append(role)
             except Exception as e:
-                errors.append(f"❌ Ошибка при удалении роли **{role.name}**: {str(e)}")
+                errors.append(
+                    f"❌ Ошибка при удалении роли **{role.name}**: {str(e)}"
+                )
         else:
             errors.append(f"❌ У {user.name} нет роли **{role.name}**.")
     return removed_roles, errors
@@ -115,7 +119,9 @@ async def remove_team(
         return
 
     # Удаляем роли
-    removed_roles, errors = await remove_roles_from_user(user, [role_dep, role_job])
+    removed_roles, errors = await remove_roles_from_user(
+        user, [role_dep, role_job]
+    )
 
     # Отправляем результаты
     await send_results(ctx, removed_roles, errors)
@@ -127,8 +133,12 @@ async def remove_team(
             description=f"{ctx.author.mention} снял с должности {user.mention}.",
             color=role_job.color,
         )
-        embed.add_field(name="Отдел:", value=f"**{role_dep.name}**", inline=False)
-        embed.add_field(name="Должность:", value=f"**{role_job.name}**", inline=False)
+        embed.add_field(
+            name="Отдел:", value=f"**{role_dep.name}**", inline=False
+        )
+        embed.add_field(
+            name="Должность:", value=f"**{role_job.name}**", inline=False
+        )
         embed.add_field(name="Причина:", value=f"**{reason}**", inline=False)
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
 

@@ -5,7 +5,13 @@ import requests
 from fuzzywuzzy import fuzz
 
 from bot_init import bot
-from config import ADMIN_TEAM, AUTHOR, GLOBAL_SESSION, LOG_CHANNEL_ID, REPOSITORIES
+from config import (
+    ADMIN_TEAM,
+    AUTHOR,
+    GLOBAL_SESSION,
+    LOG_CHANNEL_ID,
+    REPOSITORIES,
+)
 from data import JsonData
 
 
@@ -71,14 +77,18 @@ async def handle_message_deletion(message):
 
     except discord.Forbidden:
         # Если не удается отправить ЛС (например, заблокировали бота)
-        await log_channel.send(f"⚠️ Не удалось отправить ЛС пользователю {user.mention}.")
+        await log_channel.send(
+            f"⚠️ Не удалось отправить ЛС пользователю {user.mention}."
+        )
 
 
 async def handle_mention(message):
     """
     Обрабатывает упоминания бота и отвечает на определённые фразы.
     """
-    text_without_mention = message.content.replace(f"<@{bot.user.id}>", "").strip()
+    text_without_mention = message.content.replace(
+        f"<@{bot.user.id}>", ""
+    ).strip()
     data = JsonData()
 
     # Проверяем вариации фраз из JsonData

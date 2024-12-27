@@ -102,7 +102,9 @@ async def update_bot_presence():
     """
     try:
         name = "Отключена!"
-        status_state = "Игроков: ERROR! | Режим: ERROR! | Раунд: ERROR! | Статус: ERROR!"
+        status_state = (
+            "Игроков: ERROR! | Режим: ERROR! | Раунд: ERROR! | Статус: ERROR!"
+        )
         activity = discord.Activity(
             type=discord.ActivityType.unknown, name=name, state=status_state
         )

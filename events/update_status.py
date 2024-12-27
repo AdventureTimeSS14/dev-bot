@@ -38,10 +38,14 @@ def get_ss14_status_url(url: str) -> str:
 
     parsed = urlparse(url, allow_fragments=False)
     port = parsed.port or 1212  # Если порт не указан, используем 1212
-    return urlunparse(("http", f"{parsed.hostname}:{port}", parsed.path, "", "", ""))
+    return urlunparse(
+        ("http", f"{parsed.hostname}:{port}", parsed.path, "", "", "")
+    )
 
 
-def create_status_embed(address: str, status_data: dict, author=None) -> discord.Embed:
+def create_status_embed(
+    address: str, status_data: dict, author=None
+) -> discord.Embed:
     """
     Создаёт Embed с информацией о статусе сервера.
     """
@@ -79,7 +83,9 @@ def create_status_embed(address: str, status_data: dict, author=None) -> discord
         if hours > 0:
             time_str.append(f"{hours} часов")
         time_str.append(f"{minutes // 60} минут")
-        embed.add_field(name="Время раунда", value=", ".join(time_str), inline=False)
+        embed.add_field(
+            name="Время раунда", value=", ".join(time_str), inline=False
+        )
 
     if author:
         embed.set_author(name=author.name, icon_url=author.avatar.url)

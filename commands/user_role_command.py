@@ -33,6 +33,8 @@ async def user_role(ctx, *role_names: str):
     if members_with_role:
         # Формируем сообщение с упоминанием пользователей
         members_list = ", ".join(members_with_role)
-        await ctx.send(f"✅ Пользователи с ролью **{role.name}**:\n{members_list}")
+        await ctx.send(
+            f"✅ Пользователи с ролью **{role.name}**:\n{members_list}"
+        )
     else:
         await ctx.send(f"⚠️ Нет пользователей с ролью **{role.name}**.")

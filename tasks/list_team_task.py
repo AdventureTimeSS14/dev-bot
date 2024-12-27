@@ -174,7 +174,9 @@ roles_by_category = {
 @bot.command(name="list_team")
 @has_any_role_by_id(HEAD_ADT_TEAM)
 async def list_team(ctx):
-    await ctx.channel.purge(limit=15)  # Очистка канала перед отправкой сообщения
+    await ctx.channel.purge(
+        limit=15
+    )  # Очистка канала перед отправкой сообщения
 
     # Обработка каждой категории
     for category, roles in roles_by_category.items():
@@ -215,10 +217,16 @@ async def list_team(ctx):
                     )
                 elif members_count == 1:
                     field_value = members[0]
-                    embed.add_field(name=f"**{role_name}**", value=f"{field_value}", inline=False)
+                    embed.add_field(
+                        name=f"**{role_name}**",
+                        value=f"{field_value}",
+                        inline=False,
+                    )
                 else:
                     embed.add_field(
-                        name=f"**❌ {role_name}**", value="Нет участников", inline=False
+                        name=f"**❌ {role_name}**",
+                        value="Нет участников",
+                        inline=False,
                     )
 
                 # Если есть значок роли, добавляем его как изображение
@@ -226,7 +234,11 @@ async def list_team(ctx):
                     embed.set_thumbnail(url=role_icon_url)
 
             else:
-                embed.add_field(name=f"**❌ {role_name}**", value="Роль не найдена", inline=False)
+                embed.add_field(
+                    name=f"**❌ {role_name}**",
+                    value="Роль не найдена",
+                    inline=False,
+                )
 
         await ctx.send(embed=embed)
 
@@ -279,7 +291,9 @@ async def list_team_task():
                         )
                     elif members_count == 1:
                         embed.add_field(
-                            name=f"**{role_name}**", value=f"{members[0]}", inline=False
+                            name=f"**{role_name}**",
+                            value=f"{members[0]}",
+                            inline=False,
                         )
                     else:
                         embed.add_field(
@@ -289,7 +303,9 @@ async def list_team_task():
                         )
 
                     if role_icon_url:
-                        embed.set_thumbnail(url=role_icon_url)  # Добавляем иконку роли
+                        embed.set_thumbnail(
+                            url=role_icon_url
+                        )  # Добавляем иконку роли
 
                 else:
                     embed.add_field(

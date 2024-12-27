@@ -11,7 +11,9 @@ from config import ADMIN_TEAM, HEAD_ADT_TEAM, VACATION_ROLE
 
 @bot.command()
 @has_any_role_by_id(HEAD_ADT_TEAM)
-async def extend_vacation(ctx, user: discord.Member, new_end_date: str, reason: str):
+async def extend_vacation(
+    ctx, user: discord.Member, new_end_date: str, reason: str
+):
     """
     Продление отпуска пользователю. Обновляется срок отпуска и причина.
     """
@@ -43,8 +45,12 @@ async def extend_vacation(ctx, user: discord.Member, new_end_date: str, reason: 
             color=discord.Color.purple(),
         )
         embed.add_field(name="Пользователь", value=user.mention, inline=False)
-        embed.add_field(name="Новый срок отпуска", value=f"**{new_end_date}**", inline=True)
-        embed.add_field(name="Причина продления", value=f"**{reason}**", inline=False)
+        embed.add_field(
+            name="Новый срок отпуска", value=f"**{new_end_date}**", inline=True
+        )
+        embed.add_field(
+            name="Причина продления", value=f"**{reason}**", inline=False
+        )
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
         embed.set_footer(text="Желаем хорошего продолжения отдыха!")
 
@@ -52,10 +58,14 @@ async def extend_vacation(ctx, user: discord.Member, new_end_date: str, reason: 
         await admin_channel.send(embed=embed)
 
         # Ответ пользователю
-        await ctx.send(f"✅ Срок отпуска {user.mention} был успешно продлен до {new_end_date}.")
+        await ctx.send(
+            f"✅ Срок отпуска {user.mention} был успешно продлен до {new_end_date}."
+        )
 
     except discord.Forbidden:
-        await ctx.send("⚠️ Ошибка: У бота недостаточно прав для отправки уведомлений.")
+        await ctx.send(
+            "⚠️ Ошибка: У бота недостаточно прав для отправки уведомлений."
+        )
     except discord.HTTPException as e:
         await ctx.send(f"❌ Ошибка: Не удалось продлить отпуск. Подробнее: {e}")
     except Exception as e:

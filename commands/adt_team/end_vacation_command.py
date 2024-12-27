@@ -35,7 +35,9 @@ async def end_vacation(ctx, user: discord.Member):
     try:
         # Удаляем роль отпуска у пользователя
         await user.remove_roles(role_vacation)
-        await ctx.send(f"✅ Роль {role_vacation.name} успешно снята с {user.mention}.")
+        await ctx.send(
+            f"✅ Роль {role_vacation.name} успешно снята с {user.mention}."
+        )
 
         # Создаем Embed для уведомления в админ-канал
         embed = discord.Embed(

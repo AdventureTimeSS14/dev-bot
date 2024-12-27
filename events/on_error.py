@@ -29,4 +29,6 @@ async def on_error(event, *args, **kwargs):
         except Exception as e:
             print(f"❌ Ошибка при отправке сообщения об ошибке в канал: {e}")
     else:
-        print(f"❌ Канал с ID {LOG_CHANNEL_ID} не найден. Ошибка не записана в лог.")
+        print(
+            f"❌ Канал с ID {LOG_CHANNEL_ID} не найден. Ошибка не записана в лог."
+        )

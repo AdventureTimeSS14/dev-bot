@@ -5,7 +5,11 @@ import discord
 from discord.ext import tasks
 
 from bot_init import bot
-from config import CHANNEL_ID_UPDATE_STATUS, MESSAGE_ID_TIME_SHUTDOWS, TIME_SHUTDOWSE
+from config import (
+    CHANNEL_ID_UPDATE_STATUS,
+    MESSAGE_ID_TIME_SHUTDOWS,
+    TIME_SHUTDOWSE,
+)
 
 
 @tasks.loop(seconds=11)
@@ -14,8 +18,12 @@ async def update_time_shutdows():
     Задача для обновления времени работы бота и оставшегося времени до отключения,
     редактируя указанное сообщение.
     """
-    channel_id = CHANNEL_ID_UPDATE_STATUS  # ID канала, где нужно редактировать сообщение
-    message_id = MESSAGE_ID_TIME_SHUTDOWS  # ID сообщения, которое нужно редактировать
+    channel_id = (
+        CHANNEL_ID_UPDATE_STATUS  # ID канала, где нужно редактировать сообщение
+    )
+    message_id = (
+        MESSAGE_ID_TIME_SHUTDOWS  # ID сообщения, которое нужно редактировать
+    )
 
     # Получаем канал
     channel = bot.get_channel(channel_id)

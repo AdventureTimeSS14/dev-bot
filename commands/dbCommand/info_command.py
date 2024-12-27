@@ -49,7 +49,9 @@ async def db_info(ctx):
         # Запрос версии сервера
         cursor.execute("SELECT VERSION()")
         server_version = cursor.fetchone()
-        embed.add_field(name="Версия MariaDB", value=server_version[0], inline=False)
+        embed.add_field(
+            name="Версия MariaDB", value=server_version[0], inline=False
+        )
 
         # Запрос списка таблиц
         cursor.execute("SHOW TABLES")
@@ -57,9 +59,15 @@ async def db_info(ctx):
 
         if tables:
             table_list = "\n".join([table[0] for table in tables])
-            embed.add_field(name="Список таблиц", value=table_list, inline=False)
+            embed.add_field(
+                name="Список таблиц", value=table_list, inline=False
+            )
         else:
-            embed.add_field(name="Список таблиц", value="В базе данных нет таблиц.", inline=False)
+            embed.add_field(
+                name="Список таблиц",
+                value="В базе данных нет таблиц.",
+                inline=False,
+            )
 
         # Отправляем embed-ответ
         await ctx.send(embed=embed)

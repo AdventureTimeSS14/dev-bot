@@ -36,7 +36,9 @@ async def check_for_new_commit():
         # Получаем SHA последнего коммита
         latest_commit_sha = commits[0]["sha"]
         commit_message = commits[0]["commit"]["message"]  # Сообщение коммита
-        commit_url = commits[0]["html_url"]  # URL для просмотра коммита на GitHub
+        commit_url = commits[0][
+            "html_url"
+        ]  # URL для просмотра коммита на GitHub
 
         # Получаем подробности коммита, включая диффы
         commit_details_response = requests.get(
@@ -106,7 +108,9 @@ async def monitor_commits():
         committer = commit_data["committer"]
         coauthors = commit_data["coauthors"]
 
-        message = f"**Обнаружен новый коммит!** Перезапуск бота для обновления...\n\n"
+        message = (
+            f"**Обнаружен новый коммит!** Перезапуск бота для обновления...\n\n"
+        )
         message += f"**Сообщение коммита**: {commit_message}\n"
         message += f"**SHA**: {commit_sha}\n"
         message += f"**URL**: `{commit_url}`\n\n"

@@ -17,7 +17,9 @@ async def add_role(ctx, user: discord.Member, *role_names: str):
     Добавляет одну или несколько ролей указанному пользователю.
     """
     if not role_names:
-        await ctx.send("❌ Пожалуйста, укажите хотя бы одну роль для добавления.")
+        await ctx.send(
+            "❌ Пожалуйста, укажите хотя бы одну роль для добавления."
+        )
         return
 
     # Переменная для подсчета успешно добавленных ролей
@@ -54,7 +56,9 @@ async def add_role(ctx, user: discord.Member, *role_names: str):
     # Если добавлены роли, выводим итоговое сообщение
     if added_roles:
         roles_list = ", ".join(added_roles)
-        await ctx.send(f"✅ Роли ({roles_list}) успешно добавлены для {user.mention}.")
+        await ctx.send(
+            f"✅ Роли ({roles_list}) успешно добавлены для {user.mention}."
+        )
 
     # Если есть ошибки
     if errors:

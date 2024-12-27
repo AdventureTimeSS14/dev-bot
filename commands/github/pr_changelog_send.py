@@ -29,7 +29,10 @@ def smart_truncate(text, max_length):
     return truncated_text.strip() + "..."  # Добавляем многоточие
 
 
-@bot.command(name="pr", help="Получить информацию о замерженном пулл-реквесте по его номеру.")
+@bot.command(
+    name="pr",
+    help="Получить информацию о замерженном пулл-реквесте по его номеру.",
+)
 @has_any_role_by_id(
     WHITELIST_ROLE_ID
 )  # Проверяем, есть ли у пользователя доступ к выполнению команды
@@ -57,9 +60,9 @@ async def get_pr_info(ctx, pr_number: int):
         return
 
     # Извлекаем данные о пулл-реквесте
-    merged_at = datetime.strptime(pr["merged_at"], "%Y-%m-%dT%H:%M:%SZ").replace(
-        tzinfo=timezone.utc
-    )
+    merged_at = datetime.strptime(
+        pr["merged_at"], "%Y-%m-%dT%H:%M:%SZ"
+    ).replace(tzinfo=timezone.utc)
     pr_title = pr["title"]
     pr_url = pr["html_url"]
     description = pr.get("body", "").strip()
@@ -78,7 +81,9 @@ async def get_pr_info(ctx, pr_number: int):
 
     cl_text = match.group(1).strip()
     remaining_lines = description[match.end() :].strip()
-    description = f"{cl_text}\n{remaining_lines}" if remaining_lines else cl_text
+    description = (
+        f"{cl_text}\n{remaining_lines}" if remaining_lines else cl_text
+    )
 
     # Умная обрезка текста, если описание слишком длинное
     description = smart_truncate(description, MAX_FIELD_LENGTH)
@@ -93,7 +98,9 @@ async def get_pr_info(ctx, pr_number: int):
     # Добавляем поля в Embed
     embed.add_field(name="Изменения:", value=description, inline=False)
     embed.add_field(name="Автор:", value=author_name, inline=False)
-    embed.add_field(name="Ссылка:", value=f"[PR #{pr_number}]({pr_url})", inline=False)
+    embed.add_field(
+        name="Ссылка:", value=f"[PR #{pr_number}]({pr_url})", inline=False
+    )
 
     # Добавляем соавторов, если они есть
     if coauthors:
@@ -114,7 +121,11 @@ async def get_pr_info(ctx, pr_number: int):
             f"Информация о пулл-реквесте успешно отправлена в канал <#{CHANGELOG_CHANNEL_ID}>."
         )
     except discord.Forbidden:
-        await ctx.send("❌ У бота нет прав для отправки сообщений в указанный канал.")
+        await ctx.send(
+            "❌ У бота нет прав для отправки сообщений в указанный канал."
+        )
     except discord.HTTPException as e:
         print(f"❌ Ошибка при отправке Embed: {e}")
-        await ctx.send("❌ Произошла ошибка при отправке информации о пулл-реквесте.")
+        await ctx.send(
+            "❌ Произошла ошибка при отправке информации о пулл-реквесте."
+        )

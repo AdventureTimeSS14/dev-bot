@@ -42,7 +42,9 @@ async def tweak_team(
 
     # Проверка на допустимость причины
     if not reason or len(reason.strip()) < 5:
-        await ctx.send("❌ Причина должна быть указана и содержать хотя бы 5 символов.")
+        await ctx.send(
+            "❌ Причина должна быть указана и содержать хотя бы 5 символов."
+        )
         return
 
     try:
@@ -51,7 +53,11 @@ async def tweak_team(
         await user.add_roles(new_role, reason=reason)
 
         # Определяем тип действия: повышение или понижение
-        action = "Повышение в должности" if old_role < new_role else "Понижение в должности"
+        action = (
+            "Повышение в должности"
+            if old_role < new_role
+            else "Понижение в должности"
+        )
         action_description = f"{ctx.author.mention} {'повышает' if old_role < new_role else 'понижает'} {user.mention}."
         color = new_role.color  # Цвет для Embed сообщения
 
@@ -61,8 +67,12 @@ async def tweak_team(
             description=action_description,
             color=color,
         )
-        embed.add_field(name="Старая должность", value=f"**{old_role.name}**", inline=False)
-        embed.add_field(name="Новая должность", value=f"**{new_role.name}**", inline=False)
+        embed.add_field(
+            name="Старая должность", value=f"**{old_role.name}**", inline=False
+        )
+        embed.add_field(
+            name="Новая должность", value=f"**{new_role.name}**", inline=False
+        )
         embed.add_field(name="Причина", value=f"**{reason}**", inline=False)
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
         embed.set_footer(
@@ -77,7 +87,9 @@ async def tweak_team(
         )
 
     except discord.Forbidden:
-        await ctx.send("⚠️ У бота нет прав для изменения ролей. Пожалуйста, проверьте права бота.")
+        await ctx.send(
+            "⚠️ У бота нет прав для изменения ролей. Пожалуйста, проверьте права бота."
+        )
     except discord.HTTPException as e:
         await ctx.send(f"❌ Произошла ошибка при изменении ролей: {e}")
         print(f"Ошибка при изменении ролей: {e}")

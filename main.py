@@ -81,11 +81,15 @@ def setup_signal_handlers():
     Настроить обработчики сигналов для корректного завершения работы бота.
     """
     if sys.platform == "win32":
-        logging.warning("Сигналы SIGINT и SIGTERM не поддерживаются на Windows.")
+        logging.warning(
+            "Сигналы SIGINT и SIGTERM не поддерживаются на Windows."
+        )
     else:
         loop = asyncio.get_event_loop()
         for sig in (signal.SIGINT, signal.SIGTERM):
-            loop.add_signal_handler(sig, lambda s=sig: asyncio.create_task(shutdown(s)))
+            loop.add_signal_handler(
+                sig, lambda s=sig: asyncio.create_task(shutdown(s))
+            )
 
 
 async def main():
