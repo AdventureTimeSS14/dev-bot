@@ -20,46 +20,36 @@ async def check_workflows():
     если обнаружено более одного процесса с состоянием 'in_progress' для workflow с именем 'Deploy Discord-Bot'.
     """
     try:
+        async with aiohttp.ClientSession(headers=HEADERS) as session:
+            async with session.get(API_URL) as response:
+                if response.status != 200:
+                    print(f"❌ Ошибка при подключении к GitHub API. Статус: {response.status}")
+                    sys.exit(1)
+
+                workflows = await response.json()
+
         # Счётчик для процессов 'in_progress'
         in_progress_count = 0  # Количество процессов со статусом 'in_progress'
-        deploy_workflows = []  # Список всех workflow процессов, которые "in_progress"
+        deploy_workflows = []
 
-        # Инициализируем пагинацию
-        page = 1
-        while True:
-            async with aiohttp.ClientSession(headers=HEADERS) as session:
-                # Получаем workflows на текущей странице
-                async with session.get(f'{API_URL}?page={page}') as response:
-                    if response.status != 200:
-                        print(f"❌ Ошибка при подключении к GitHub API. Статус: {response.status}")
-                        sys.exit(1)
+        # Проверяем все workflows
+        for run in workflows.get('workflow_runs', []):
+            run_name = run.get('name', 'Неизвестно')
+            
+            # Проверяем, что имя процесса соответствует 'Deploy Discord-Bot'
+            if run_name == 'Deploy Discord-Bot':
+                status = run.get('status', 'Неизвестно')
+                
+                # Логируем информацию о процессе
+                print(f"  - Название: {run_name}")
+                print(f"    Статус: {status}")
+                print(f"    Дата начала: {run.get('created_at', 'Неизвестно')}")
+                print()
 
-                    workflows = await response.json()
-
-            # Проверяем все workflow runs
-            for run in workflows.get('workflow_runs', []):
-                run_name = run.get('name', 'Неизвестно')
-
-                # Проверяем, что имя процесса соответствует 'Deploy Discord-Bot'
-                if run_name == 'Deploy Discord-Bot':
-                    status = run.get('status', 'Неизвестно')
-
-                    # # Логируем информацию о процессе
-                    # print(f"  - Название: {run_name}")
-                    # print(f"    Статус: {status}")
-                    # print(f"    Дата начала: {run.get('created_at', 'Неизвестно')}")
-                    # print()
-
-                    # Если процесс в статусе 'in_progress', увеличиваем счётчик
-                    if status == 'in_progress':
-                        in_progress_count += 1
-                        deploy_workflows.append(run)
-
-            # Если на странице нет следующей страницы, выходим из цикла
-            if 'next' not in response.links and page == 2:
-                break
-            # Переходим к следующей странице
-            page += 1
+                # Если процесс в статусе 'in_progress', увеличиваем счётчик
+                if status == 'in_progress':
+                    in_progress_count += 1
+                    deploy_workflows.append(run)
 
         # Если более одного процесса в статусе 'in_progress', завершаем работу
         if in_progress_count > 1:
