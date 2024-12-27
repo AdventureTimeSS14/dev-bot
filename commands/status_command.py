@@ -1,3 +1,6 @@
+'''
+Модуль команды для получения статуса сервера ss14
+'''
 from bot_init import bot
 from config import SS14_ADDRESS
 from events.update_status import (create_status_embed,
@@ -22,7 +25,7 @@ async def get_status_command(ctx):
         embed = create_status_embed(SS14_ADDRESS, status_data, ctx.author)
         await ctx.send(embed=embed)
 
-    except Exception as e:
+    except Exception as e: # pylint: disable=W0718
         # Обработка любых ошибок
         print(f"❌ Произошла ошибка в команде 'status': {e}")
         await ctx.send("❌ Произошла ошибка при выполнении команды. Повторите позже.")
