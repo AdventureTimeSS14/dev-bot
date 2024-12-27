@@ -19,8 +19,10 @@ HEADERS = {
 
 async def check_workflows():
     """
-    Проверяет состояние запущенных GitHub Actions workflows и завершает работу бота,
-    если обнаружено более одного процесса с состоянием 'in_progress' для workflow с именем 'Deploy Discord-Bot'.
+    Проверяет состояние запущенных GitHub Actions workflows
+    и завершает работу бота,
+    если обнаружено более одного процесса с состоянием 
+    'in_progress' для workflow с именем 'Deploy Discord-Bot'.
     """
     try:
         async with aiohttp.ClientSession(headers=HEADERS) as session:
@@ -59,7 +61,8 @@ async def check_workflows():
         # Если более одного процесса в статусе 'in_progress', завершаем работу
         if in_progress_count > 1:
             print(
-                "❌ Обнаружено более одного запущенного workflow 'Deploy Discord-Bot'. Завершаем процесс..."
+                "❌ Обнаружено более одного запущенного "
+                "workflow 'Deploy Discord-Bot'. Завершаем процесс..."
             )
             # Закрываем бота и завершаем выполнение скрипта
             await bot.close()
@@ -68,11 +71,13 @@ async def check_workflows():
         # Логируем результаты проверки
         if in_progress_count == 0:
             print(
-                "✅ Нет запущенных workflow 'Deploy Discord-Bot' в статусе 'in_progress'. Продолжаем работу."
+                "✅ Нет запущенных workflow 'Deploy Discord-Bot' "
+                "в статусе 'in_progress'. Продолжаем работу."
             )
         else:
             print(
-                f"⚠️ Обнаружено {in_progress_count} запущенный(ых) workflow 'Deploy Discord-Bot' в статусе 'in_progress'. Продолжаем работу."
+                f"⚠️ Обнаружено {in_progress_count} запущенный(ых) workflow "
+                f"'Deploy Discord-Bot' в статусе 'in_progress'. Продолжаем работу."
             )
 
     except aiohttp.ClientError as e:

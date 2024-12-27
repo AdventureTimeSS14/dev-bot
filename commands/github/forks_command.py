@@ -28,9 +28,9 @@ async def forks(ctx, repo_key: str):
 
     # Формируем URL и запрашиваем данные о форках
     url = f"https://api.github.com/repos/{repository_name}/forks"
-    forks = await fetch_github_data(url)
+    forks_url = await fetch_github_data(url)
 
-    if not forks:
+    if not forks_url:
         await ctx.send("❌ Форки не найдены.")
         return
 
@@ -41,7 +41,7 @@ async def forks(ctx, repo_key: str):
             "owner": fork["owner"]["login"],
             "url": fork["html_url"],
         }
-        for fork in forks
+        for fork in forks_url
     ]
 
     # Создаём список Embed-сообщений

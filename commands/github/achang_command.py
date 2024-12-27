@@ -69,7 +69,8 @@ async def achang(ctx, repo_key: str):
             "name": pr["title"],
             "value": (
                 f"Автор: {pr['author']}\n"
-                f"Чьё ревью запрошено: {', '.join(pr['requested_by']) if pr['requested_by'] else 'Нет запрашиваемых рецензентов'}\n"
+                f"Чьё ревью запрошено: "
+                f"{', '.join(pr['requested_by']) if pr['requested_by'] else 'Нет запрашиваемых рецензентов'}\n" # pylint: disable=C0301
                 f"Ссылка: {pr['url']}"
             ),
             "inline": False,
@@ -87,7 +88,9 @@ async def achang_error(ctx, error):
     """
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send(
-            "Вы не указали ключ к репозиторию. Указать ключ к репозиторию можно следующим образом: `&achang n`, `&achang o`"
+            "Вы не указали ключ к репозиторию. "
+            "Указать ключ к репозиторию можно "
+            "следующим образом: `&achang n`, `&achang o`"
         )
     else:
         await ctx.send(f"Произошла ошибка: {error}")
