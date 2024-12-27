@@ -6,7 +6,7 @@ from commands.misc.shutdows_deff import shutdown_def
 
 OWNER = AUTHOR
 REPO = 'Dev-bot'
-API_URL = f'https://api.github.com/repos/{OWNER}/{REPO}/actions/runs'
+API_URL = f'https://api.github.com/repos/{OWNER}/{REPO}/actions/runs?workflow=deploy.yml' #!!!!!
 
 # Заголовки для аутентификации
 HEADERS = {
