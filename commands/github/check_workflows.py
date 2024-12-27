@@ -56,7 +56,7 @@ async def check_workflows():
                         deploy_workflows.append(run)
 
             # Если на странице нет следующей страницы, выходим из цикла
-            if 'next' not in response.links or page == 3:
+            if 'next' not in response.links and page == 2:
                 break
             # Переходим к следующей странице
             page += 1
