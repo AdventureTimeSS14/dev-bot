@@ -1,5 +1,5 @@
 '''
-
+Модуль команды add_vacation
 '''
 import discord
 
