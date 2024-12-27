@@ -64,7 +64,7 @@ async def get_pr_info(ctx, pr_number: int):
 
     # Очищаем описание от комментариев и ищем текст изменений
     description = re.sub(r"<!--.*?-->", "", description, flags=re.DOTALL)
-    match = re.search(r"(:cl:.*?)(\n|$)", description, re.DOTALL)
+    match = re.search(r"(:cl:.*?|\U0001F191.*?)(\n|$)", description, re.DOTALL)
 
     if not match:
         await ctx.send("❌ Не удалось найти описание изменений.")
