@@ -28,9 +28,7 @@ async def achang(ctx, repo_key: str):
 
     # Формируем URL для GitHub API
     url = f"https://api.github.com/repos/{repository_name}/pulls"
-    pulls = await fetch_github_data(
-        url, {"state": "open", "sort": "created", "base": "master"}
-    )
+    pulls = await fetch_github_data(url, {"state": "open", "sort": "created", "base": "master"})
 
     # Если нет открытых пулл-реквестов
     if not pulls:
@@ -49,10 +47,7 @@ async def achang(ctx, repo_key: str):
             ],
         }
         for pr in pulls
-        if any(
-            label.get("name") == "Status: Awaiting Changes"
-            for label in pr.get("labels", [])
-        )
+        if any(label.get("name") == "Status: Awaiting Changes" for label in pr.get("labels", []))
     ]
 
     # Если нет пулл-реквестов, требующих изменений

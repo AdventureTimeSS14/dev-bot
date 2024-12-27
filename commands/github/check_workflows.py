@@ -26,9 +26,7 @@ async def check_workflows():
         async with aiohttp.ClientSession(headers=HEADERS) as session:
             async with session.get(API_URL) as response:
                 if response.status != 200:
-                    print(
-                        f"❌ Ошибка при подключении к GitHub API. Статус: {response.status}"
-                    )
+                    print(f"❌ Ошибка при подключении к GitHub API. Статус: {response.status}")
                     sys.exit(1)
 
                 workflows = await response.json()

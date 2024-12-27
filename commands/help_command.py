@@ -52,9 +52,7 @@ async def help_command(ctx):
     }
 
     # Создаем embed-сообщение
-    embed = discord.Embed(
-        title=help_command_text["title"], color=discord.Color.dark_green()
-    )
+    embed = discord.Embed(title=help_command_text["title"], color=discord.Color.dark_green())
     embed.add_field(
         name=help_command_text["name_1"],
         value=help_command_text["context_1"],

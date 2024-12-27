@@ -21,9 +21,7 @@ async def validate_repository(ctx, repo_key):
     Проверяет правильность указанного ключа репозитория.
     """
     if repo_key not in REPOSITORIES:
-        await ctx.send(
-            "❌ Неверный ключ репозитория. Укажите корректный ключ: `n` или `o`."
-        )
+        await ctx.send("❌ Неверный ключ репозитория. Укажите корректный ключ: `n` или `o`.")
         return None
     return f"{AUTHOR}/{REPOSITORIES[repo_key]}"
 

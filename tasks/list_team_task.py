@@ -215,9 +215,7 @@ async def list_team(ctx):
                     )
                 elif members_count == 1:
                     field_value = members[0]
-                    embed.add_field(
-                        name=f"**{role_name}**", value=f"{field_value}", inline=False
-                    )
+                    embed.add_field(name=f"**{role_name}**", value=f"{field_value}", inline=False)
                 else:
                     embed.add_field(
                         name=f"**❌ {role_name}**", value="Нет участников", inline=False
@@ -228,9 +226,7 @@ async def list_team(ctx):
                     embed.set_thumbnail(url=role_icon_url)
 
             else:
-                embed.add_field(
-                    name=f"**❌ {role_name}**", value="Роль не найдена", inline=False
-                )
+                embed.add_field(name=f"**❌ {role_name}**", value="Роль не найдена", inline=False)
 
         await ctx.send(embed=embed)
 

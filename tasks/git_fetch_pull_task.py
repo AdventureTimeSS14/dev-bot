@@ -45,14 +45,10 @@ async def fetch_merged_pull_requests():
     global LAST_CHECK_TIME
 
     # Формируем URL для получения закрытых пулл-реквестов
-    url = (
-        f'https://api.github.com/repos/{AUTHOR}/{REPOSITORIES["n"]}/pulls?state=closed'
-    )
+    url = f'https://api.github.com/repos/{AUTHOR}/{REPOSITORIES["n"]}/pulls?state=closed'
 
     # Получаем данные о пулл-реквестах
-    pull_requests = await fetch_github_data(
-        url, {"Accept": "application/vnd.github.v3+json"}
-    )
+    pull_requests = await fetch_github_data(url, {"Accept": "application/vnd.github.v3+json"})
 
     if not pull_requests:
         print("❌ Пулл-реквесты не найдены или произошла ошибка при запросе.")
@@ -66,9 +62,7 @@ async def fetch_merged_pull_requests():
             continue
 
         # Преобразуем дату мержа в объект datetime
-        merged_at = datetime.strptime(merged_at, "%Y-%m-%dT%H:%M:%SZ").replace(
-            tzinfo=timezone.utc
-        )
+        merged_at = datetime.strptime(merged_at, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
 
         # Проверяем, произошел ли мерж после последнего времени проверки
         if LAST_CHECK_TIME and merged_at > LAST_CHECK_TIME:
@@ -92,9 +86,7 @@ async def fetch_merged_pull_requests():
             # Формируем текст изменений
             cl_text = match.group(1).strip()
             remaining_lines = description[match.end() :].strip()
-            description = (
-                f"{cl_text}\n{remaining_lines}" if remaining_lines else cl_text
-            )
+            description = f"{cl_text}\n{remaining_lines}" if remaining_lines else cl_text
 
             # Умная обрезка текста, если описание слишком длинное
             description = smart_truncate(description, MAX_FIELD_LENGTH)
@@ -108,9 +100,7 @@ async def fetch_merged_pull_requests():
             embed.add_field(name="Изменения:", value=description, inline=False)
             embed.add_field(name="Автор:", value=author_name, inline=False)
             pr_number = pr["number"]  # Номер пулл-реквеста
-            embed.add_field(
-                name="Ссылка:", value=f"[PR #{pr_number}]({pr_url})", inline=False
-            )
+            embed.add_field(name="Ссылка:", value=f"[PR #{pr_number}]({pr_url})", inline=False)
             # Добавляем соавторов, если они есть
             if coauthors:
                 coauthors_str = "\n".join(coauthors)
@@ -128,9 +118,7 @@ async def fetch_merged_pull_requests():
             try:
                 # Отправляем сообщение в CHANGELOG
                 await changelog_channel.send(embed=embed)
-                print(
-                    f"✅ Информация о замерженном PR #{pr_number} опубликована в CHANGELOG."
-                )
+                print(f"✅ Информация о замерженном PR #{pr_number} опубликована в CHANGELOG.")
 
                 # Логируем отправленное сообщение в LOG_CHANNEL
                 if log_channel:

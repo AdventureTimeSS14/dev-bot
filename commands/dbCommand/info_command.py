@@ -59,9 +59,7 @@ async def db_info(ctx):
             table_list = "\n".join([table[0] for table in tables])
             embed.add_field(name="Список таблиц", value=table_list, inline=False)
         else:
-            embed.add_field(
-                name="Список таблиц", value="В базе данных нет таблиц.", inline=False
-            )
+            embed.add_field(name="Список таблиц", value="В базе данных нет таблиц.", inline=False)
 
         # Отправляем embed-ответ
         await ctx.send(embed=embed)

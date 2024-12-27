@@ -47,9 +47,7 @@ async def review(ctx, repo_key: str):
             "title": pr["title"],
             "url": pr["html_url"],
             "author": pr["user"]["login"],
-            "requested_by": [
-                reviewer["login"] for reviewer in pr.get("requested_reviewers", [])
-            ],
+            "requested_by": [reviewer["login"] for reviewer in pr.get("requested_reviewers", [])],
         }
         for pr in pulls
         if any(label["name"] == "Status: Needs Review" for label in pr["labels"])

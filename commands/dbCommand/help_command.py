@@ -30,9 +30,7 @@ async def db_help(ctx: commands.Context):
 
         # Добавляем каждую команду из списка DB_COMMANDS
         for command in DB_COMMANDS:
-            embed.add_field(
-                name=command["name"], value=command["description"], inline=False
-            )
+            embed.add_field(name=command["name"], value=command["description"], inline=False)
 
         # Устанавливаем автора embed
         avatar_url = ctx.author.avatar.url if ctx.author.avatar else None
@@ -48,6 +46,4 @@ async def db_help(ctx: commands.Context):
             f"Пользователь: {ctx.author} (ID: {ctx.author.id})"
         )
         print(error_message)  # Логирование в консоль
-        await ctx.send(
-            "Произошла ошибка при выполнении команды. Пожалуйста, попробуйте позже."
-        )
+        await ctx.send("Произошла ошибка при выполнении команды. Пожалуйста, попробуйте позже.")

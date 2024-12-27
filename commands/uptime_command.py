@@ -24,9 +24,7 @@ async def uptime(ctx):
 
     # Вычисляем оставшееся время до отключения
     remaining_time = TIME_SHUTDOWSE - elapsed_time
-    if (
-        remaining_time < 0
-    ):  # Если оставшееся время отрицательное, бот должен быть отключен
+    if remaining_time < 0:  # Если оставшееся время отрицательное, бот должен быть отключен
         remaining_time_str = "Время истекло."
     else:
         remaining_time_str = format_time(int(remaining_time))

@@ -43,9 +43,7 @@ async def extend_vacation(ctx, user: discord.Member, new_end_date: str, reason: 
             color=discord.Color.purple(),
         )
         embed.add_field(name="Пользователь", value=user.mention, inline=False)
-        embed.add_field(
-            name="Новый срок отпуска", value=f"**{new_end_date}**", inline=True
-        )
+        embed.add_field(name="Новый срок отпуска", value=f"**{new_end_date}**", inline=True)
         embed.add_field(name="Причина продления", value=f"**{reason}**", inline=False)
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
         embed.set_footer(text="Желаем хорошего продолжения отдыха!")
@@ -54,9 +52,7 @@ async def extend_vacation(ctx, user: discord.Member, new_end_date: str, reason: 
         await admin_channel.send(embed=embed)
 
         # Ответ пользователю
-        await ctx.send(
-            f"✅ Срок отпуска {user.mention} был успешно продлен до {new_end_date}."
-        )
+        await ctx.send(f"✅ Срок отпуска {user.mention} был успешно продлен до {new_end_date}.")
 
     except discord.Forbidden:
         await ctx.send("⚠️ Ошибка: У бота недостаточно прав для отправки уведомлений.")

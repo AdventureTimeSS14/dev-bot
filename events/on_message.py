@@ -71,9 +71,7 @@ async def handle_message_deletion(message):
 
     except discord.Forbidden:
         # Если не удается отправить ЛС (например, заблокировали бота)
-        await log_channel.send(
-            f"⚠️ Не удалось отправить ЛС пользователю {user.mention}."
-        )
+        await log_channel.send(f"⚠️ Не удалось отправить ЛС пользователю {user.mention}.")
 
 
 async def handle_mention(message):

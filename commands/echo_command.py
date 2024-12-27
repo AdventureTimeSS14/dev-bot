@@ -32,9 +32,7 @@ async def echo(ctx, *, message: str):
 
     except discord.Forbidden:
         # Если бот не имеет прав на удаление сообщений
-        await ctx.reply(
-            "⚠️ У меня нет прав для удаления сообщений.", mention_author=False
-        )
+        await ctx.reply("⚠️ У меня нет прав для удаления сообщений.", mention_author=False)
     except discord.DiscordException as e:
         # Логирование других ошибок, связанных с Discord
         print(f"❌ Произошла ошибка в команде 'echo': {e}")

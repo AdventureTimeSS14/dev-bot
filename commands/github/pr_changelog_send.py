@@ -29,9 +29,7 @@ def smart_truncate(text, max_length):
     return truncated_text.strip() + "..."  # Добавляем многоточие
 
 
-@bot.command(
-    name="pr", help="Получить информацию о замерженном пулл-реквесте по его номеру."
-)
+@bot.command(name="pr", help="Получить информацию о замерженном пулл-реквесте по его номеру.")
 @has_any_role_by_id(
     WHITELIST_ROLE_ID
 )  # Проверяем, есть ли у пользователя доступ к выполнению команды

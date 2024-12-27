@@ -17,9 +17,7 @@ async def update_status_presence():
     """
     status_data = await get_ss14_server_status_second(SS14_ADDRESS)
     if not status_data:
-        await bot.change_presence(
-            activity=discord.Game(name="Ошибка при получении статуса")
-        )
+        await bot.change_presence(activity=discord.Game(name="Ошибка при получении статуса"))
         return
 
     # Формируем строку для статуса
@@ -30,8 +28,8 @@ async def update_status_presence():
     round_id = status_data.get("round_id", "?")
     run_level = SS14_RUN_LEVELS.get(status_data.get("run_level"), "Неизвестно")
 
-    status_state = f"Игроков: {count}/{countmax} | Режим: {preset} | Раунд: {round_id} | Статус: {run_level}"
-    activity = discord.Activity(
-        type=discord.ActivityType.playing, name=name, state=status_state
+    status_state = (
+        f"Игроков: {count}/{countmax} | Режим: {preset} | Раунд: {round_id} | Статус: {run_level}"
     )
+    activity = discord.Activity(type=discord.ActivityType.playing, name=name, state=status_state)
     await bot.change_presence(activity=activity)
