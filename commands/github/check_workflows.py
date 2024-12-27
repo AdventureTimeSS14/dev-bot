@@ -44,11 +44,11 @@ async def check_workflows():
                 if run_name == 'Deploy Discord-Bot':
                     status = run.get('status', 'Неизвестно')
 
-                    # Логируем информацию о процессе
-                    print(f"  - Название: {run_name}")
-                    print(f"    Статус: {status}")
-                    print(f"    Дата начала: {run.get('created_at', 'Неизвестно')}")
-                    print()
+                    # # Логируем информацию о процессе
+                    # print(f"  - Название: {run_name}")
+                    # print(f"    Статус: {status}")
+                    # print(f"    Дата начала: {run.get('created_at', 'Неизвестно')}")
+                    # print()
 
                     # Если процесс в статусе 'in_progress', увеличиваем счётчик
                     if status == 'in_progress':
