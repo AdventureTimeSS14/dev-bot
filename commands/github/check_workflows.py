@@ -7,8 +7,9 @@ from commands.misc.shutdows_deff import shutdown_def
 from config import AUTHOR, GITHUB
 
 OWNER = AUTHOR
-REPO = "Dev-bot"
-API_URL = f"https://api.github.com/repos/{OWNER}/{REPO}/actions/runs"
+REPO = 'Dev-bot'
+API_URL = f'https://api.github.com/repos/{OWNER}/{REPO}/actions/runs?workflow=deploy.yml' #!!!!!
+
 
 # Заголовки для аутентификации
 HEADERS = {
@@ -60,10 +61,10 @@ async def check_workflows():
 
         # Если более одного процесса в статусе 'in_progress', завершаем работу
         if in_progress_count > 1:
-            print(
-                "❌ Обнаружено более одного запущенного "
-                "workflow 'Deploy Discord-Bot'. Завершаем процесс..."
-            )
+            print("❌ Обнаружено более одного запущенного workflow "
+                  "'Deploy Discord-Bot'. Завершаем процесс... "
+                  f"in_progress_count = {in_progress_count}\n"
+                  f"Список запущенных:\n{deploy_workflows}")
             # Закрываем бота и завершаем выполнение скрипта
             await bot.close()
             sys.exit(0)

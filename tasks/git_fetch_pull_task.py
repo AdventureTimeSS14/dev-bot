@@ -80,10 +80,8 @@ async def fetch_merged_pull_requests():
             coauthors = pr.get("coauthors", [])
 
             # Очищаем описание от HTML-комментариев и ищем описание изменений
-            description = re.sub(
-                r"<!--.*?-->", "", description, flags=re.DOTALL
-            )
-            match = re.search(r"(:cl:.*?)(\n|$)", description, re.DOTALL)
+            description = re.sub(r"<!--.*?-->", "", description, flags=re.DOTALL)
+            match = re.search(r"(:cl:.*?|\U0001F191.*?)(\n|$)", description, re.DOTALL)
 
             if not match:
                 print(
