@@ -19,7 +19,7 @@ async def tweak_team(
     Команда для изменения роли пользователя.
     Позволяет заменить одну роль другой с указанием причины.
     """
-    
+
     # Проверка канала для логирования
     admin_channel = bot.get_channel(ADMIN_TEAM)
     if not admin_channel:
@@ -28,12 +28,16 @@ async def tweak_team(
 
     # Проверка на существование участника
     if not user:
-        await ctx.send("❌ Не смогла найти участника. Пожалуйста, убедитесь, что имя пользователя указано правильно.")
+        await ctx.send(
+            "❌ Не смогла найти участника. Пожалуйста, убедитесь, что имя пользователя указано правильно."
+        )
         return
 
     # Проверка наличия старой роли у пользователя
     if old_role not in user.roles:
-        await ctx.send(f"❌ У {user.name} нет роли **{old_role.name}**. Убедитесь, что роль указана верно.")
+        await ctx.send(
+            f"❌ У {user.name} нет роли **{old_role.name}**. Убедитесь, что роль указана верно."
+        )
         return
 
     # Проверка на допустимость причины
@@ -47,10 +51,10 @@ async def tweak_team(
         await user.add_roles(new_role, reason=reason)
 
         # Определяем тип действия: повышение или понижение
-        action = "Повышение в должности" if old_role < new_role else "Понижение в должности"
-        action_description = (
-            f"{ctx.author.mention} {'повышает' if old_role < new_role else 'понижает'} {user.mention}."
+        action = (
+            "Повышение в должности" if old_role < new_role else "Понижение в должности"
         )
+        action_description = f"{ctx.author.mention} {'повышает' if old_role < new_role else 'понижает'} {user.mention}."
         color = new_role.color  # Цвет для Embed сообщения
 
         # Создаем Embed сообщение для лог-канала
@@ -59,18 +63,29 @@ async def tweak_team(
             description=action_description,
             color=color,
         )
-        embed.add_field(name="Старая должность", value=f"**{old_role.name}**", inline=False)
-        embed.add_field(name="Новая должность", value=f"**{new_role.name}**", inline=False)
+        embed.add_field(
+            name="Старая должность", value=f"**{old_role.name}**", inline=False
+        )
+        embed.add_field(
+            name="Новая должность", value=f"**{new_role.name}**", inline=False
+        )
         embed.add_field(name="Причина", value=f"**{reason}**", inline=False)
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
-        embed.set_footer(text=f"Изменение роли произведено {ctx.author}", icon_url=ctx.guild.icon.url if ctx.guild.icon else None)
+        embed.set_footer(
+            text=f"Изменение роли произведено {ctx.author}",
+            icon_url=ctx.guild.icon.url if ctx.guild.icon else None,
+        )
 
         # Отправляем Embed в лог-канал и подтверждение в канал команды
         await admin_channel.send(embed=embed)
-        await ctx.send(f"✅ Роль **{old_role.name}** была успешно заменена на **{new_role.name}** у {user.name}. Причина: {reason}")
+        await ctx.send(
+            f"✅ Роль **{old_role.name}** была успешно заменена на **{new_role.name}** у {user.name}. Причина: {reason}"
+        )
 
     except discord.Forbidden:
-        await ctx.send("⚠️ У бота нет прав для изменения ролей. Пожалуйста, проверьте права бота.")
+        await ctx.send(
+            "⚠️ У бота нет прав для изменения ролей. Пожалуйста, проверьте права бота."
+        )
     except discord.HTTPException as e:
         await ctx.send(f"❌ Произошла ошибка при изменении ролей: {e}")
         print(f"Ошибка при изменении ролей: {e}")

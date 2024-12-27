@@ -1,6 +1,7 @@
-'''
+"""
 Модуль команды add_vacation
-'''
+"""
+
 import discord
 
 from bot_init import bot
@@ -34,7 +35,9 @@ async def add_vacation(ctx, user: discord.Member, end_date: str, reason: str):
     try:
         # Добавляем роль отпуска пользователю
         await user.add_roles(role_vacation)
-        await ctx.send(f"✅ Роль {role_vacation.name} успешно добавлена {user.mention}.")
+        await ctx.send(
+            f"✅ Роль {role_vacation.name} успешно добавлена {user.mention}."
+        )
 
         # Создаем Embed для уведомления в админ-канале
         embed = discord.Embed(

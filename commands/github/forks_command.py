@@ -3,8 +3,13 @@ from discord.ext import commands
 
 from bot_init import bot
 
-from .github_processor import (create_embed_list, fetch_github_data,
-                               send_embeds, validate_repository, validate_user)
+from .github_processor import (
+    create_embed_list,
+    fetch_github_data,
+    send_embeds,
+    validate_repository,
+    validate_user,
+)
 
 
 @bot.command(name="forks")
@@ -66,4 +71,6 @@ async def forks_error(ctx, error):
             "Укажите ключ следующим образом: `&forks n` или `&forks o`."
         )
     else:
-        await ctx.send("❌ Произошла ошибка при выполнении команды. Пожалуйста, попробуйте позже.")
+        await ctx.send(
+            "❌ Произошла ошибка при выполнении команды. Пожалуйста, попробуйте позже."
+        )

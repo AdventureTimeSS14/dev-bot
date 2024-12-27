@@ -68,6 +68,7 @@ async def remove_roles_from_user(user, roles):
             errors.append(f"❌ У {user.name} нет роли **{role.name}**.")
     return removed_roles, errors
 
+
 async def send_results(ctx, removed_roles, errors):
     """
     Отправляет результаты удаления ролей или ошибки в канал.
@@ -80,16 +81,18 @@ async def send_results(ctx, removed_roles, errors):
         for error in errors:
             await ctx.send(error)
 
+
 # Основная команда
 @bot.command()
 @has_any_role_by_id(HEAD_ADT_TEAM)
 async def remove_team(
-    ctx, user: discord.Member,
+    ctx,
+    user: discord.Member,
     role_dep: discord.Role,
     role_job: discord.Role,
     *,
-    reason: str
-    ):
+    reason: str,
+):
     """
     Команда для снятия сотрудника с должности.
     """

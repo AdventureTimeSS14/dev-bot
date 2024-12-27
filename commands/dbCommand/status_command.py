@@ -15,11 +15,7 @@ async def db_status(ctx):
     try:
         # Подключаемся к базе данных
         conn = mariadb.connect(
-            user=USER,
-            password=PASSWORD,
-            host=HOST,
-            port=int(PORT),
-            database=DATABASE
+            user=USER, password=PASSWORD, host=HOST, port=int(PORT), database=DATABASE
         )
 
         # Создаем embed для успешного подключения
@@ -40,7 +36,9 @@ async def db_status(ctx):
         # Логируем успешное подключение
         log_channel = bot.get_channel(LOG_CHANNEL_ID)
         if log_channel:
-            await log_channel.send(f"✅ Успешное подключение к БД MariaDB. Запрошено пользователем: {ctx.author}.\n_ _")
+            await log_channel.send(
+                f"✅ Успешное подключение к БД MariaDB. Запрошено пользователем: {ctx.author}.\n_ _"
+            )
 
     except mariadb.Error as db_error:
         # Создаем embed для ошибки подключения
@@ -85,4 +83,3 @@ async def db_status(ctx):
         if conn and conn.open:
             conn.close()
             print("Соединение с базой данных закрыто.")
-

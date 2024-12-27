@@ -10,11 +10,8 @@ from bot_init import bot
 from config import CHANNEL_ID_UPDATE_STATUS, SS14_ADDRESS
 
 # Определение уровней игры для SS14
-SS14_RUN_LEVELS = {
-    0: "Лобби",
-    1: "Раунд идёт",
-    2: "Окончание раунда..."
-}
+SS14_RUN_LEVELS = {0: "Лобби", 1: "Раунд идёт", 2: "Окончание раунда..."}
+
 
 async def get_ss14_server_status_second(address: str) -> dict:
     """
@@ -31,6 +28,7 @@ async def get_ss14_server_status_second(address: str) -> dict:
         print(f"Ошибка при получении статуса с сервера SS14: {e}")
         return None
 
+
 def get_ss14_status_url(url: str) -> str:
     """
     Преобразует адрес сервера в корректный URL.
@@ -41,6 +39,7 @@ def get_ss14_status_url(url: str) -> str:
     parsed = urlparse(url, allow_fragments=False)
     port = parsed.port or 1212  # Если порт не указан, используем 1212
     return urlunparse(("http", f"{parsed.hostname}:{port}", parsed.path, "", "", ""))
+
 
 def create_status_embed(address: str, status_data: dict, author=None) -> discord.Embed:
     """
@@ -87,6 +86,7 @@ def create_status_embed(address: str, status_data: dict, author=None) -> discord
 
     return embed
 
+
 def create_error_embed(address: str) -> discord.Embed:
     """
     Создаёт Embed для ошибок.
@@ -95,7 +95,15 @@ def create_error_embed(address: str) -> discord.Embed:
     embed.title = "Ошибка получения данных"
     embed.set_footer(text=f"Адрес: {address}")
 
-    fields = ["Игроков", "Статус", "Время раунда", "Раунд", "Карта", "Режим игры", "Бункер"]
+    fields = [
+        "Игроков",
+        "Статус",
+        "Время раунда",
+        "Раунд",
+        "Карта",
+        "Режим игры",
+        "Бункер",
+    ]
     for field in fields:
         embed.add_field(name=field, value="Error!", inline=False)
 

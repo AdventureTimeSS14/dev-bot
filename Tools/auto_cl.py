@@ -42,7 +42,7 @@
 # def represent_dict_compact(dumper, data):
 #     if len(data) == 2 and "message" in data and "type" in data:
 #         return dumper.represent_mapping("tag:yaml.org,2002:map", data.items(), flow_style=True)
-    
+
 #     return dumper.represent_mapping("tag:yaml.org,2002:map", data.items())
 
 # def represent_multiline_string(dumper, data):
@@ -60,12 +60,12 @@
 #             reset_timestamp = data["rate"]["reset"]
 #             reset_time = datetime.fromtimestamp(reset_timestamp, tz=timezone.utc)
 #             logging.info(f"Rate limit checked: {remaining} remaining out of {limit}.")
-        
+
 #             if remaining == 0:
 #                 reset_in = (reset_time - datetime.now(timezone.utc)).total_seconds()
 #                 logging.warning(f"Rate limit exceeded. Waiting {reset_in:.2f} seconds.")
 #                 await asyncio.sleep(max(reset_in, 1))
-        
+
 #         else:
 #             logging.error(f"Error checking rate limit: {response.status}")
 #             response.raise_for_status()
@@ -78,7 +78,7 @@
 #             if response.status == 404:
 #                 logging.info(f"{url} not found (404). Skipping.")
 #                 return None
-            
+
 #             elif response.status == 200:
 #                 logging.info(f"Successfully fetched data from {url}.")
 #                 return await response.json()
@@ -86,8 +86,8 @@
 #             if response.status in {403, 429}:
 #                 logging.warning(f"Received status {response.status} from {url}. Checking rate limit and retrying.")
 #                 await asyncio.sleep(delay)
-#                 continue  
-            
+#                 continue
+
 #             logging.error(f"Error fetching {url}: {response.status}")
 #             response.raise_for_status()
 
@@ -107,7 +107,7 @@
 #         logging.info(f"Loading YAML data from {file_path}.")
 #         with file_path.open("r", encoding="utf-8") as file:
 #             return yaml.load(file, Loader=NoDatesSafeLoader)
-    
+
 #     logging.info(f"{file_path} does not exist. Returning empty entries.")
 #     return {"Entries": []}
 
@@ -120,13 +120,13 @@
 # def strip_newlines(data):
 #     if isinstance(data, dict):
 #         return {k: strip_newlines(v) for k, v in data.items()}
-    
+
 #     elif isinstance(data, list):
 #         return [strip_newlines(v) for v in data]
-    
+
 #     elif isinstance(data, str):
 #         return data.replace("\n", " ").replace("\r", " ")
-    
+
 #     return data
 
 # async def fetch_pr_data(token, repo, pr_number):
@@ -139,7 +139,7 @@
 #             return None
 
 #         body, author, changes = pr_info.get("body", ""), pr_info["user"]["login"], []
-        
+
 #         # Проверяем, что body не None перед разделением на строки
 #         if body:
 #             lines = [line.strip() for line in body.splitlines()]
@@ -178,7 +178,7 @@
 #         for result in await asyncio.gather(*tasks):
 #             if result:
 #                 pr_data.append(result)
-                
+
 #     pr_data.sort(key=lambda x: x["time"])
 #     return pr_data
 
@@ -203,7 +203,7 @@
 #         sys.exit(1)
 
 #     github_token, repo = sys.argv[1], sys.argv[2]
-    
+
 #     async with aiohttp.ClientSession(headers={"Authorization": f"token {github_token}", "Accept": "application/vnd.github.v3+json"}) as session:
 #         logging.info(f"Fetching the latest PR number for repo: {repo}.")
 #         pr_number = await get_latest_pr_number(session, repo)

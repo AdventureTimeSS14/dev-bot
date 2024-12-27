@@ -1,7 +1,8 @@
-'''
+"""
 Модуль gpt_command
 Author: Schodinger71, Nix Silvam, Xelasto
-'''
+"""
+
 from discord.ext import commands
 from discord.ext.commands import BucketType
 from g4f.client import Client
@@ -16,14 +17,14 @@ from config import GPT_PROMPT, WHITELIST_ROLE_ID
 @commands.cooldown(1, 60, BucketType.user)
 @has_any_role_by_id(WHITELIST_ROLE_ID)
 async def gpt(ctx, *prompt):
-    '''
+    """
     Команда принимает промт и отправляет его
     к Gpt чату, и присылает от него же ответ.
 
     Параметры:
     ctx: Контекст команды из Discord.
     prompt: Строка запроса, которую пользователь хочет отправить в GPT.
-    '''
+    """
     async with ctx.typing():
         formatted_prompt = GPT_PROMPT.format(user_id=ctx.author.id)
         client = Client(provider=FreeGpt)
@@ -49,14 +50,14 @@ async def gpt(ctx, *prompt):
 
 @gpt.error
 async def gpt_error(ctx, error):
-    '''
+    """
     Обработка ошибок для команды gpt.
     Проверка на тайм-ауты и ошибки проверки прав пользователя.
 
     Параметры:
     ctx: Контекст команды из Discord.
     error: Ошибка, возникшая при выполнении команды.
-    '''
+    """
     if isinstance(error, commands.CommandOnCooldown):
         await ctx.send(
             f"Эту команду можно использовать снова через {int(error.retry_after)} секунд."

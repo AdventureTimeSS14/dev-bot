@@ -6,29 +6,36 @@ from discord.ext import tasks
 
 from bot_init import bot
 from commands.github.github_processor import fetch_github_data
-from config import (AUTHOR, CHANGELOG_CHANNEL_ID, LOG_CHANNEL_ID, REPOSITORIES,
-                    SECOND_UPDATE_CHANGELOG)
+from config import (
+    AUTHOR,
+    CHANGELOG_CHANNEL_ID,
+    LOG_CHANNEL_ID,
+    REPOSITORIES,
+    SECOND_UPDATE_CHANGELOG,
+)
 
 # Переменная для отслеживания последнего времени проверки
 LAST_CHECK_TIME: datetime = None
 
 MAX_FIELD_LENGTH = 1024  # Максимальный размер поля для Embed
 
+
 def smart_truncate(text, max_length):
     """Умная обрезка текста: обрезает до максимальной длины, не разрывая слова или предложения."""
     if len(text) <= max_length:
         return text
-    
+
     # Ищем последнее завершенное предложение перед обрезкой
     truncated_text = text[:max_length]
     last_period = truncated_text.rfind(".")
-    
+
     if last_period == -1:  # Если нет точки, обрезаем просто по лимиту
         truncated_text = truncated_text[:max_length]
     else:
-        truncated_text = truncated_text[:last_period + 1]
-    
+        truncated_text = truncated_text[: last_period + 1]
+
     return truncated_text.strip() + "..."  # Добавляем многоточие
+
 
 @tasks.loop(seconds=SECOND_UPDATE_CHANGELOG)
 async def fetch_merged_pull_requests():
@@ -38,7 +45,9 @@ async def fetch_merged_pull_requests():
     global LAST_CHECK_TIME
 
     # Формируем URL для получения закрытых пулл-реквестов
-    url = f'https://api.github.com/repos/{AUTHOR}/{REPOSITORIES["n"]}/pulls?state=closed'
+    url = (
+        f'https://api.github.com/repos/{AUTHOR}/{REPOSITORIES["n"]}/pulls?state=closed'
+    )
 
     # Получаем данные о пулл-реквестах
     pull_requests = await fetch_github_data(
@@ -68,9 +77,9 @@ async def fetch_merged_pull_requests():
             pr_url = pr["html_url"]
             description = pr.get("body", "").strip()
             author_name = pr["user"]["login"]
-            
+
             # Получаем данные о соавторах, если они есть
-            coauthors = pr.get('coauthors', [])
+            coauthors = pr.get("coauthors", [])
 
             # Очищаем описание от HTML-комментариев и ищем описание изменений
             description = re.sub(r"<!--.*?-->", "", description, flags=re.DOTALL)
@@ -82,8 +91,10 @@ async def fetch_merged_pull_requests():
 
             # Формируем текст изменений
             cl_text = match.group(1).strip()
-            remaining_lines = description[match.end():].strip()
-            description = f"{cl_text}\n{remaining_lines}" if remaining_lines else cl_text
+            remaining_lines = description[match.end() :].strip()
+            description = (
+                f"{cl_text}\n{remaining_lines}" if remaining_lines else cl_text
+            )
 
             # Умная обрезка текста, если описание слишком длинное
             description = smart_truncate(description, MAX_FIELD_LENGTH)
@@ -97,7 +108,9 @@ async def fetch_merged_pull_requests():
             embed.add_field(name="Изменения:", value=description, inline=False)
             embed.add_field(name="Автор:", value=author_name, inline=False)
             pr_number = pr["number"]  # Номер пулл-реквеста
-            embed.add_field(name="Ссылка:", value=f"[PR #{pr_number}]({pr_url})", inline=False)
+            embed.add_field(
+                name="Ссылка:", value=f"[PR #{pr_number}]({pr_url})", inline=False
+            )
             # Добавляем соавторов, если они есть
             if coauthors:
                 coauthors_str = "\n".join(coauthors)
@@ -115,8 +128,10 @@ async def fetch_merged_pull_requests():
             try:
                 # Отправляем сообщение в CHANGELOG
                 await changelog_channel.send(embed=embed)
-                print(f"✅ Информация о замерженном PR #{pr_number} опубликована в CHANGELOG.")
-                
+                print(
+                    f"✅ Информация о замерженном PR #{pr_number} опубликована в CHANGELOG."
+                )
+
                 # Логируем отправленное сообщение в LOG_CHANNEL
                 if log_channel:
                     log_message = (
@@ -131,7 +146,9 @@ async def fetch_merged_pull_requests():
                     print(f"⚠️ Лог-канал с ID {LOG_CHANNEL_ID} не найден.")
 
             except discord.Forbidden:
-                print(f"❌ У бота нет прав для отправки сообщений в канал с ID {CHANGELOG_CHANNEL_ID}.")
+                print(
+                    f"❌ У бота нет прав для отправки сообщений в канал с ID {CHANGELOG_CHANNEL_ID}."
+                )
             except discord.HTTPException as e:
                 print(f"❌ Ошибка при отправке Embed: {e}")
 

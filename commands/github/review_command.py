@@ -3,11 +3,19 @@ from discord.ext import commands
 
 from bot_init import bot
 
-from .github_processor import (create_embed_list, fetch_github_data,
-                               send_embeds, validate_repository, validate_user)
+from .github_processor import (
+    create_embed_list,
+    fetch_github_data,
+    send_embeds,
+    validate_repository,
+    validate_user,
+)
 
 
-@bot.command(name="review", help="Получает список пулл-реквестов для ревью из указанного репозитория.")
+@bot.command(
+    name="review",
+    help="Получает список пулл-реквестов для ревью из указанного репозитория.",
+)
 async def review(ctx, repo_key: str):
     """
     Команда для получения списка пулл-реквестов, которые требуют ревью, из указанного репозитория.
@@ -85,4 +93,6 @@ async def review_error(ctx, error):
     else:
         # Логируем и отправляем сообщение об ошибке
         print(f"❌ Ошибка в команде review: {error}")
-        await ctx.send("❌ Произошла ошибка при выполнении команды. Проверьте логи для подробностей.")
+        await ctx.send(
+            "❌ Произошла ошибка при выполнении команды. Проверьте логи для подробностей."
+        )

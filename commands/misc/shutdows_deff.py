@@ -1,8 +1,12 @@
 import discord
 
 from bot_init import bot
-from config import (CHANNEL_ID_UPDATE_STATUS, LOG_CHANNEL_ID,
-                    MESSAGE_ID_TIME_SHUTDOWS, SS14_ADDRESS)
+from config import (
+    CHANNEL_ID_UPDATE_STATUS,
+    LOG_CHANNEL_ID,
+    MESSAGE_ID_TIME_SHUTDOWS,
+    SS14_ADDRESS,
+)
 
 
 async def shutdown_def():
@@ -98,11 +102,11 @@ async def update_bot_presence():
     """
     try:
         name = "Отключена!"
-        status_state = "Игроков: ERROR! | Режим: ERROR! | Раунд: ERROR! | Статус: ERROR!"
+        status_state = (
+            "Игроков: ERROR! | Режим: ERROR! | Раунд: ERROR! | Статус: ERROR!"
+        )
         activity = discord.Activity(
-            type=discord.ActivityType.unknown,
-            name=name,
-            state=status_state
+            type=discord.ActivityType.unknown, name=name, state=status_state
         )
         await bot.change_presence(activity=activity)
         print("✅ Статус бота обновлён на 'Отключена'.")
@@ -117,7 +121,9 @@ async def send_to_log_channel():
     try:
         channel = bot.get_channel(LOG_CHANNEL_ID)
         if channel:
-            await channel.send(f"⚠️ {bot.user} завершает свою работу! Перезапуск начнётся в течение 10 минут.\n_ _")
+            await channel.send(
+                f"⚠️ {bot.user} завершает свою работу! Перезапуск начнётся в течение 10 минут.\n_ _"
+            )
         else:
             print(f"❌ Лог-канал с ID {LOG_CHANNEL_ID} не найден.")
     except Exception as e:

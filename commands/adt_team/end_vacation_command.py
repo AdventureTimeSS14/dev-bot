@@ -1,6 +1,7 @@
-'''
+"""
 Модуль команды end_vacation
-'''
+"""
+
 import discord
 
 from bot_init import bot

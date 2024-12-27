@@ -1,6 +1,7 @@
-'''
+"""
 Модуль содержащий команду add_role
-'''
+"""
+
 import discord
 from discord.utils import get
 

@@ -1,6 +1,7 @@
-'''
+"""
 Модуль команды remove_role
-'''
+"""
+
 import discord
 from discord.utils import get
 
@@ -48,7 +49,9 @@ async def remove_role(ctx, user: discord.Member, *role_names: str):
             await user.remove_roles(role)
             removed_roles.append(role.name)
         except discord.Forbidden:
-            await ctx.send(f"⚠️ У бота нет прав для снятия роли '{role.name}' у {user.name}.")
+            await ctx.send(
+                f"⚠️ У бота нет прав для снятия роли '{role.name}' у {user.name}."
+            )
         except discord.HTTPException as e:
             await ctx.send(f"❌ Ошибка при снятии роли '{role.name}': {str(e)}")
         except Exception as e:
@@ -59,4 +62,6 @@ async def remove_role(ctx, user: discord.Member, *role_names: str):
 
     # Отправляем сообщение об успешных действиях, если были сняты роли
     if removed_roles:
-        await ctx.send(f"✅ Роли успешно сняты у {user.name}: {', '.join(removed_roles)}.")
+        await ctx.send(
+            f"✅ Роли успешно сняты у {user.name}: {', '.join(removed_roles)}."
+        )

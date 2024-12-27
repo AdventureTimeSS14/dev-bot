@@ -7,29 +7,34 @@ from discord.ext import commands
 
 from bot_init import bot
 from commands.misc.check_roles import has_any_role_by_id
-from config import (AUTHOR, CHANGELOG_CHANNEL_ID, REPOSITORIES,
-                    WHITELIST_ROLE_ID)
+from config import AUTHOR, CHANGELOG_CHANNEL_ID, REPOSITORIES, WHITELIST_ROLE_ID
 
 MAX_FIELD_LENGTH = 1024  # Максимальный размер поля для Embed
+
 
 def smart_truncate(text, max_length):
     """Умная обрезка текста: обрезает до максимальной длины, не разрывая слова или предложения."""
     if len(text) <= max_length:
         return text
-    
+
     # Ищем последнее завершенное предложение перед обрезкой
     truncated_text = text[:max_length]
     last_period = truncated_text.rfind(".")
-    
+
     if last_period == -1:  # Если нет точки, обрезаем просто по лимиту
         truncated_text = truncated_text[:max_length]
     else:
-        truncated_text = truncated_text[:last_period + 1]
-    
+        truncated_text = truncated_text[: last_period + 1]
+
     return truncated_text.strip() + "..."  # Добавляем многоточие
 
-@bot.command(name="pr", help="Получить информацию о замерженном пулл-реквесте по его номеру.")
-@has_any_role_by_id(WHITELIST_ROLE_ID)  # Проверяем, есть ли у пользователя доступ к выполнению команды
+
+@bot.command(
+    name="pr", help="Получить информацию о замерженном пулл-реквесте по его номеру."
+)
+@has_any_role_by_id(
+    WHITELIST_ROLE_ID
+)  # Проверяем, есть ли у пользователя доступ к выполнению команды
 async def get_pr_info(ctx, pr_number: int):
     """
     Команда для получения информации о замерженном пулл-реквесте из GitHub.
@@ -54,14 +59,16 @@ async def get_pr_info(ctx, pr_number: int):
         return
 
     # Извлекаем данные о пулл-реквесте
-    merged_at = datetime.strptime(pr["merged_at"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+    merged_at = datetime.strptime(pr["merged_at"], "%Y-%m-%dT%H:%M:%SZ").replace(
+        tzinfo=timezone.utc
+    )
     pr_title = pr["title"]
     pr_url = pr["html_url"]
     description = pr.get("body", "").strip()
     author_name = pr["user"]["login"]
-    
+
     # Получаем данные о соавторах, если они есть
-    coauthors = pr.get('coauthors', [])
+    coauthors = pr.get("coauthors", [])
 
     # Очищаем описание от комментариев и ищем текст изменений
     description = re.sub(r"<!--.*?-->", "", description, flags=re.DOTALL)
@@ -72,7 +79,7 @@ async def get_pr_info(ctx, pr_number: int):
         return
 
     cl_text = match.group(1).strip()
-    remaining_lines = description[match.end():].strip()
+    remaining_lines = description[match.end() :].strip()
     description = f"{cl_text}\n{remaining_lines}" if remaining_lines else cl_text
 
     # Умная обрезка текста, если описание слишком длинное
@@ -89,7 +96,7 @@ async def get_pr_info(ctx, pr_number: int):
     embed.add_field(name="Изменения:", value=description, inline=False)
     embed.add_field(name="Автор:", value=author_name, inline=False)
     embed.add_field(name="Ссылка:", value=f"[PR #{pr_number}]({pr_url})", inline=False)
-    
+
     # Добавляем соавторов, если они есть
     if coauthors:
         coauthors_str = "\n".join(coauthors)
@@ -105,7 +112,9 @@ async def get_pr_info(ctx, pr_number: int):
 
     try:
         await channel.send(embed=embed)
-        await ctx.send(f"Информация о пулл-реквесте успешно отправлена в канал <#{CHANGELOG_CHANNEL_ID}>.")
+        await ctx.send(
+            f"Информация о пулл-реквесте успешно отправлена в канал <#{CHANGELOG_CHANNEL_ID}>."
+        )
     except discord.Forbidden:
         await ctx.send("❌ У бота нет прав для отправки сообщений в указанный канал.")
     except discord.HTTPException as e:

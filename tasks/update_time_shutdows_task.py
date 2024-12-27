@@ -5,8 +5,7 @@ import discord
 from discord.ext import tasks
 
 from bot_init import bot
-from config import (CHANNEL_ID_UPDATE_STATUS, MESSAGE_ID_TIME_SHUTDOWS,
-                    TIME_SHUTDOWSE)
+from config import CHANNEL_ID_UPDATE_STATUS, MESSAGE_ID_TIME_SHUTDOWS, TIME_SHUTDOWSE
 
 
 @tasks.loop(seconds=11)
@@ -15,7 +14,9 @@ async def update_time_shutdows():
     Задача для обновления времени работы бота и оставшегося времени до отключения,
     редактируя указанное сообщение.
     """
-    channel_id = CHANNEL_ID_UPDATE_STATUS  # ID канала, где нужно редактировать сообщение
+    channel_id = (
+        CHANNEL_ID_UPDATE_STATUS  # ID канала, где нужно редактировать сообщение
+    )
     message_id = MESSAGE_ID_TIME_SHUTDOWS  # ID сообщения, которое нужно редактировать
 
     # Получаем канал
@@ -27,9 +28,9 @@ async def update_time_shutdows():
     try:
         # Получаем сообщение по ID
         message = await channel.fetch_message(message_id)
-        
+
         # Проверяем, задано ли время старта бота
-        if not hasattr(bot, 'start_time') or bot.start_time is None:
+        if not hasattr(bot, "start_time") or bot.start_time is None:
             await message.edit(content="⏳ Время запуска бота не задано.")
             return  # Если время старта не задано, прекращаем выполнение
 
