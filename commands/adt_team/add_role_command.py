@@ -1,5 +1,7 @@
+'''
+Модуль содержащий команду add_role
+'''
 import discord
-from discord.ext import commands
 from discord.utils import get
 
 from bot_init import bot
@@ -38,10 +40,15 @@ async def add_role(ctx, user: discord.Member, *role_names: str):
             await user.add_roles(role)
             added_roles.append(role.name)
         except discord.Forbidden:
-            errors.append(f"⚠️ У бота недостаточно прав для добавления роли '{role.name}' пользователю {user.mention}.")
+            errors.append(
+                f"⚠️ У бота недостаточно прав для добавления роли '{role.name}' "
+                f"пользователю {user.mention}."
+            )
         except discord.HTTPException as e:
             print(f"Ошибка при добавлении роли '{role.name}': {e}")
-            errors.append(f"❌ Не удалось добавить роль '{role.name}' для {user.mention} из-за ошибки: {e}")
+            errors.append(
+                f"❌ Не удалось добавить роль '{role.name}' для {user.mention} из-за ошибки: {e}"
+            )
 
     # Если добавлены роли, выводим итоговое сообщение
     if added_roles:
@@ -54,4 +61,7 @@ async def add_role(ctx, user: discord.Member, *role_names: str):
 
     # Если не удалось добавить ни одной роли
     if not added_roles and not errors:
-        await ctx.send(f"❌ Не удалось добавить ни одной роли для {user.mention}. Проверьте права и правильность ввода ролей.")
+        await ctx.send(
+            f"❌ Не удалось добавить ни одной роли для {user.mention}. "
+            "Проверьте права и правильность ввода ролей."
+        )
