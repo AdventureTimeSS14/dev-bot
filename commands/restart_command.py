@@ -44,7 +44,7 @@ async def restart(ctx):
         print(f"❌ Ошибка соединения: {e}")
         await ctx.send("❌ Ошибка соединения. Проверьте логи.")
 
-    except Exception as e: # pylint: disable=W0718
+    except Exception as e:
         # Общая ошибка, если ничего более специфического не подошло
         print(f"❌ Произошла ошибка при попытке перезапуска: {e}")
         await ctx.send("❌ Произошла ошибка при попытке перезапуска. Проверьте логи.")

@@ -55,6 +55,6 @@ async def add_vacation(ctx, user: discord.Member, end_date: str, reason: str):
         await ctx.send("⚠️ Ошибка: У бота недостаточно прав для добавления роли.")
     except discord.HTTPException as e:
         await ctx.send(f"❌ Ошибка: Не удалось добавить роль. Подробнее: {e}")
-    except Exception as e: # pylint: disable=W0718
+    except Exception as e:
         print(f"Неожиданная ошибка: {e}")
         await ctx.send("❌ Произошла непредвиденная ошибка.")

@@ -25,7 +25,7 @@ async def get_status_command(ctx):
         embed = create_status_embed(SS14_ADDRESS, status_data, ctx.author)
         await ctx.send(embed=embed)
 
-    except Exception as e: # pylint: disable=W0718
+    except Exception as e:
         # Обработка любых ошибок
         print(f"❌ Произошла ошибка в команде 'status': {e}")
         await ctx.send("❌ Произошла ошибка при выполнении команды. Повторите позже.")

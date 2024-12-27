@@ -42,7 +42,7 @@ async def gpt(ctx, *prompt):
         except (ConnectionError, TimeoutError) as e:
             # Обработка более конкретных ошибок подключения и таймаутов
             await ctx.send(f"Ошибка при подключении к GPT: {str(e)}")
-        except Exception as e: # pylint: disable=W0718
+        except Exception as e:
             # Общая ошибка для всех остальных случаев
             await ctx.send(f"Произошла ошибка при обращении к GPT: {str(e)}")
 
