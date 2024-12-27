@@ -42,9 +42,9 @@ async def check_workflows():
             run_name = run.get("name", "Неизвестно")
 
             # Проверяем, что имя процесса соответствует 'Deploy Discord-Bot'
-            if run_name == 'Deploy Discord-Bot':
-                status = run.get('status', 'Неизвестно')
-                
+            if run_name == "Deploy Discord-Bot":
+                status = run.get("status", "Неизвестно")
+
                 # Логируем информацию о процессе
                 print(f"  - Название: {run_name}")
                 print(f"    Статус: {status}")
@@ -52,13 +52,15 @@ async def check_workflows():
                 print()
 
                 # Если процесс в статусе 'in_progress', увеличиваем счётчик
-                if status == 'in_progress':
+                if status == "in_progress":
                     in_progress_count += 1
                     deploy_workflows.append(run)
 
         # Если более одного процесса в статусе 'in_progress', завершаем работу
         if in_progress_count > 1:
-            print("❌ Обнаружено более одного запущенного workflow 'Deploy Discord-Bot'. Завершаем процесс...")
+            print(
+                "❌ Обнаружено более одного запущенного workflow 'Deploy Discord-Bot'. Завершаем процесс..."
+            )
             # Закрываем бота и завершаем выполнение скрипта
             await bot.close()
             sys.exit(0)
