@@ -2,7 +2,7 @@ import discord
 
 from bot_init import bot
 from config import ADMIN_TEAM
-
+# pylint: disable=C0301
 commands_info = {
     "Основные команды": {
         "&new_team": {
