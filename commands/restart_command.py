@@ -1,8 +1,8 @@
 """
 Команда для безопасного перезапуска бота.
 """
-import sys
 import asyncio
+import sys
 
 from bot_init import bot
 from commands.misc.check_roles import has_any_role_by_id
