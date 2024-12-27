@@ -1,5 +1,7 @@
+'''
+Модуль команды end_vacation
+'''
 import discord
-from discord.ext import commands
 
 from bot_init import bot
 from commands.misc.check_roles import has_any_role_by_id
