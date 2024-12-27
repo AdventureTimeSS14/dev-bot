@@ -2,6 +2,7 @@
 Команда для безопасного перезапуска бота.
 """
 import sys
+import asyncio
 
 from bot_init import bot
 from commands.misc.check_roles import has_any_role_by_id
@@ -33,7 +34,17 @@ async def restart(ctx):
         # Завершаем процесс
         sys.exit(0)
 
-    except Exception as e:
-        # Обработка ошибок
+    except asyncio.CancelledError:
+        # Обработка отмены асинхронной операции
+        print("❌ Перезапуск был отменен.")
+        await ctx.send("❌ Перезапуск был отменен.")
+
+    except ConnectionError as e:
+        # Ошибки, связанные с сетью
+        print(f"❌ Ошибка соединения: {e}")
+        await ctx.send("❌ Ошибка соединения. Проверьте логи.")
+
+    except Exception as e: # pylint: disable=W0718
+        # Общая ошибка, если ничего более специфического не подошло
         print(f"❌ Произошла ошибка при попытке перезапуска: {e}")
         await ctx.send("❌ Произошла ошибка при попытке перезапуска. Проверьте логи.")
