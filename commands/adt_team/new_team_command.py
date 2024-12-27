@@ -1,3 +1,6 @@
+'''
+Модуль команды new_team
+'''
 import discord
 
 from bot_init import bot
@@ -30,7 +33,9 @@ async def new_team(ctx, user: discord.Member, *roles: discord.Role):
                 await user.add_roles(role)
                 assigned_roles.append(role.name)
             except discord.Forbidden:
-                await ctx.send(f"⚠️ У бота нет прав для добавления роли **{role.name}** у {user.mention}.")
+                await ctx.send(
+                    f"⚠️ У бота нет прав для добавления роли **{role.name}** у {user.mention}."
+                )
             except discord.HTTPException as e:
                 await ctx.send(f"❌ Ошибка при добавлении роли **{role.name}**: {str(e)}")
             except Exception as e:
