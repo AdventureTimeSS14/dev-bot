@@ -1,3 +1,6 @@
+'''
+Модуль команды для получения все никнеймов относящихся к введённой роли.
+'''
 import discord
 
 from bot_init import bot
@@ -12,7 +15,9 @@ async def user_role(ctx, *role_names: str):
     role_name = " ".join(role_names).strip()
 
     if not role_name:
-        await ctx.send("❌ Вы не указали название роли. Используйте команду так: `&user_role <название роли>`.")
+        await ctx.send(
+            "❌ Вы не указали название роли. Используйте команду так: `&user_role <название роли>`."
+        )
         return
 
     # Ищем роль в списке ролей сервера
