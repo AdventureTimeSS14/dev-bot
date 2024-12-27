@@ -29,7 +29,8 @@ async def tweak_team(
     # Проверка на существование участника
     if not user:
         await ctx.send(
-            "❌ Не смогла найти участника. Пожалуйста, убедитесь, что имя пользователя указано правильно."
+            "❌ Не смогла найти участника. "
+            "Пожалуйста, убедитесь, что имя пользователя указано правильно."
         )
         return
 
@@ -58,7 +59,7 @@ async def tweak_team(
             if old_role < new_role
             else "Понижение в должности"
         )
-        action_description = f"{ctx.author.mention} {'повышает' if old_role < new_role else 'понижает'} {user.mention}."
+        action_description = f"{ctx.author.mention} {'повышает' if old_role < new_role else 'понижает'} {user.mention}." # pylint: disable=C0301
         color = new_role.color  # Цвет для Embed сообщения
 
         # Создаем Embed сообщение для лог-канала
@@ -83,7 +84,7 @@ async def tweak_team(
         # Отправляем Embed в лог-канал и подтверждение в канал команды
         await admin_channel.send(embed=embed)
         await ctx.send(
-            f"✅ Роль **{old_role.name}** была успешно заменена на **{new_role.name}** у {user.name}. Причина: {reason}"
+            f"✅ Роль **{old_role.name}** была успешно заменена на **{new_role.name}** у {user.name}. Причина: {reason}" # pylint: disable=C0301
         )
 
     except discord.Forbidden:
