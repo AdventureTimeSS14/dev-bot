@@ -1,5 +1,7 @@
+'''
+Модуль команды extend_vacation
+'''
 import discord
-from discord.ext import commands
 
 from bot_init import bot
 from commands.misc.check_roles import has_any_role_by_id
@@ -20,7 +22,10 @@ async def extend_vacation(ctx, user: discord.Member, new_end_date: str, reason: 
 
     # Проверяем, есть ли у пользователя роль отпуска
     if role_vacation not in user.roles:
-        await ctx.send(f"❌ {user.mention} не имеет роли {role_vacation.name}, поэтому продлить отпуск невозможно.")
+        await ctx.send(
+            f"❌ {user.mention} не имеет роли {role_vacation.name}, "
+            "поэтому продлить отпуск невозможно."
+        )
         return
 
     # Получаем канал для уведомлений
