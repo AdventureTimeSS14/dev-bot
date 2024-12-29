@@ -5,7 +5,7 @@ from config import LOG_CHANNEL_ID
 
 
 @bot.event
-async def on_error(event, *args, **kwargs):
+async def on_error(event):
     """
     Обрабатывает ошибки, произошедшие в событии.
     Логирует их в указанный канал и выводит в консоль для диагностики.
@@ -23,8 +23,12 @@ async def on_error(event, *args, **kwargs):
     channel = bot.get_channel(LOG_CHANNEL_ID)
     if channel:
         try:
-            await channel.send(f"{error_message}\n```{error_traceback[:1900]}```")  # Урезаем до лимита Discord (2000 символов)
+            await channel.send(
+                f"{error_message}\n```{error_traceback[:1900]}```"
+            )  # Урезаем до лимита Discord (2000 символов)
         except Exception as e:
             print(f"❌ Ошибка при отправке сообщения об ошибке в канал: {e}")
     else:
-        print(f"❌ Канал с ID {LOG_CHANNEL_ID} не найден. Ошибка не записана в лог.")
+        print(
+            f"❌ Канал с ID {LOG_CHANNEL_ID} не найден. Ошибка не записана в лог."
+        )

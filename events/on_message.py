@@ -5,8 +5,13 @@ import requests
 from fuzzywuzzy import fuzz
 
 from bot_init import bot
-from config import (ADMIN_TEAM, AUTHOR, GLOBAL_SESSION, LOG_CHANNEL_ID,
-                    REPOSITORIES)
+from config import (
+    ADMIN_TEAM,
+    AUTHOR,
+    GLOBAL_SESSION,
+    LOG_CHANNEL_ID,
+    REPOSITORIES,
+)
 from data import JsonData
 
 
@@ -58,32 +63,41 @@ async def handle_message_deletion(message):
     try:
         # Отправляем ЛС пользователю
         await user.send(dm_message)
-        
+
         # Логируем информацию о сообщении
         log_message = (
-            f"{user.mention}, ваше сообщение было удалено. Пожалуйста, соблюдайте правила и структуру канала. "
+            f"{user.mention}, ваше сообщение было удалено. "
+            "Пожалуйста, соблюдайте правила и структуру канала. "
             "Используйте `&team_help` для получения инструкций."
         )
         await log_channel.send(log_message)
 
         # Логируем причину удаления
-        log_message = f"❌ Сообщение пользователя `{user.mention}` было удалено в канале {message.channel.mention}. Причина: нарушение правил."
+        log_message = (
+            f"❌ Сообщение пользователя `{user.mention}` "
+            f"было удалено в канале {message.channel.mention}. "
+            "Причина: нарушение правил."
+        )
         await log_channel.send(log_message)
 
     except discord.Forbidden:
         # Если не удается отправить ЛС (например, заблокировали бота)
-        await log_channel.send(f"⚠️ Не удалось отправить ЛС пользователю {user.mention}.")
+        await log_channel.send(
+            f"⚠️ Не удалось отправить ЛС пользователю {user.mention}."
+        )
 
 
 async def handle_mention(message):
     """
     Обрабатывает упоминания бота и отвечает на определённые фразы.
     """
-    text_without_mention = message.content.replace(f"<@{bot.user.id}>", "").strip()
+    text_without_mention = message.content.replace(
+        f"<@{bot.user.id}>", ""
+    ).strip()
     data = JsonData()
 
     # Проверяем вариации фраз из JsonData
-    for variation in data.get_data('hug_variations'):
+    for variation in data.get_data("hug_variations"):
         if fuzz.token_sort_ratio(text_without_mention.lower(), variation) > 80:
             await message.channel.send("*Обнимает в ответ.*")
             break
@@ -93,7 +107,7 @@ async def handle_github_pattern(message):
     """
     Проверяет наличие шаблона GitHub issue/PR в сообщении и отправляет ссылку на него.
     """
-    match = re.search(r'\[(n|o)(\d+)\]', message.content)
+    match = re.search(r"\[(n|o)(\d+)\]", message.content)
     if match:
         repo_code, number = match.groups()
         link = await get_github_link(repo_code, number)
@@ -110,9 +124,9 @@ async def get_github_link(repo_code, number):
         print(f"⚠️ Репозиторий с кодом {repo_code} не найден.")
         return None
 
-    base_api_url = f'https://api.github.com/repos/{AUTHOR}/{repo_name}'
-    issue_url = f'{base_api_url}/issues/{number}'
-    pr_url = f'{base_api_url}/pulls/{number}'
+    base_api_url = f"https://api.github.com/repos/{AUTHOR}/{repo_name}"
+    issue_url = f"{base_api_url}/issues/{number}"
+    pr_url = f"{base_api_url}/pulls/{number}"
 
     try:
         # Проверка PR

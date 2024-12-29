@@ -3,8 +3,13 @@ from discord.ext import commands
 
 from bot_init import bot
 
-from .github_processor import (create_embed_list, fetch_github_data,
-                               send_embeds, validate_repository, validate_user)
+from .github_processor import (
+    create_embed_list,
+    fetch_github_data,
+    send_embeds,
+    validate_repository,
+    validate_user,
+)
 
 
 @bot.command(name="achang")
@@ -23,7 +28,9 @@ async def achang(ctx, repo_key: str):
 
     # Формируем URL для GitHub API
     url = f"https://api.github.com/repos/{repository_name}/pulls"
-    pulls = await fetch_github_data(url, {"state": "open", "sort": "created", "base": "master"})
+    pulls = await fetch_github_data(
+        url, {"state": "open", "sort": "created", "base": "master"}
+    )
 
     # Если нет открытых пулл-реквестов
     if not pulls:
@@ -36,9 +43,16 @@ async def achang(ctx, repo_key: str):
             "title": pr.get("title", "Без названия"),
             "url": pr.get("html_url", "Нет ссылки"),
             "author": pr["user"].get("login", "Неизвестно"),
-            "requested_by": [reviewer.get("login", "Неизвестно") for reviewer in pr.get("requested_reviewers", [])]
+            "requested_by": [
+                reviewer.get("login", "Неизвестно")
+                for reviewer in pr.get("requested_reviewers", [])
+            ],
         }
-        for pr in pulls if any(label.get("name") == "Status: Awaiting Changes" for label in pr.get("labels", []))
+        for pr in pulls
+        if any(
+            label.get("name") == "Status: Awaiting Changes"
+            for label in pr.get("labels", [])
+        )
     ]
 
     # Если нет пулл-реквестов, требующих изменений
@@ -55,7 +69,8 @@ async def achang(ctx, repo_key: str):
             "name": pr["title"],
             "value": (
                 f"Автор: {pr['author']}\n"
-                f"Чьё ревью запрошено: {', '.join(pr['requested_by']) if pr['requested_by'] else 'Нет запрашиваемых рецензентов'}\n"
+                f"Чьё ревью запрошено: "
+                f"{', '.join(pr['requested_by']) if pr['requested_by'] else 'Нет запрашиваемых рецензентов'}\n" # pylint: disable=C0301
                 f"Ссылка: {pr['url']}"
             ),
             "inline": False,
@@ -73,7 +88,9 @@ async def achang_error(ctx, error):
     """
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send(
-            "Вы не указали ключ к репозиторию. Указать ключ к репозиторию можно следующим образом: `&achang n`, `&achang o`"
+            "Вы не указали ключ к репозиторию. "
+            "Указать ключ к репозиторию можно "
+            "следующим образом: `&achang n`, `&achang o`"
         )
     else:
         await ctx.send(f"Произошла ошибка: {error}")

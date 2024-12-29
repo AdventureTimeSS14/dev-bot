@@ -1,9 +1,9 @@
 import discord
 import mariadb
-from discord.ext import commands
 
 from bot_init import bot
-from config import DATABASE, HOST, LOG_CHANNEL_ID, PASSWORD, PORT, USER
+from commands.dbCommand.get_db_connection import get_db_connection
+from config import DATABASE, HOST, LOG_CHANNEL_ID, PORT, USER
 
 COLOR = discord.Color.dark_purple()
 
@@ -16,22 +16,16 @@ async def db_info(ctx):
     conn = None
     try:
         # Устанавливаем соединение с базой данных
-        conn = mariadb.connect(
-            user=USER,
-            password=PASSWORD,
-            host=HOST,
-            port=int(PORT),
-            database=DATABASE,
-        )
+        conn = get_db_connection()
 
         # Создаем embed для ответа
         avatar_url = ctx.author.avatar.url if ctx.author.avatar else None
-        embed.set_author(name=ctx.author.name, icon_url=avatar_url)
         embed = discord.Embed(
             title="Информация о базе данных",
             description=f"Подключение к базе данных {DATABASE} выполнено успешно!",
             color=COLOR,
         )
+        embed.set_author(name=ctx.author.name, icon_url=avatar_url)
 
         # Добавляем общую информацию
         embed.add_field(
@@ -49,7 +43,9 @@ async def db_info(ctx):
         # Запрос версии сервера
         cursor.execute("SELECT VERSION()")
         server_version = cursor.fetchone()
-        embed.add_field(name="Версия MariaDB", value=server_version[0], inline=False)
+        embed.add_field(
+            name="Версия MariaDB", value=server_version[0], inline=False
+        )
 
         # Запрос списка таблиц
         cursor.execute("SHOW TABLES")
@@ -57,9 +53,15 @@ async def db_info(ctx):
 
         if tables:
             table_list = "\n".join([table[0] for table in tables])
-            embed.add_field(name="Список таблиц", value=table_list, inline=False)
+            embed.add_field(
+                name="Список таблиц", value=table_list, inline=False
+            )
         else:
-            embed.add_field(name="Список таблиц", value="В базе данных нет таблиц.", inline=False)
+            embed.add_field(
+                name="Список таблиц",
+                value="В базе данных нет таблиц.",
+                inline=False,
+            )
 
         # Отправляем embed-ответ
         await ctx.send(embed=embed)
@@ -77,7 +79,8 @@ async def db_info(ctx):
         log_channel = bot.get_channel(LOG_CHANNEL_ID)
         if log_channel:
             await log_channel.send(
-                f"❌ Ошибка подключения к базе данных: {db_error}. Запрошено пользователем {ctx.author}.\n_ _"
+                f"❌ Ошибка подключения к базе данных: {db_error}. "
+                f"Запрошено пользователем {ctx.author}.\n_ _"
             )
 
     except Exception as e:
@@ -93,7 +96,8 @@ async def db_info(ctx):
         log_channel = bot.get_channel(LOG_CHANNEL_ID)
         if log_channel:
             await log_channel.send(
-                f"❌ Непредвиденная ошибка при выполнении команды db_info: {e}. Запрошено пользователем {ctx.author}.\n_ _"
+                f"❌ Непредвиденная ошибка при выполнении команды db_info: "
+                f"{e}. Запрошено пользователем {ctx.author}.\n_ _"
             )
 
     finally:

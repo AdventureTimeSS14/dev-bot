@@ -1,9 +1,9 @@
 import discord
 import mariadb
-from discord.ext import commands
 
 from bot_init import bot
-from config import DATABASE, HOST, LOG_CHANNEL_ID, PASSWORD, PORT, USER
+from commands.dbCommand.get_db_connection import get_db_connection
+from config import LOG_CHANNEL_ID
 
 
 @bot.command(name="db_status")
@@ -14,13 +14,7 @@ async def db_status(ctx):
     conn = None
     try:
         # Подключаемся к базе данных
-        conn = mariadb.connect(
-            user=USER,
-            password=PASSWORD,
-            host=HOST,
-            port=int(PORT),
-            database=DATABASE
-        )
+        conn = get_db_connection()
 
         # Создаем embed для успешного подключения
         embed = discord.Embed(
@@ -40,7 +34,10 @@ async def db_status(ctx):
         # Логируем успешное подключение
         log_channel = bot.get_channel(LOG_CHANNEL_ID)
         if log_channel:
-            await log_channel.send(f"✅ Успешное подключение к БД MariaDB. Запрошено пользователем: {ctx.author}.\n_ _")
+            await log_channel.send(
+                f"✅ Успешное подключение к БД MariaDB. "
+                f"Запрошено пользователем: {ctx.author}.\n_ _"
+            )
 
     except mariadb.Error as db_error:
         # Создаем embed для ошибки подключения
@@ -58,7 +55,8 @@ async def db_status(ctx):
         log_channel = bot.get_channel(LOG_CHANNEL_ID)
         if log_channel:
             await log_channel.send(
-                f"❌ Ошибка подключения к БД MariaDB: {db_error}. Запрошено пользователем: {ctx.author}.\n_ _"
+                f"❌ Ошибка подключения к БД MariaDB: {db_error}. "
+                f"Запрошено пользователем: {ctx.author}.\n_ _"
             )
 
     except Exception as e:
@@ -77,7 +75,8 @@ async def db_status(ctx):
         log_channel = bot.get_channel(LOG_CHANNEL_ID)
         if log_channel:
             await log_channel.send(
-                f"❌ Непредвиденная ошибка при подключении к БД MariaDB: {e}. Запрошено пользователем: {ctx.author}.\n_ _"
+                f"❌ Непредвиденная ошибка при подключении к БД MariaDB: {e}. "
+                f"Запрошено пользователем: {ctx.author}.\n_ _"
             )
 
     finally:
@@ -85,4 +84,3 @@ async def db_status(ctx):
         if conn and conn.open:
             conn.close()
             print("Соединение с базой данных закрыто.")
-

@@ -1,10 +1,18 @@
+"""
+Этот модуль содержит команду 'echo', которая повторяет переданное сообщение,
+если пользователь является владельцем бота.
+"""
+
 import discord
 
 from bot_init import bot
 from config import MY_USER_ID
 
 
-@bot.command(name="echo", help="Повторяет переданное сообщение. Доступна только для владельца бота.")
+@bot.command(
+    name="echo",
+    help="Повторяет переданное сообщение. Доступна только для владельца бота.",
+)
 async def echo(ctx, *, message: str):
     """
     Команда для повторения сообщения.
@@ -12,7 +20,9 @@ async def echo(ctx, *, message: str):
     """
     # Проверка прав доступа
     if ctx.author.id != MY_USER_ID:
-        await ctx.reply("❌ У вас нет доступа к этой команде.", mention_author=False)
+        await ctx.reply(
+            "❌ У вас нет доступа к этой команде.", mention_author=False
+        )
         return
 
     try:
@@ -24,8 +34,13 @@ async def echo(ctx, *, message: str):
 
     except discord.Forbidden:
         # Если бот не имеет прав на удаление сообщений
-        await ctx.reply("⚠️ У меня нет прав для удаления сообщений.", mention_author=False)
-    except Exception as e:
-        # Логирование других ошибок
+        await ctx.reply(
+            "⚠️ У меня нет прав для удаления сообщений.", mention_author=False
+        )
+    except discord.DiscordException as e:
+        # Логирование других ошибок, связанных с Discord
         print(f"❌ Произошла ошибка в команде 'echo': {e}")
-        await ctx.reply("❌ Произошла ошибка при выполнении команды. Проверьте логи.", mention_author=False)
+        await ctx.reply(
+            "❌ Произошла ошибка при выполнении команды. Проверьте логи.",
+            mention_author=False,
+        )

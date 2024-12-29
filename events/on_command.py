@@ -1,4 +1,5 @@
 import datetime
+
 import discord
 from discord.ext import commands
 
@@ -27,10 +28,14 @@ async def on_command(ctx):
         message_link = f"https://discord.com/channels/@me/{ctx.channel.id}/{ctx.message.id}"
     else:
         channel_info = f"Канал {ctx.channel.name} в {ctx.guild.name}"
-        message_link = f"https://discord.com/channels/{ctx.guild.id}/{ctx.channel.id}/{ctx.message.id}"
+        message_link = (
+            f"https://discord.com/channels/{ctx.guild.id}/{ctx.channel.id}/{ctx.message.id}"
+        )
 
     # Формируем сообщение для логирования
-    log_message = format_command_log_message(ctx, current_time, channel_info, message_link)
+    log_message = format_command_log_message(
+        ctx, current_time, channel_info, message_link
+    )
 
     # Отправляем лог-сообщение в канал
     try:
@@ -39,20 +44,37 @@ async def on_command(ctx):
         print(f"❌ Ошибка при отправке лог-сообщения в канал: {e}")
 
     # Логирование в консоль
-    print(f"✅ Команда выполнена: {ctx.command.name} от {ctx.author} в {channel_info} в {current_time}")
+    print(
+        f"✅ Команда выполнена: {ctx.command.name} от {ctx.author} в {channel_info} в {current_time}"
+    )
+
 
 @bot.event
 async def on_command_error(ctx, error):
+    """
+    Обрабатывает ошибки, связанные с выполнением команд.
+    """
     if isinstance(error, commands.CommandNotFound):
         # Если команда не найдена, отправляем сообщение с предложением использовать &help
-        await ctx.send("❌ Команда не найдена! Попробуйте использовать команду `&help`, чтобы узнать доступные команды.")
+        await ctx.send(
+            "❌ Команда не найдена! "
+            "Попробуйте использовать команду "
+            "`&help`, чтобы узнать доступные команды."
+        )
     else:
         # Если произошла другая ошибка, выводим её
         await ctx.send(f"❌ Произошла ошибка: {error}")
 
+
 def format_command_log_message(ctx, current_time, channel_info, message_link):
     """
     Форматирует сообщение для логирования информации о выполненной команде.
+
+    :param ctx: Контекст команды.
+    :param current_time: Время выполнения команды.
+    :param channel_info: Информация о канале, в котором была выполнена команда.
+    :param message_link: Ссылка на сообщение с командой.
+    :return: Отформатированное сообщение для логирования.
     """
     return (
         f"🎯 **Команда выполнена:** `{ctx.command.name}`\n"

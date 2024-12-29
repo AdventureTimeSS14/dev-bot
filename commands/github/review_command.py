@@ -1,19 +1,26 @@
 import discord
 from discord.ext import commands
 
+from commands.github.utils import validate_and_return_if_invalid
 from bot_init import bot
+from .github_processor import (
+    create_embed_list,
+    fetch_github_data,
+    send_embeds,
+    validate_repository,
+)
 
-from .github_processor import (create_embed_list, fetch_github_data,
-                               send_embeds, validate_repository, validate_user)
 
-
-@bot.command(name="review", help="Получает список пулл-реквестов для ревью из указанного репозитория.")
+@bot.command(
+    name="review",
+    help="Получает список пулл-реквестов для ревью из указанного репозитория.",
+)
 async def review(ctx, repo_key: str):
     """
     Команда для получения списка пулл-реквестов, которые требуют ревью, из указанного репозитория.
     """
     # Проверяем, имеет ли пользователь доступ к выполнению команды
-    if not await validate_user(ctx):
+    if not await validate_and_return_if_invalid(ctx):
         return
 
     # Проверяем репозиторий по переданному ключу
@@ -40,16 +47,19 @@ async def review(ctx, repo_key: str):
             "url": pr["html_url"],
             "author": pr["user"]["login"],
             "requested_by": [
-                reviewer["login"] for reviewer in pr.get("requested_reviewers", [])
+                reviewer["login"]
+                for reviewer in pr.get("requested_reviewers", [])
             ],
         }
         for pr in pulls
-        if any(label["name"] == "Status: Needs Review" for label in pr["labels"])
+        if any(
+            label["name"] == "Status: Needs Review" for label in pr["labels"]
+        )
     ]
 
     # Если нет пулл-реквестов с меткой "Status: Needs Review"
     if not pull_requests_list:
-        await ctx.send("❌ Нет пулл-реквестов с меткой `Status: Needs Review`.")
+        await ctx.send("❌ Нет пулл-реквестов с меткой `Status: Needs Review`. ")
         return
 
     # Создаём Embed-список для отображения в Discord
@@ -61,7 +71,7 @@ async def review(ctx, repo_key: str):
             "name": pr["title"],
             "value": (
                 f"**Автор:** {pr['author']}\n"
-                f"**Чьё ревью запрошено:** {', '.join(pr['requested_by']) if pr['requested_by'] else 'Нет запрашиваемых рецензентов'}\n"
+                f"**Чьё ревью запрошено:** {', '.join(pr['requested_by']) if pr['requested_by'] else 'Нет запрашиваемых рецензентов'}\n" # pylint: disable=C0301
                 f"**Ссылка:** [Открыть PR]({pr['url']})"
             ),
             "inline": False,
@@ -85,4 +95,6 @@ async def review_error(ctx, error):
     else:
         # Логируем и отправляем сообщение об ошибке
         print(f"❌ Ошибка в команде review: {error}")
-        await ctx.send("❌ Произошла ошибка при выполнении команды. Проверьте логи для подробностей.")
+        await ctx.send(
+            "❌ Произошла ошибка при выполнении команды. Проверьте логи для подробностей."
+        )

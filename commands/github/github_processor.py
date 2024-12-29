@@ -35,7 +35,9 @@ async def fetch_github_data(url, params=None):
     try:
         response = GLOBAL_SESSION.get(url, params=params)
         if response.status_code != 200:
-            print(f"❌ Ошибка при запросе данных с GitHub: {response.status_code}")
+            print(
+                f"❌ Ошибка при запросе данных с GitHub: {response.status_code}"
+            )
             return None
         return response.json()
     except Exception as e:
@@ -43,7 +45,9 @@ async def fetch_github_data(url, params=None):
         return None
 
 
-async def create_embed_list(title, items, color, formatter, max_items_per_embed=25):
+async def create_embed_list(
+    title, items, color, formatter, max_items_per_embed=25
+):
     """
     Создаёт список Embed на основе переданных данных.
     """

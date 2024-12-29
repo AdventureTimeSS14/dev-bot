@@ -1,3 +1,7 @@
+"""
+Модуль команды для получения времени работы и времени до завершения работы бота
+"""
+
 import time
 from datetime import timedelta
 
@@ -10,7 +14,7 @@ async def uptime(ctx):
     """
     Команда для вывода времени работы бота и оставшегося времени до отключения.
     """
-    if not hasattr(bot, 'start_time') or bot.start_time is None:
+    if not hasattr(bot, "start_time") or bot.start_time is None:
         await ctx.send("Бот еще не запущен.")
         return
 
@@ -20,7 +24,9 @@ async def uptime(ctx):
 
     # Вычисляем оставшееся время до отключения
     remaining_time = TIME_SHUTDOWSE - elapsed_time
-    if remaining_time < 0:  # Если оставшееся время отрицательное, бот должен быть отключен
+    if (
+        remaining_time < 0
+    ):  # Если оставшееся время отрицательное, бот должен быть отключен
         remaining_time_str = "Время истекло."
     else:
         remaining_time_str = format_time(int(remaining_time))

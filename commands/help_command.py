@@ -1,12 +1,21 @@
+"""
+Модуль вызова помощи и подсказок
+"""
+
 import discord
 
 from bot_init import bot
 
 
-@bot.command(name='help')
+@bot.command(name="help")
 async def help_command(ctx):
+    """
+    Просто вызвается пользователем &help
+    И отправляет embed
+    """
     # Данные для команды help
-    help_command = {
+    # pylint: disable=C0301
+    help_command_text = {
         "title": "📚 Помощь по командам",
         "name_1": "Основные команды:",
         "context_1": (
@@ -15,7 +24,7 @@ async def help_command(ctx):
             "👥 &team_help - Выводит помощь по командам для руководства.\n"
             "🏓 &ping - Выводит задержку ответа.\n"
             "🔄 &echo <сообщение> - Повторить ваше сообщение.\n"
-            "🎭 &user_role \"<роль>\" - Показать список пользователей с указанной ролью.\n"
+            '🎭 &user_role "<роль>" - Показать список пользователей с указанной ролью.\n'
             "🤖 &gpt <промт> - ChatGPT 3.5 turbo.\n"
             "🌳 &forks n/o - Вывести список форков AdventureTimeSS14/space_station_ADT или AdventureTimeSS14/space_station.\n"
             "👀 &review n/o - Вывести список пулл-реквестов для ревью (n - новый, o - старый репозиторий).\n"
@@ -39,43 +48,39 @@ async def help_command(ctx):
         "name_4": "Разработчики:",
         "context_4": "👨‍💻 Автор: schrodinger71\n👥 Maintainer: schrodinger71, nixsilvam, xelasto, mskaktus\n📡 Хост: 🐈‍⬛github-actions[bot]",
         "name_5": "Репозиторий бота:",
-        "context_5": "🔗 GitHub: https://github.com/AdventureTimeSS14/Dev-bot"
+        "context_5": "🔗 GitHub: https://github.com/AdventureTimeSS14/Dev-bot",
     }
 
     # Создаем embed-сообщение
     embed = discord.Embed(
-        title=help_command["title"],
-        color=discord.Color.dark_green()
+        title=help_command_text["title"], color=discord.Color.dark_green()
     )
     embed.add_field(
-        name=help_command["name_1"],
-        value=help_command["context_1"],
-        inline=False
+        name=help_command_text["name_1"],
+        value=help_command_text["context_1"],
+        inline=False,
     )
     embed.add_field(
-        name=help_command["name_2"],
-        value=help_command["context_2"],
-        inline=False
+        name=help_command_text["name_2"],
+        value=help_command_text["context_2"],
+        inline=False,
     )
     embed.add_field(
-        name=help_command["name_3"],
-        value=help_command["context_3"],
-        inline=False
+        name=help_command_text["name_3"],
+        value=help_command_text["context_3"],
+        inline=False,
     )
     embed.add_field(
-        name=help_command["name_4"],
-        value=help_command["context_4"],
-        inline=False
+        name=help_command_text["name_4"],
+        value=help_command_text["context_4"],
+        inline=False,
     )
     embed.add_field(
-        name=help_command["name_5"],
-        value=help_command["context_5"],
-        inline=False
+        name=help_command_text["name_5"],
+        value=help_command_text["context_5"],
+        inline=False,
     )
-    embed.set_author(
-        name=ctx.author.name, 
-        icon_url=ctx.author.avatar.url
-    )
+    embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
 
     # Отправляем embed-сообщение
     await ctx.send(embed=embed)

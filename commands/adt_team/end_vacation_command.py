@@ -1,5 +1,8 @@
+"""
+Модуль команды end_vacation
+"""
+
 import discord
-from discord.ext import commands
 
 from bot_init import bot
 from commands.misc.check_roles import has_any_role_by_id
@@ -32,7 +35,9 @@ async def end_vacation(ctx, user: discord.Member):
     try:
         # Удаляем роль отпуска у пользователя
         await user.remove_roles(role_vacation)
-        await ctx.send(f"✅ Роль {role_vacation.name} успешно снята с {user.mention}.")
+        await ctx.send(
+            f"✅ Роль {role_vacation.name} успешно снята с {user.mention}."
+        )
 
         # Создаем Embed для уведомления в админ-канал
         embed = discord.Embed(
