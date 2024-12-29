@@ -1,13 +1,13 @@
 import discord
 from discord.ext import commands
 
+from commands.github.utils import validate_and_return_if_invalid
 from bot_init import bot
 from .github_processor import (
     create_embed_list,
     fetch_github_data,
     send_embeds,
     validate_repository,
-    validate_user,
 )
 
 
@@ -20,7 +20,7 @@ async def review(ctx, repo_key: str):
     Команда для получения списка пулл-реквестов, которые требуют ревью, из указанного репозитория.
     """
     # Проверяем, имеет ли пользователь доступ к выполнению команды
-    if not await validate_user(ctx):
+    if not await validate_and_return_if_invalid(ctx):
         return
 
     # Проверяем репозиторий по переданному ключу

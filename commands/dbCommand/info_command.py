@@ -2,7 +2,8 @@ import discord
 import mariadb
 
 from bot_init import bot
-from config import DATABASE, HOST, LOG_CHANNEL_ID, PASSWORD, PORT, USER
+from commands.dbCommand.get_db_connection import get_db_connection
+from config import DATABASE, HOST, LOG_CHANNEL_ID, PORT, USER
 
 COLOR = discord.Color.dark_purple()
 
@@ -15,13 +16,7 @@ async def db_info(ctx):
     conn = None
     try:
         # Устанавливаем соединение с базой данных
-        conn = mariadb.connect(
-            user=USER,
-            password=PASSWORD,
-            host=HOST,
-            port=int(PORT),
-            database=DATABASE,
-        )
+        conn = get_db_connection()
 
         # Создаем embed для ответа
         avatar_url = ctx.author.avatar.url if ctx.author.avatar else None

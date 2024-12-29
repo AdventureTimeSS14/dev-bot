@@ -2,7 +2,8 @@ import discord
 import mariadb
 
 from bot_init import bot
-from config import DATABASE, HOST, LOG_CHANNEL_ID, PASSWORD, PORT, USER
+from commands.dbCommand.get_db_connection import get_db_connection
+from config import LOG_CHANNEL_ID
 
 
 @bot.command(name="db_status")
@@ -13,13 +14,7 @@ async def db_status(ctx):
     conn = None
     try:
         # Подключаемся к базе данных
-        conn = mariadb.connect(
-            user=USER,
-            password=PASSWORD,
-            host=HOST,
-            port=int(PORT),
-            database=DATABASE,
-        )
+        conn = get_db_connection()
 
         # Создаем embed для успешного подключения
         embed = discord.Embed(
