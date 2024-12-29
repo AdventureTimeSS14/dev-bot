@@ -37,7 +37,7 @@ async def check_for_new_commit():
     """
     Проверяет наличие нового коммита в репозитории.
     """
-    global last_commit_sha
+    global last_commit_sha # pylint: disable=W0603
     try:
         response = requests.get(API_URL, headers=headers, timeout=10)  # Добавлен timeout
         response.raise_for_status()  # Проверка на ошибки HTTP
@@ -131,12 +131,12 @@ async def monitor_commits():
         )
 
         if coauthors:
-            message += f"**Соавторы**:\n" + "\n".join(coauthors) + "\n"
+            message += "**Соавторы**:\n" + "\n".join(coauthors) + "\n"
 
-        message += f"\n**Изменения**:\n```diff\n"
-        message += f"+ Добавлено строк: {additions}\n"
-        message += f"- Удалено строк: {deletions}\n"
-        message += f"```"
+        message += "\n**Изменения**:\n```diff\n"
+        message += "+ Добавлено строк: " + str(additions) + "\n"
+        message += "- Удалено строк: " + str(deletions) + "\n"
+        message += "```"
 
         # Отправляем сообщение в Discord канал о новом коммите
         channel = bot.get_channel(LOG_CHANNEL_ID)

@@ -6,7 +6,7 @@ from bot_init import bot
 from commands.misc.check_roles import has_any_role_by_id
 from config import HEAD_ADT_TEAM
 
-roles = [
+roles_team = [
     # Список ролей и их ID
     # Руководство проекта
     ("Создатель проекта", 1116612861993689251),
@@ -177,7 +177,7 @@ async def list_team(ctx):
     await ctx.channel.purge(limit=15)
 
     # Обработка каждой категории
-    for category, roles in roles_by_category.items():
+    for category, roles_team in roles_by_category.items(): # pylint: disable=W0621
         color = color_map.get(category, 0xFFFFFF)  # Выбор цвета
         embed = Embed(
             title=category,
@@ -197,7 +197,7 @@ async def list_team(ctx):
             inline=False,
         )
 
-        for role_name, role_id in roles:
+        for role_name, role_id in roles_team:
             role = get(ctx.guild.roles, id=role_id)
             if role:
                 # Получаем URL иконки роли (если она есть)
@@ -243,6 +243,13 @@ async def list_team(ctx):
 
 @list_team.error
 async def list_team_error(ctx, error):
+    """
+    Обработчик ошибок для команды list_team.
+
+    Аргументы:
+    ctx - контекст команды
+    error - объект ошибки
+    """
     if isinstance(error, commands.CheckFailure):
         await ctx.send("🚫 У вас нет прав на использование этой команды.")
     else:
@@ -250,12 +257,16 @@ async def list_team_error(ctx, error):
 
 
 @tasks.loop(hours=12)
-async def list_team_task():
+async def list_team_task(): # pylint: disable=R0912
+    """
+    Задача, выполняющаяся каждые 12 часов. Очищает канал от последних 15 сообщений.
+    Ожидается, что ID канала уже известен. Выводит полный список команды.
+    """
     channel = bot.get_channel(1297158288063987752)  # ID канала
     if channel:
         await channel.purge(limit=15)
 
-        for category, roles in roles_by_category.items():
+        for category, roles_team in roles_by_category.items(): # pylint: disable=W0621
             color = color_map.get(category, 0xFFFFFF)  # Выбор цвета
             embed = Embed(
                 title=category,
@@ -274,7 +285,7 @@ async def list_team_task():
                 inline=False,
             )
 
-            for role_name, role_id in roles:
+            for role_name, role_id in roles_team:
                 role = get(channel.guild.roles, id=role_id)
                 if role:
                     role_icon_url = role.icon.url if role.icon else None
@@ -316,17 +327,16 @@ async def list_team_task():
                 viki_editor_role = get(channel.guild.roles, id=1084840686303580191)
                 if viki_editor_role and viki_editor_role.icon:
                     embed.set_thumbnail(url=viki_editor_role.icon.url)
-                    
+
             if category == "Отдел Маппинга":
                 mapper_role = get(channel.guild.roles, id=1062660322386784307)
                 if mapper_role and mapper_role.icon:
                     embed.set_thumbnail(url=mapper_role.icon.url)
-                    
+
             if category == "Отдел Администрации":
                 admin_role = get(channel.guild.roles, id=1248665281748795392)
                 if admin_role and admin_role.icon:
                     embed.set_thumbnail(url=admin_role.icon.url)
-                
 
             await channel.send(embed=embed)
 
