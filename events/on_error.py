@@ -5,7 +5,7 @@ from config import LOG_CHANNEL_ID
 
 
 @bot.event
-async def on_error(event, *args, **kwargs):
+async def on_error(event):
     """
     Обрабатывает ошибки, произошедшие в событии.
     Логирует их в указанный канал и выводит в консоль для диагностики.

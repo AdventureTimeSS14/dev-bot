@@ -66,13 +66,18 @@ async def handle_message_deletion(message):
 
         # Логируем информацию о сообщении
         log_message = (
-            f"{user.mention}, ваше сообщение было удалено. Пожалуйста, соблюдайте правила и структуру канала. "
+            f"{user.mention}, ваше сообщение было удалено. "
+            "Пожалуйста, соблюдайте правила и структуру канала. "
             "Используйте `&team_help` для получения инструкций."
         )
         await log_channel.send(log_message)
 
         # Логируем причину удаления
-        log_message = f"❌ Сообщение пользователя `{user.mention}` было удалено в канале {message.channel.mention}. Причина: нарушение правил."
+        log_message = (
+            f"❌ Сообщение пользователя `{user.mention}` "
+            f"было удалено в канале {message.channel.mention}. "
+            "Причина: нарушение правил."
+        )
         await log_channel.send(log_message)
 
     except discord.Forbidden:

@@ -1,8 +1,6 @@
 import sys
-
 import requests
 from discord.ext import tasks
-
 from bot_init import bot
 from commands.misc.shutdows_deff import shutdown_def
 from config import AUTHOR, GITHUB, LOG_CHANNEL_ID
@@ -19,12 +17,29 @@ headers = {
 
 last_commit_sha = None
 
+def get_commit_details(commit_sha: str):
+    """
+    Получает подробности коммита с использованием его SHA.
+    """
+    try:
+        commit_details_response = requests.get(
+            f"https://api.github.com/repos/{OWNER}/{REPO}/commits/{commit_sha}",
+            headers=headers, timeout=10  # Добавлен timeout
+        )
+        commit_details_response.raise_for_status()
+        return commit_details_response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Ошибка при получении деталей коммита {commit_sha}: {e}")
+        return None
 
-# Функция для получения состояния последнего коммита
+
 async def check_for_new_commit():
+    """
+    Проверяет наличие нового коммита в репозитории.
+    """
     global last_commit_sha
     try:
-        response = requests.get(API_URL, headers=headers)
+        response = requests.get(API_URL, headers=headers, timeout=10)  # Добавлен timeout
         response.raise_for_status()  # Проверка на ошибки HTTP
 
         commits = response.json()
@@ -36,17 +51,12 @@ async def check_for_new_commit():
         # Получаем SHA последнего коммита
         latest_commit_sha = commits[0]["sha"]
         commit_message = commits[0]["commit"]["message"]  # Сообщение коммита
-        commit_url = commits[0][
-            "html_url"
-        ]  # URL для просмотра коммита на GitHub
+        commit_url = commits[0]["html_url"]  # URL для просмотра коммита на GitHub
 
         # Получаем подробности коммита, включая диффы
-        commit_details_response = requests.get(
-            f"https://api.github.com/repos/{OWNER}/{REPO}/commits/{latest_commit_sha}",
-            headers=headers,
-        )
-        commit_details_response.raise_for_status()
-        commit_details = commit_details_response.json()
+        commit_details = get_commit_details(latest_commit_sha)
+        if not commit_details:
+            return False, None
 
         # Извлекаем информацию о добавленных и удалённых строках
         additions = commit_details["stats"]["additions"]
@@ -90,9 +100,12 @@ async def check_for_new_commit():
         sys.exit(1)
 
 
-# Проверка о получении новых коммитах
 @tasks.loop(seconds=50)
 async def monitor_commits():
+    """
+    Проверяет наличие новых коммитов каждые 50 секунд.
+    При обнаружении нового коммита, перезапускает бота.
+    """
     new_commit_found, commit_data = await check_for_new_commit()
 
     if new_commit_found:
@@ -110,18 +123,17 @@ async def monitor_commits():
 
         message = (
             f"**Обнаружен новый коммит!** Перезапуск бота для обновления...\n\n"
+            f"**Сообщение коммита**: {commit_message}\n"
+            f"**SHA**: {commit_sha}\n"
+            f"**URL**: `{commit_url}`\n\n"
+            f"**Автор**: {author}\n"
+            f"**Коммиттер**: {committer}\n"
         )
-        message += f"**Сообщение коммита**: {commit_message}\n"
-        message += f"**SHA**: {commit_sha}\n"
-        message += f"**URL**: `{commit_url}`\n\n"
-        message += f"**Автор**: {author}\n"
-        message += f"**Коммиттер**: {committer}\n"
 
         if coauthors:
             message += f"**Соавторы**:\n" + "\n".join(coauthors) + "\n"
 
-        message += f"\n**Изменения**:\n"
-        message += f"```diff\n"
+        message += f"\n**Изменения**:\n```diff\n"
         message += f"+ Добавлено строк: {additions}\n"
         message += f"- Удалено строк: {deletions}\n"
         message += f"```"

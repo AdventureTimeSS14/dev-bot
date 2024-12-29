@@ -31,21 +31,21 @@ async def on_ready():
     """
     Событие, которое выполняется при запуске бота.
     """
-    logging.info(f"Bot {bot.user.name} (ID: {bot.user.id}) is ready to work!")
-    logging.info("Connected to Discord successfully.")
     logging.info(
-        f"Guilds: {[guild.name for guild in bot.guilds]}"
-    )  # Выводит список серверов, к которым подключен бот.
+        "Bot %s (ID: %d) is ready to work!", bot.user.name, bot.user.id
+    )
+    logging.info("Connected to Discord successfully.")
+    guild_names = [guild.name for guild in bot.guilds]
+    logging.info("Guilds: %s", guild_names)  # Выводит список серверов, к которым подключен бот.
 
-    print(f"✅ Connected to Discord successfully.")
-    print(
-        f"✅ Guilds: {[guild.name for guild in bot.guilds]}"
-    )  # Выводит список серверов, к которым подключен бот.
+    print("✅ Connected to Discord successfully.")
+    print(f"✅ Guilds: {guild_names}")  # Выводит список серверов, к которым подключен бот.
 
     bot.start_time = time.time()  # Сохраняем время старта бота
 
     # Проверка workflows на случай повторного запуска на GitHub Actions
-    await check_workflows.check_workflows()  # Завершает работу, если бот уже запущен на GitHub Actions
+    await check_workflows.check_workflows()  # Завершает работу,
+                                             # если бот уже запущен на GitHub Actions
 
     # Запуск всех фоновых задач
     await start_task_if_not_running(

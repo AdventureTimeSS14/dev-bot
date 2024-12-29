@@ -25,12 +25,12 @@ async def db_info(ctx):
 
         # Создаем embed для ответа
         avatar_url = ctx.author.avatar.url if ctx.author.avatar else None
-        embed.set_author(name=ctx.author.name, icon_url=avatar_url)
         embed = discord.Embed(
             title="Информация о базе данных",
             description=f"Подключение к базе данных {DATABASE} выполнено успешно!",
             color=COLOR,
         )
+        embed.set_author(name=ctx.author.name, icon_url=avatar_url)
 
         # Добавляем общую информацию
         embed.add_field(

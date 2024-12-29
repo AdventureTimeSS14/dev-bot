@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 
 from bot_init import bot
-
 from .github_processor import (
     create_embed_list,
     fetch_github_data,
@@ -60,7 +59,7 @@ async def review(ctx, repo_key: str):
 
     # Если нет пулл-реквестов с меткой "Status: Needs Review"
     if not pull_requests_list:
-        await ctx.send("❌ Нет пулл-реквестов с меткой `Status: Needs Review`.")
+        await ctx.send("❌ Нет пулл-реквестов с меткой `Status: Needs Review`. ")
         return
 
     # Создаём Embed-список для отображения в Discord
@@ -72,7 +71,7 @@ async def review(ctx, repo_key: str):
             "name": pr["title"],
             "value": (
                 f"**Автор:** {pr['author']}\n"
-                f"**Чьё ревью запрошено:** {', '.join(pr['requested_by']) if pr['requested_by'] else 'Нет запрашиваемых рецензентов'}\n"
+                f"**Чьё ревью запрошено:** {', '.join(pr['requested_by']) if pr['requested_by'] else 'Нет запрашиваемых рецензентов'}\n" # pylint: disable=C0301
                 f"**Ссылка:** [Открыть PR]({pr['url']})"
             ),
             "inline": False,

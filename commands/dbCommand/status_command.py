@@ -40,7 +40,8 @@ async def db_status(ctx):
         log_channel = bot.get_channel(LOG_CHANNEL_ID)
         if log_channel:
             await log_channel.send(
-                f"✅ Успешное подключение к БД MariaDB. Запрошено пользователем: {ctx.author}.\n_ _"
+                f"✅ Успешное подключение к БД MariaDB. "
+                f"Запрошено пользователем: {ctx.author}.\n_ _"
             )
 
     except mariadb.Error as db_error:
@@ -79,7 +80,8 @@ async def db_status(ctx):
         log_channel = bot.get_channel(LOG_CHANNEL_ID)
         if log_channel:
             await log_channel.send(
-                f"❌ Непредвиденная ошибка при подключении к БД MariaDB: {e}. Запрошено пользователем: {ctx.author}.\n_ _"
+                f"❌ Непредвиденная ошибка при подключении к БД MariaDB: {e}. "
+                f"Запрошено пользователем: {ctx.author}.\n_ _"
             )
 
     finally:

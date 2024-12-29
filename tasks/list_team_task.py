@@ -168,13 +168,13 @@ roles_by_category = {
     "Отдел Медиа": [("Ютуберы", 1192427200964735087)],
 }
 
-
 @bot.command(name="list_team")
 @has_any_role_by_id(HEAD_ADT_TEAM)
 async def list_team(ctx):
-    await ctx.channel.purge(
-        limit=15
-    )  # Очистка канала перед отправкой сообщения
+    """
+    Команда для отображения состава команды по категориям.
+    """
+    await ctx.channel.purge(limit=15)
 
     # Обработка каждой категории
     for category, roles in roles_by_category.items():
@@ -300,10 +300,9 @@ async def list_team_task():
                             inline=False,
                         )
 
+                    # Если у роли есть иконка, добавляем её
                     if role_icon_url:
-                        embed.set_thumbnail(
-                            url=role_icon_url
-                        )  # Добавляем иконку роли
+                        embed.set_thumbnail(url=role_icon_url)
 
                 else:
                     embed.add_field(
@@ -311,6 +310,23 @@ async def list_team_task():
                         value="Роль не найдена",
                         inline=False,
                     )
+
+            # Добавление иконки для Вики Отдела
+            if category == "Отдел Вики":
+                viki_editor_role = get(channel.guild.roles, id=1084840686303580191)
+                if viki_editor_role and viki_editor_role.icon:
+                    embed.set_thumbnail(url=viki_editor_role.icon.url)
+                    
+            if category == "Отдел Маппинга":
+                mapper_role = get(channel.guild.roles, id=1062660322386784307)
+                if mapper_role and mapper_role.icon:
+                    embed.set_thumbnail(url=mapper_role.icon.url)
+                    
+            if category == "Отдел Администрации":
+                admin_role = get(channel.guild.roles, id=1248665281748795392)
+                if admin_role and admin_role.icon:
+                    embed.set_thumbnail(url=admin_role.icon.url)
+                
 
             await channel.send(embed=embed)
 
