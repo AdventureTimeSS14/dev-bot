@@ -3,7 +3,6 @@ import sys
 import aiohttp
 
 from bot_init import bot
-from commands.misc.shutdows_deff import shutdown_def
 from config import AUTHOR, GITHUB
 
 OWNER = AUTHOR

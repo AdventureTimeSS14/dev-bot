@@ -1,8 +1,5 @@
 import asyncio
-import os
 import sys
-
-import discord
 
 from bot_init import bot
 from commands.misc.shutdows_deff import shutdown_def

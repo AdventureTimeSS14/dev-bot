@@ -62,5 +62,7 @@ async def milestones(ctx, repo_key: str):
 async def milestones_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send(
-            "Вы не указали ключ к репозиторию. Указать ключ к репозиторию можно следующим образом: `&milestones n`, `&milestones o`"
+            "Вы не указали ключ к репозиторию. "
+            "Указать ключ к репозиторию можно следующим "
+            "образом: `&milestones n`, `&milestones o`"
         )

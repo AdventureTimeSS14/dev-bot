@@ -1,8 +1,6 @@
-import discord
-from discord import Color, Embed
+from discord import Embed
 from discord.ext import commands, tasks
-from discord.ext.tasks import loop
-from discord.utils import get  # Убедитесь, что этот импорт присутствует
+from discord.utils import get
 
 from bot_init import bot
 from commands.misc.check_roles import has_any_role_by_id

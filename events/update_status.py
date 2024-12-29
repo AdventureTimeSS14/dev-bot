@@ -4,10 +4,6 @@ from urllib.parse import urlparse, urlunparse
 import aiohttp
 import dateutil.parser
 import discord
-from discord.ext import commands, tasks
-
-from bot_init import bot
-from config import CHANNEL_ID_UPDATE_STATUS, SS14_ADDRESS
 
 # Определение уровней игры для SS14
 SS14_RUN_LEVELS = {0: "Лобби", 1: "Раунд идёт", 2: "Окончание раунда..."}
