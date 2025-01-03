@@ -1,5 +1,6 @@
 import logging
 import time
+import asyncio
 
 from bot_init import bot
 from commands.github import check_workflows
@@ -20,7 +21,7 @@ async def start_task_if_not_running(task, task_name: str):
     Запускает задачу, если она еще не запущена.
     """
     if not task.is_running():
-        task.start()
+        asyncio.create_task(task())  # Используем asyncio.create_task
         print(f"✅ Задача {task_name} запущена.")
     else:
         print(f"⚙️ Задача {task_name} уже работает.")
