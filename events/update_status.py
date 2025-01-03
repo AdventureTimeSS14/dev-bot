@@ -12,8 +12,26 @@ SS14_RUN_LEVELS = {0: "Лобби", 1: "Раунд идёт", 2: "Окончан
 async def get_ss14_server_status_second(address: str) -> dict:
     """
     Получает статус игры с сервера SS14.
+    Если сервер не отвечает на порту 1212, пытается на порту 1211.
     """
-    url = get_ss14_status_url(address)
+    url = get_ss14_status_url(address, 1212)
+    try:
+        # Пытаемся запросить с порта 1212
+        status = await fetch_status(url)
+        if status is None:
+            # Если не удалось получить статус с порта 1212, пробуем порт 1211
+            print("Пробуем подключиться к порту 1211...")
+            url = get_ss14_status_url(address, 1211)
+            status = await fetch_status(url)
+        return status
+    except Exception as e:
+        print(f"Ошибка при получении статуса с сервера SS14: {e}")
+        return None
+
+async def fetch_status(url: str) -> dict:
+    """
+    Функция для запроса статуса с указанного URL.
+    """
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get(url + "/status") as resp:
@@ -28,16 +46,15 @@ async def get_ss14_server_status_second(address: str) -> dict:
         print(f"Ошибка при получении статуса с сервера SS14: {e}")
         return None
 
-def get_ss14_status_url(url: str) -> str:
+def get_ss14_status_url(url: str, port: int) -> str:
     """
-    Преобразует адрес сервера в корректный URL.
+    Преобразует адрес сервера в корректный URL с указанным портом.
     """
     # Если адрес начинается с ss14://, преобразуем в http://
     if url.startswith("ss14://"):
         url = "http://" + url[7:]
 
     parsed = urlparse(url, allow_fragments=False)
-    port = parsed.port or 1212  # Если порт не указан, используем 1212 по умолчанию
     return urlunparse(
         ("http", f"{parsed.hostname}:{port}", parsed.path, "", "", "")
     )
