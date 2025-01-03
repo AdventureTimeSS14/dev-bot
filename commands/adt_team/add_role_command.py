@@ -2,8 +2,8 @@
 Модуль содержащий команду add_role
 """
 
-import discord
-from discord.utils import get
+import disnake
+from disnake.utils import get
 
 from bot_init import bot
 from commands.misc.check_roles import has_any_role_by_id
@@ -12,7 +12,7 @@ from config import HEAD_ADT_TEAM
 
 @bot.command()
 @has_any_role_by_id(HEAD_ADT_TEAM)
-async def add_role(ctx, user: discord.Member, *role_names: str):
+async def add_role(ctx, user: disnake.Member, *role_names: str):
     """
     Добавляет одну или несколько ролей указанному пользователю.
     """
@@ -42,12 +42,12 @@ async def add_role(ctx, user: discord.Member, *role_names: str):
             # Добавляем роль пользователю
             await user.add_roles(role)
             added_roles.append(role.name)
-        except discord.Forbidden:
+        except disnake.Forbidden:
             errors.append(
                 f"⚠️ У бота недостаточно прав для добавления роли '{role.name}' "
                 f"пользователю {user.mention}."
             )
-        except discord.HTTPException as e:
+        except disnake.HTTPException as e:
             print(f"Ошибка при добавлении роли '{role.name}': {e}")
             errors.append(
                 f"❌ Не удалось добавить роль '{role.name}' для {user.mention} из-за ошибки: {e}"

@@ -2,7 +2,7 @@
 Модуль команды add_vacation
 """
 
-import discord
+import disnake
 
 from bot_init import bot
 from commands.misc.check_roles import has_any_role_by_id
@@ -11,7 +11,7 @@ from config import ADMIN_TEAM, HEAD_ADT_TEAM, VACATION_ROLE
 
 @bot.command()
 @has_any_role_by_id(HEAD_ADT_TEAM)
-async def add_vacation(ctx, user: discord.Member, end_date: str, reason: str):
+async def add_vacation(ctx, user: disnake.Member, end_date: str, reason: str):
     """
     Выдача отпуска пользователю. Добавляется роль отпуска с указанием срока и причины.
     """
@@ -42,10 +42,10 @@ async def add_vacation(ctx, user: discord.Member, end_date: str, reason: str):
         )
 
         # Создаем Embed для уведомления в админ-канале
-        embed = discord.Embed(
+        embed = disnake.Embed(
             title="Выдача отпуска",
             description=f"{ctx.author.mention} выдал(а) отпуск для {user.mention}.",
-            color=discord.Color.purple(),
+            color=disnake.Color.purple(),
         )
         embed.add_field(name="Пользователь", value=user.mention, inline=False)
         embed.add_field(
@@ -58,11 +58,11 @@ async def add_vacation(ctx, user: discord.Member, end_date: str, reason: str):
         # Отправляем Embed в админ-канал
         await admin_channel.send(embed=embed)
 
-    except discord.Forbidden:
+    except disnake.Forbidden:
         await ctx.send(
             "⚠️ Ошибка: У бота недостаточно прав для добавления роли."
         )
-    except discord.HTTPException as e:
+    except disnake.HTTPException as e:
         await ctx.send(f"❌ Ошибка: Не удалось добавить роль. Подробнее: {e}")
     except Exception as e:
         print(f"Неожиданная ошибка: {e}")

@@ -1,5 +1,5 @@
-import discord
-from discord.ext import commands
+import disnake
+from disnake.ext import commands
 
 from commands.github.utils import validate_and_return_if_invalid
 from bot_init import bot
@@ -66,7 +66,7 @@ async def review(ctx, repo_key: str):
     embed_list = await create_embed_list(
         f"📋 Список пулл-реквестов для ревью.\nРепозиторий: `{repository_name}`",
         pull_requests_list,
-        discord.Color.dark_red(),
+        disnake.Color.dark_red(),
         lambda pr: {
             "name": pr["title"],
             "value": (

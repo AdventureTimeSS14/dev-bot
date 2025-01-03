@@ -1,6 +1,6 @@
 import re
 
-import discord
+import disnake
 import requests
 from fuzzywuzzy import fuzz
 
@@ -80,7 +80,7 @@ async def handle_message_deletion(message):
         )
         await log_channel.send(log_message)
 
-    except discord.Forbidden:
+    except disnake.Forbidden:
         # Если не удается отправить ЛС (например, заблокировали бота)
         await log_channel.send(
             f"⚠️ Не удалось отправить ЛС пользователю {user.mention}."

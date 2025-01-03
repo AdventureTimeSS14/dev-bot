@@ -2,7 +2,7 @@
 Модуль команды end_vacation
 """
 
-import discord
+import disnake
 
 from bot_init import bot
 from commands.misc.check_roles import has_any_role_by_id
@@ -11,7 +11,7 @@ from config import ADMIN_TEAM, HEAD_ADT_TEAM, VACATION_ROLE
 
 @bot.command()
 @has_any_role_by_id(HEAD_ADT_TEAM)
-async def end_vacation(ctx, user: discord.Member):
+async def end_vacation(ctx, user: disnake.Member):
     """
     Завершает отпуск указанного пользователя, удаляя роль отпуска.
     """
@@ -40,10 +40,10 @@ async def end_vacation(ctx, user: discord.Member):
         )
 
         # Создаем Embed для уведомления в админ-канал
-        embed = discord.Embed(
+        embed = disnake.Embed(
             title="Окончание отпуска",
             description=f"{ctx.author.mention} завершил(а) отпуск для {user.mention}.",
-            color=discord.Color.purple(),
+            color=disnake.Color.purple(),
         )
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
         embed.add_field(name="Пользователь", value=user.mention, inline=False)
@@ -52,9 +52,9 @@ async def end_vacation(ctx, user: discord.Member):
         # Отправляем Embed в админ-канал
         await admin_channel.send(embed=embed)
 
-    except discord.Forbidden:
+    except disnake.Forbidden:
         await ctx.send("⚠️ Ошибка: У бота недостаточно прав для снятия роли.")
-    except discord.HTTPException as e:
+    except disnake.HTTPException as e:
         await ctx.send(f"❌ Ошибка: Не удалось снять роль. Подробнее: {e}")
     except Exception as e:
         print(f"Неожиданная ошибка: {e}")

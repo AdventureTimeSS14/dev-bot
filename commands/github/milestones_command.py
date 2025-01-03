@@ -1,5 +1,5 @@
-import discord
-from discord.ext import commands
+import disnake
+from disnake.ext import commands
 
 from bot_init import bot
 
@@ -57,7 +57,7 @@ async def milestones(ctx, repo_key: str):
     embed_list = await create_embed_list(
         f"Список Milestones. \nРепозиторий: {repository_name}",
         milestones_list,
-        discord.Color.blue(),
+        disnake.Color.blue(),
         lambda milestone: {
             "name": milestone["title"],
             "value": (

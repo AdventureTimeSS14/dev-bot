@@ -1,8 +1,8 @@
 import re
 from datetime import datetime, timezone
 
-import discord
-from discord.ext import tasks
+import disnake
+from disnake.ext import tasks
 
 from bot_init import bot
 from commands.github.github_processor import fetch_github_data
@@ -54,14 +54,14 @@ def extract_pull_request_changes(description: str):
     return full_description, match
 
 
-async def send_pull_request_to_discord(pr, description, pr_title, pr_url, coauthors):
+async def send_pull_request_to_disnake(pr, description, pr_title, pr_url, coauthors):
     """
     Отправляет информацию о замерженном пулл-реквесте в Discord канал CHANGELOG.
     """
     # Создаем Embed-сообщение
-    embed = discord.Embed(
+    embed = disnake.Embed(
         title=f"Пулл-реквест замержен: {pr_title}",
-        color=discord.Color.dark_green(),
+        color=disnake.Color.dark_green(),
         timestamp=datetime.strptime(pr["merged_at"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc), # pylint: disable=C0301
     )
     embed.add_field(name="Изменения:", value=description, inline=False)
@@ -88,9 +88,9 @@ async def send_pull_request_to_discord(pr, description, pr_title, pr_url, coauth
         # Отправляем сообщение в CHANGELOG
         await changelog_channel.send(embed=embed)
         print(f"✅ Информация о замерженном PR #{pr_number} опубликована в CHANGELOG.")
-    except discord.Forbidden:
+    except disnake.Forbidden:
         print(f"❌ У бота нет прав для отправки сообщений в канал с ID {CHANGELOG_CHANNEL_ID}.")
-    except discord.HTTPException as e:
+    except disnake.HTTPException as e:
         print(f"❌ Ошибка при отправке Embed: {e}")
 
 
@@ -150,7 +150,7 @@ async def fetch_merged_pull_requests():
             description = smart_truncate(description, MAX_FIELD_LENGTH)
 
             # Отправка PR в Discord и логирование
-            await send_pull_request_to_discord(pr, description, pr_title, pr_url, coauthors)
+            await send_pull_request_to_disnake(pr, description, pr_title, pr_url, coauthors)
             await log_pull_request(pr, pr_title, pr_url, merged_at)
 
     # Обновляем время последней проверки

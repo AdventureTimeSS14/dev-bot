@@ -1,4 +1,4 @@
-import discord
+import disnake
 from bot_init import bot
 from commands.misc.check_roles import has_any_role_by_id
 from config import ADMIN_TEAM, HEAD_ADT_TEAM
@@ -91,9 +91,9 @@ async def send_results(ctx, removed_roles, errors):
 @has_any_role_by_id(HEAD_ADT_TEAM)
 async def remove_team(
     ctx,
-    user: discord.Member,
-    role_dep: discord.Role,
-    role_job: discord.Role,
+    user: disnake.Member,
+    role_dep: disnake.Role,
+    role_job: disnake.Role,
     *,
     reason: str,
 ):
@@ -128,7 +128,7 @@ async def remove_team(
 
     # Если обе роли успешно удалены, отправляем Embed
     if len(removed_roles) == 2:
-        embed = discord.Embed(
+        embed = disnake.Embed(
             title="Снятие с должности",
             description=f"{ctx.author.mention} снял с должности {user.mention}.",
             color=role_job.color,

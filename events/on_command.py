@@ -1,7 +1,7 @@
 import datetime
 
-import discord
-from discord.ext import commands
+import disnake
+from disnake.ext import commands
 
 from bot_init import bot
 from config import LOG_CHANNEL_ID
@@ -22,14 +22,14 @@ async def on_command(ctx):
     current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     # Определяем, был ли вызов команды в ЛС или в канале сервера
-    if isinstance(ctx.channel, discord.DMChannel):
+    if isinstance(ctx.channel, disnake.DMChannel):
         channel_info = "ЛС с пользователем"
         # В ЛС не будет ссылки на сообщение с использованием guild
-        message_link = f"https://discord.com/channels/@me/{ctx.channel.id}/{ctx.message.id}"
+        message_link = f"https://disnake.com/channels/@me/{ctx.channel.id}/{ctx.message.id}"
     else:
         channel_info = f"Канал {ctx.channel.name} в {ctx.guild.name}"
         message_link = (
-            f"https://discord.com/channels/{ctx.guild.id}/{ctx.channel.id}/{ctx.message.id}"
+            f"https://disnake.com/channels/{ctx.guild.id}/{ctx.channel.id}/{ctx.message.id}"
         )
 
     # Формируем сообщение для логирования

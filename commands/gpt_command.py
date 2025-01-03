@@ -3,8 +3,8 @@
 Author: Schodinger71, Nix Silvam, Xelasto
 """
 
-from discord.ext import commands
-from discord.ext.commands import BucketType
+from disnake.ext import commands
+from disnake.ext.commands import BucketType
 from g4f.client import Client
 from g4f.Provider import FreeGpt
 

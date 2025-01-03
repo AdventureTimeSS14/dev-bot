@@ -30,8 +30,8 @@
                 state = f"Игроки: {players}/{max_players} | Раунд: {round_id} | Режим: {data.get('preset', 'Неизвестно')}"
                 
                 # Обновляем активность бота с Rich Presence
-                activity = discord.Activity(
-                    type=discord.ActivityType.playing,
+                activity = disnake.Activity(
+                    type=disnake.ActivityType.playing,
                     name=server_name,
                     details=details,
                     state=state,
