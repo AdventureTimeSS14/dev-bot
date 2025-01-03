@@ -1,5 +1,5 @@
 discord.py==2.4.0
-disnake==v2.10.1-final
+disnake
 curl_cffi
 aiohttp
 fuzzywuzzy==0.18.0
