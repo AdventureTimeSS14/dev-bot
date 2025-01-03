@@ -1,5 +1,5 @@
-import discord
-from discord.ext import commands
+import disnake
+from disnake.ext import commands
 
 from bot_init import bot
 from commands.misc.check_roles import has_any_role_by_id
@@ -10,9 +10,9 @@ from config import ADMIN_TEAM, HEAD_ADT_TEAM
 @has_any_role_by_id(HEAD_ADT_TEAM)
 async def tweak_team(
     ctx: commands.Context,
-    user: discord.Member,
-    old_role: discord.Role,
-    new_role: discord.Role,
+    user: disnake.Member,
+    old_role: disnake.Role,
+    new_role: disnake.Role,
     reason: str,
 ):
     """
@@ -63,7 +63,7 @@ async def tweak_team(
         color = new_role.color  # Цвет для Embed сообщения
 
         # Создаем Embed сообщение для лог-канала
-        embed = discord.Embed(
+        embed = disnake.Embed(
             title=action,
             description=action_description,
             color=color,
@@ -87,11 +87,11 @@ async def tweak_team(
             f"✅ Роль **{old_role.name}** была успешно заменена на **{new_role.name}** у {user.name}. Причина: {reason}" # pylint: disable=C0301
         )
 
-    except discord.Forbidden:
+    except disnake.Forbidden:
         await ctx.send(
             "⚠️ У бота нет прав для изменения ролей. Пожалуйста, проверьте права бота."
         )
-    except discord.HTTPException as e:
+    except disnake.HTTPException as e:
         await ctx.send(f"❌ Произошла ошибка при изменении ролей: {e}")
         print(f"Ошибка при изменении ролей: {e}")
     except Exception as e:

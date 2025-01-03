@@ -1,6 +1,6 @@
 import re
 from datetime import datetime, timezone
-import discord
+import disnake
 import requests
 from bot_init import bot
 from commands.misc.check_roles import has_any_role_by_id
@@ -88,9 +88,9 @@ async def get_pr_info(ctx, pr_number: int):
     pr_data["description"] = smart_truncate(pr_data["description"], MAX_FIELD_LENGTH)
 
     # Формируем Embed для отображения данных
-    embed = discord.Embed(
+    embed = disnake.Embed(
         title=f"Пулл-реквест замержен: {pr_data['title']}",
-        color=discord.Color.dark_green(),
+        color=disnake.Color.dark_green(),
         timestamp=pr_data["merged_at"],
     )
 
@@ -115,8 +115,8 @@ async def get_pr_info(ctx, pr_number: int):
         await ctx.send(
             f"Информация о пулл-реквесте успешно отправлена в канал <#{CHANGELOG_CHANNEL_ID}>."
         )
-    except discord.Forbidden:
+    except disnake.Forbidden:
         await ctx.send("❌ У бота нет прав для отправки сообщений в указанный канал.")
-    except discord.HTTPException as e:
+    except disnake.HTTPException as e:
         print(f"❌ Ошибка при отправке Embed: {e}")
         await ctx.send("❌ Произошла ошибка при отправке информации о пулл-реквесте.")

@@ -1,4 +1,4 @@
-import discord
+import disnake
 
 from bot_init import bot
 from config import ADMIN_TEAM
@@ -90,10 +90,10 @@ async def team_help(ctx):
                 embed_description += f"- {note}\n"
 
     # Создание Embed сообщения
-    embed = discord.Embed(
+    embed = disnake.Embed(
         title="📚 Команды для управления сотрудниками отдела",
         description=embed_description,
-        color=discord.Color.gold(),
+        color=disnake.Color.gold(),
     )
 
     # Информация об отправителе команды

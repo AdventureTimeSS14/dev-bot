@@ -1,5 +1,5 @@
-import discord
-from discord.ext import commands
+import disnake
+from disnake.ext import commands
 
 from bot_init import bot
 
@@ -64,7 +64,7 @@ async def achang(ctx, repo_key: str):
     embed_list = await create_embed_list(
         f"Список пулл-реквестов, требующих изменений. \nРепозиторий: {repository_name}",
         pull_requests_list,
-        discord.Color.dark_gold(),
+        disnake.Color.dark_gold(),
         lambda pr: {
             "name": pr["title"],
             "value": (

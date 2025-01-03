@@ -2,7 +2,7 @@
 Модуль команды для получения все никнеймов относящихся к введённой роли.
 """
 
-import discord
+import disnake
 
 from bot_init import bot
 
@@ -22,7 +22,7 @@ async def user_role(ctx, *role_names: str):
         return
 
     # Ищем роль в списке ролей сервера
-    role = discord.utils.get(ctx.guild.roles, name=role_name)
+    role = disnake.utils.get(ctx.guild.roles, name=role_name)
     if role is None:
         await ctx.send(f"❌ Роль '{role_name}' не найдена на сервере.")
         return

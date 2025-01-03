@@ -1,9 +1,9 @@
-import discord
-from discord.ext import commands
+import disnake
+from disnake.ext import commands
 
 from bot_init import bot
 
-COLOR = discord.Color.dark_purple()
+COLOR = disnake.Color.dark_purple()
 
 # Список команд и их описаний для работы с базой данных
 DB_COMMANDS = [
@@ -25,7 +25,7 @@ async def db_help(ctx: commands.Context):
     """
     try:
         # Создаем embed
-        embed = discord.Embed(
+        embed = disnake.Embed(
             title="Команды для управления MariaDB",
             description="Список доступных команд для работы с базой данных:",
             color=COLOR,

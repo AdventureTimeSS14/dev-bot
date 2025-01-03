@@ -3,7 +3,7 @@
 если пользователь является владельцем бота.
 """
 
-import discord
+import disnake
 
 from bot_init import bot
 from config import MY_USER_ID
@@ -32,12 +32,12 @@ async def echo(ctx, *, message: str):
         # Отправка повторённого сообщения
         await ctx.send(message)
 
-    except discord.Forbidden:
+    except disnake.Forbidden:
         # Если бот не имеет прав на удаление сообщений
         await ctx.reply(
             "⚠️ У меня нет прав для удаления сообщений.", mention_author=False
         )
-    except discord.DiscordException as e:
+    except disnake.DiscordException as e:
         # Логирование других ошибок, связанных с Discord
         print(f"❌ Произошла ошибка в команде 'echo': {e}")
         await ctx.reply(

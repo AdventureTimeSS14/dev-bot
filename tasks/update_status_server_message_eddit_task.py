@@ -1,5 +1,5 @@
-import discord
-from discord.ext import tasks
+import disnake
+from disnake.ext import tasks
 
 from bot_init import bot
 from config import CHANNEL_ID_UPDATE_STATUS, SS14_ADDRESS
@@ -34,9 +34,9 @@ async def update_status_server_message_eddit():
 
         await message.edit(embed=embed)
 
-    except discord.NotFound:
+    except disnake.NotFound:
         print("Сообщение не найдено!")
-    except discord.Forbidden:
+    except disnake.Forbidden:
         print("У бота нет прав для редактирования сообщения!")
     except Exception as e:
         print(f"Ошибка при обновлении сообщения: {e}")

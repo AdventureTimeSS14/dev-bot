@@ -34,7 +34,7 @@ from commands.adt_team import (
     team_help_command,
     tweak_team_command,
 )
-from commands.dbCommand import info_command, status_command
+from commands.dbCommand import info_command, status_command, help_command
 from commands.github import (
     achang_command,
     check_workflows,
@@ -112,4 +112,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    bot.run(DISCORD_KEY)  # Запуск бота, без asyncio.run()

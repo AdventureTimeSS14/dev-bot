@@ -1,4 +1,4 @@
-import discord
+import disnake
 import mariadb
 
 from bot_init import bot
@@ -17,10 +17,10 @@ async def db_status(ctx):
         conn = get_db_connection()
 
         # Создаем embed для успешного подключения
-        embed = discord.Embed(
+        embed = disnake.Embed(
             title="Статус БД",
             description="Успешно подключено к базе данных MariaDB!",
-            color=discord.Color.green(),
+            color=disnake.Color.green(),
         )
         embed.add_field(
             name="Статус сервера",
@@ -41,10 +41,10 @@ async def db_status(ctx):
 
     except mariadb.Error as db_error:
         # Создаем embed для ошибки подключения
-        embed = discord.Embed(
+        embed = disnake.Embed(
             title="Ошибка подключения",
             description="Не удалось подключиться к базе данных MariaDB.",
-            color=discord.Color.red(),
+            color=disnake.Color.red(),
         )
         embed.add_field(name="Ошибка", value=str(db_error), inline=False)
 
@@ -61,10 +61,10 @@ async def db_status(ctx):
 
     except Exception as e:
         # Общая обработка исключений
-        embed = discord.Embed(
+        embed = disnake.Embed(
             title="Ошибка",
             description="Произошла непредвиденная ошибка при подключении к базе данных.",
-            color=discord.Color.red(),
+            color=disnake.Color.red(),
         )
         embed.add_field(name="Детали ошибки", value=str(e), inline=False)
 

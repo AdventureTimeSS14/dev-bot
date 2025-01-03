@@ -2,8 +2,8 @@
 Модуль команды remove_role
 """
 
-import discord
-from discord.utils import get
+import disnake
+from disnake.utils import get
 
 from bot_init import bot
 from commands.misc.check_roles import has_any_role_by_id
@@ -12,7 +12,7 @@ from config import HEAD_ADT_TEAM
 
 @bot.command()
 @has_any_role_by_id(HEAD_ADT_TEAM)
-async def remove_role(ctx, user: discord.Member, *role_names: str):
+async def remove_role(ctx, user: disnake.Member, *role_names: str):
     """
     Команда для снятия указанных ролей у пользователя.
     """
@@ -48,11 +48,11 @@ async def remove_role(ctx, user: discord.Member, *role_names: str):
             # Пытаемся снять роль
             await user.remove_roles(role)
             removed_roles.append(role.name)
-        except discord.Forbidden:
+        except disnake.Forbidden:
             await ctx.send(
                 f"⚠️ У бота нет прав для снятия роли '{role.name}' у {user.name}."
             )
-        except discord.HTTPException as e:
+        except disnake.HTTPException as e:
             await ctx.send(f"❌ Ошибка при снятии роли '{role.name}': {str(e)}")
         except Exception as e:
             await ctx.send(

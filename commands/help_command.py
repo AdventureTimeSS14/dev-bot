@@ -2,7 +2,7 @@
 Модуль вызова помощи и подсказок
 """
 
-import discord
+import disnake
 
 from bot_init import bot
 
@@ -52,8 +52,8 @@ async def help_command(ctx):
     }
 
     # Создаем embed-сообщение
-    embed = discord.Embed(
-        title=help_command_text["title"], color=discord.Color.dark_green()
+    embed = disnake.Embed(
+        title=help_command_text["title"], color=disnake.Color.dark_green()
     )
     embed.add_field(
         name=help_command_text["name_1"],

@@ -1,5 +1,5 @@
-import discord
-from discord.ext import commands
+import disnake
+from disnake.ext import commands
 
 from bot_init import bot
 
@@ -48,7 +48,7 @@ async def forks(ctx, repo_key: str):
     embed_list = await create_embed_list(
         title=f"🌳 Список форков для репозитория {repository_name}",
         items=forks_list,
-        color=discord.Color.dark_green(),
+        color=disnake.Color.dark_green(),
         formatter=lambda fork: {
             "name": fork["name"],
             "value": f"Владелец: {fork['owner']}\nСсылка: [Открыть форк]({fork['url']})",
