@@ -44,6 +44,6 @@ async def restart(ctx, server_name: str):
     success, message = await send_server_request(ctx, url, data, headers)
     
     if success:
-        await ctx.send(f"✅ Сервер {server_name.upper()} успешно перезапущен.")
+        await ctx.send(f"✅ Запрос на перезапуск сервера {server_name.upper()} успешно отправлен.")
     else:
-        await ctx.send(f"❌ Ошибка при перезапуске сервера {server_name.upper()}: {message}")
+        await ctx.send(f"❌ Ошибка при отправке запроса к серверу {server_name.upper()}: {message}")
