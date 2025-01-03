@@ -1,6 +1,5 @@
 import logging
 import time
-import asyncio
 
 from bot_init import bot
 from commands.github import check_workflows
@@ -21,7 +20,7 @@ async def start_task_if_not_running(task, task_name: str):
     Запускает задачу, если она еще не запущена.
     """
     if not task.is_running():
-        asyncio.create_task(task())  # Используем asyncio.create_task
+        task.start()
         print(f"✅ Задача {task_name} запущена.")
     else:
         print(f"⚙️ Задача {task_name} уже работает.")
@@ -79,4 +78,4 @@ async def on_ready():
         print(f"❌ Не удалось найти канал с ID {LOG_CHANNEL_ID} для логов.")
 
     # Запуск задачи для автоматического завершения работы через определённое время
-    asyncio.create_task(shutdown_after_time())  # Используем asyncio.create_task
+    bot.loop.create_task(shutdown_after_time())
