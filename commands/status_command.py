@@ -27,7 +27,7 @@ async def get_status_command(ctx, server_name: str = None):
         else:
             await ctx.send("❌ Некорректное имя сервера. Используйте 'dev' или 'mrp'.")
             return
-        
+
         # Получаем данные статуса с выбранного сервера
         print(f"Попытка подключения к серверу: {address}")
         status_data = await get_ss14_server_status_second(address)
