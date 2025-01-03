@@ -79,4 +79,4 @@ async def on_ready():
         print(f"❌ Не удалось найти канал с ID {LOG_CHANNEL_ID} для логов.")
 
     # Запуск задачи для автоматического завершения работы через определённое время
-    bot.loop.create_task(shutdown_after_time())
+    asyncio.create_task(shutdown_after_time())  # Используем asyncio.create_task
