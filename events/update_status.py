@@ -28,16 +28,16 @@ async def get_ss14_server_status_second(address: str) -> dict:
         print(f"Ошибка при получении статуса с сервера SS14: {e}")
         return None
 
-
 def get_ss14_status_url(url: str) -> str:
     """
     Преобразует адрес сервера в корректный URL.
     """
+    # Если адрес начинается с ss14://, преобразуем в http://
     if url.startswith("ss14://"):
-        url = "http://" + url[7:]  # Убираем ss14:// и добавляем http://
+        url = "http://" + url[7:]
 
     parsed = urlparse(url, allow_fragments=False)
-    port = parsed.port or 1212  # Если порт не указан, используем 1212
+    port = parsed.port or 1212  # Если порт не указан, используем 1212 по умолчанию
     return urlunparse(
         ("http", f"{parsed.hostname}:{port}", parsed.path, "", "", "")
     )

@@ -14,10 +14,13 @@ from commands import (
     gpt_command,
     help_command,
     ping_command,
-    restart_command,
+    shutdown_command,
     status_command,
     uptime_command,
     user_role_command,
+)
+from commands.post_admin import (
+    restart_command,
 )
 from commands.adt_team import (
     add_role_command,
