@@ -29,6 +29,14 @@ PASSWORD = get_env_variable("PASSWORD")
 HOST = get_env_variable("HOST")
 PORT = get_env_variable("PORT")
 DATABASE = get_env_variable("DATABASE")
+# Для управление DEV/MRP
+POST_AUTHORIZATION_DEV = get_env_variable("POST_AUTHORIZATION_DEV")
+POST_AUTHORIZATION_MRP = get_env_variable("POST_AUTHORIZATION_MRP")
+POST_USER_AGENT = get_env_variable("POST_USER_AGENT")
+POST_USERNAME_DEV = get_env_variable("POST_USERNAME_DEV")
+POST_PASSWORD_DEV = get_env_variable("POST_PASSWORD_DEV")
+POST_USERNAME_MRP = get_env_variable("POST_USERNAME_MRP")
+POST_PASSWORD_MRP = get_env_variable("POST_PASSWORD_MRP")
 
 # Константы для идентификаторов
 CHANGELOG_CHANNEL_ID = 1089490875182239754
@@ -41,6 +49,17 @@ MESSAGE_ID_TIME_SHUTDOWS = 1320771150938243195
 TIME_SHUTDOWSE = 5 * 3600 + 57 * 60  # Время в секундах
 
 SS14_ADDRESS = "ss14://193.164.18.155"
+SS14_ADDRESS_DEV = "ss14://5.180.174.139"
+
+ADDRESS_DEV = "5.180.174.139"
+ADDRESS_MRP = "193.164.18.155"
+
+AUTHOR = "AdventureTimeSS14"
+SECOND_UPDATE_CHANGELOG = 30  # Частота обновлений изменений в журнале
+
+# Инициализация сессии для запросов
+GLOBAL_SESSION = requests.Session()
+GLOBAL_SESSION.headers.update({"Authorization": f"token {GITHUB}"})
 
 SS14_RUN_LEVELS = {0: "Лобби", 1: "Раунд идёт", 2: "Окончание раунда..."}
 
@@ -54,19 +73,25 @@ WHITELIST_ROLE_ID = [
     1266161300036390913,  # Руководство отдела разработки
 ]
 
-HEAD_ADT_TEAM = WHITELIST_ROLE_ID  # Роли для команды
+HEAD_ADT_TEAM = [
+    1116612861993689251,  # Создатель проекта🔑
+    1060264704838209586,  # Куратор Проекта
+    1054908932868538449,  # Руководитель проекта
+    1054827766211694593,  # Админ
+    1127152229439246468,  # Зам. создателя проекта
+    1266161300036390913,  # Руководство отдела разработки
+]
+
+SERVER_ADMIN_POST = [
+    1116612861993689251,  # Создатель проекта🔑
+    1127152229439246468,  # Зам. создателя проекта
+    1266161300036390913,  # Руководство отдела разработки 
+]
 
 REPOSITORIES = {
     "n": "space_station_ADT",  # Репозиторий для нового проекта
     "o": "space_station",  # Репозиторий для основного проекта
 }
-
-AUTHOR = "AdventureTimeSS14"
-SECOND_UPDATE_CHANGELOG = 30  # Частота обновлений изменений в журнале
-
-# Инициализация сессии для запросов
-GLOBAL_SESSION = requests.Session()
-GLOBAL_SESSION.headers.update({"Authorization": f"token {GITHUB}"})
 
 # GPT-промпт
 GPT_PROMPT = (
@@ -79,3 +104,33 @@ GPT_PROMPT = (
     "You are now talking to a character with ID {user_id}. "
     "You must respond in Russian."
 )
+
+POST_DATA_MRP = {
+    "Username": POST_USERNAME_MRP,
+    "Password": POST_PASSWORD_MRP
+}
+
+POST_HEADERS_MPR = {
+    "Authorization": POST_AUTHORIZATION_MRP,
+    "Content-Length": str(len(str(POST_DATA_MRP))),
+    "Host": f"{ADDRESS_MRP}:5000",
+    "User-Agent": POST_USER_AGENT,
+    "Accept": "application/json",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Connection": "keep-alive"
+}
+
+POST_DATA_DEV = {
+    "Username": POST_USERNAME_DEV,
+    "Password": POST_PASSWORD_DEV
+}
+
+POST_HEADERS_DEV = {
+    "Authorization": POST_AUTHORIZATION_DEV,
+    "Content-Length": str(len(str(POST_DATA_DEV))),
+    "Host": f"{ADDRESS_DEV}:5000",
+    "User-Agent": POST_USER_AGENT,
+    "Accept": "application/json",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Connection": "keep-alive"
+}
