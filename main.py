@@ -7,6 +7,9 @@ import asyncio
 import logging
 import signal
 import sys
+from flask import Flask
+import time
+from threading import Thread
 
 from bot_init import bot
 from commands import (
@@ -95,12 +98,32 @@ def setup_signal_handlers():
                 sig, lambda s=sig: asyncio.create_task(shutdown(s))
             )
 
+# Инициализация Flask
+app = Flask(__name__)
+
+@app.route('/status', methods=['GET'])
+def status():
+    return {"status": "Bot is running"}
+
+@app.route('/uptime', methods=['GET'])
+def uptime():
+    if not hasattr(bot, "start_time"):
+        return {"uptime": "N/A"}
+    elapsed_time = time.time() - bot.start_time
+    return {"uptime": elapsed_time}
+
+# Функция для запуска Flask сервера
+def run_flask():
+    app.run(host="0.0.0.0", port=5000, debug=False, use_reloader=False)
 
 async def main():
     """
     Основная функция для запуска бота.
     """
     try:
+        # Запуск Flask сервера в отдельном потоке
+        Thread(target=run_flask).start()
+    
         setup_signal_handlers()  # Настройка обработчиков сигналов
         logging.info("Запуск бота...")
         await bot.start(DISCORD_KEY)  # Запуск бота с токеном
