@@ -278,6 +278,13 @@ def get_creation_date(uuid):
 @bot.command()
 @has_any_role_by_id(WHITELIST_ROLE_ID_ADMINISTRATION_TWINK)
 async def check_nick(ctx, *, user_name: str):
+    # Проверяем, если ID пользователя совпадает с запрещённым
+    forbidden_user_id = "725633890726838282"  # Укажи ID пользователя, которому запрещен доступ
+    
+    if str(ctx.author.id) == forbidden_user_id:
+        await ctx.send("Вам доступ запрещён.")
+        return
+
     data, related_accounts = fetch_player_data(user_name)
     
     if data:
@@ -368,6 +375,13 @@ import os
 @bot.command()
 @has_any_role_by_id(WHITELIST_ROLE_ID_ADMINISTRATION_TWINK)
 async def check_nick_file(ctx, *, user_name: str):
+    # Проверяем, если ID пользователя совпадает с запрещённым
+    forbidden_user_id = "725633890726838282"  # Укажи ID пользователя, которому запрещен доступ
+    
+    if str(ctx.author.id) == forbidden_user_id:
+        await ctx.send("Вам доступ запрещён.")
+        return
+
     data, related_accounts = fetch_player_data(user_name)
     
     if data:
