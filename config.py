@@ -157,3 +157,8 @@ POST_HEADERS_DEV = {
     "Accept-Encoding": "gzip, deflate, br",
     "Connection": "keep-alive"
 }
+
+ACTOR_DATA_ADMIN = {
+    "Guid": POST_ADMIN_NAME,
+    "Name": POST_ADMIN_GUID
+}

@@ -96,18 +96,24 @@ async def send_pull_request_to_disnake(pr, description, pr_title, pr_url, coauth
 
 async def log_pull_request(pr, pr_title, pr_url, merged_at):
     """
-    Логирует информацию о замерженном пулл-реквесте в LOG_CHANNEL.
+    Логирует информацию о замерженном пулл-реквесте
+    в LOG_CHANNEL с использованием Embed.
     """
     log_channel = bot.get_channel(LOG_CHANNEL_ID)
+
     if log_channel:
-        log_message = (
-            f"✅ **Пулл-реквест опубликован:**\n"
-            f"- **Название:** {pr_title}\n"
-            f"- **Автор:** {pr['user']['login']}\n"
-            f"- **Ссылка:** [Открыть PR #{pr['number']}]({pr_url})\n"
-            f"- **Дата мержа:** {merged_at.strftime('%Y-%m-%d %H:%M:%S')} UTC\n_ _"
+        # Создание Embed сообщения
+        embed = disnake.Embed(
+            title="✅ Пулл-реквест замерджен",
+            description=f"- **Название:** {pr_title}\n"
+                        f"- **Автор:** {pr['user']['login']}\n"
+                        f"- **Ссылка:** [Открыть PR #{pr['number']}]({pr_url})\n"
+                        f"- **Дата мержа:** {merged_at.strftime('%Y-%m-%d %H:%M:%S')} UTC",
+            color=disnake.Color.green()  # Зеленый цвет для успешных операций
         )
-        await log_channel.send(log_message)
+
+        # Отправка Embed в лог-канал
+        await log_channel.send(embed=embed)
     else:
         print(f"⚠️ Лог-канал с ID {LOG_CHANNEL_ID} не найден.")
 
