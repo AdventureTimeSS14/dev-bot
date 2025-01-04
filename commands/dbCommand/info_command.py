@@ -1,11 +1,11 @@
-import discord
+import disnake
 import mariadb
 
 from bot_init import bot
 from commands.dbCommand.get_db_connection import get_db_connection
 from config import DATABASE, HOST, LOG_CHANNEL_ID, PORT, USER
 
-COLOR = discord.Color.dark_purple()
+COLOR = disnake.Color.dark_purple()
 
 
 @bot.command(name="db_info")
@@ -20,7 +20,7 @@ async def db_info(ctx):
 
         # Создаем embed для ответа
         avatar_url = ctx.author.avatar.url if ctx.author.avatar else None
-        embed = discord.Embed(
+        embed = disnake.Embed(
             title="Информация о базе данных",
             description=f"Подключение к базе данных {DATABASE} выполнено успешно!",
             color=COLOR,
@@ -68,10 +68,10 @@ async def db_info(ctx):
 
     except mariadb.Error as db_error:
         # Обработка ошибок базы данных
-        error_embed = discord.Embed(
+        error_embed = disnake.Embed(
             title="Ошибка подключения к базе данных",
             description=str(db_error),
-            color=discord.Color.red(),
+            color=disnake.Color.red(),
         )
         await ctx.send(embed=error_embed)
 
@@ -85,10 +85,10 @@ async def db_info(ctx):
 
     except Exception as e:
         # Общая обработка ошибок
-        error_embed = discord.Embed(
+        error_embed = disnake.Embed(
             title="Ошибка",
             description=f"Произошла непредвиденная ошибка: {e}",
-            color=discord.Color.red(),
+            color=disnake.Color.red(),
         )
         await ctx.send(embed=error_embed)
 

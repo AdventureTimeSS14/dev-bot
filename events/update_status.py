@@ -3,7 +3,7 @@ from urllib.parse import urlparse, urlunparse
 
 import aiohttp
 import dateutil.parser
-import discord
+import disnake
 
 # Определение уровней игры для SS14
 SS14_RUN_LEVELS = {0: "Лобби", 1: "Раунд идёт", 2: "Окончание раунда..."}
@@ -62,11 +62,11 @@ def get_ss14_status_url(url: str, port: int) -> str:
 
 def create_status_embed(
     address: str, status_data: dict, author=None
-) -> discord.Embed:
+) -> disnake.Embed:
     """
     Создаёт Embed с информацией о статусе сервера.
     """
-    embed = discord.Embed(color=discord.Color.dark_blue())
+    embed = disnake.Embed(color=disnake.Color.dark_blue())
     embed.title = status_data.get("name", "Неизвестно")
     embed.set_footer(text=f"Адрес: {address}")
 
@@ -120,11 +120,11 @@ def format_time_delta(delta) -> list:
     return time_str
 
 
-def create_error_embed(address: str) -> discord.Embed:
+def create_error_embed(address: str) -> disnake.Embed:
     """
     Создаёт Embed для ошибок.
     """
-    embed = discord.Embed(color=discord.Color.red())
+    embed = disnake.Embed(color=disnake.Color.red())
     embed.title = "Ошибка получения данных"
     embed.set_footer(text=f"Адрес: {address}")
 

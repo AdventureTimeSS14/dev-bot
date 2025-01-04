@@ -1,8 +1,8 @@
 import time
 from datetime import timedelta
 
-import discord
-from discord.ext import tasks
+import disnake
+from disnake.ext import tasks
 
 from bot_init import bot
 from config import (
@@ -60,9 +60,9 @@ async def update_time_shutdows():
         # Редактируем сообщение
         await message.edit(content=content)
 
-    except discord.NotFound:
+    except disnake.NotFound:
         print(f"❌ Сообщение с ID {message_id} не найдено.")
-    except discord.Forbidden:
+    except disnake.Forbidden:
         print("❌ У бота нет прав для редактирования сообщения.")
     except Exception as e:
         print(f"❌ Произошла ошибка при редактировании сообщения: {e}")

@@ -1,4 +1,4 @@
-import discord
+import disnake
 
 from bot_init import bot
 from config import (
@@ -54,9 +54,9 @@ async def update_shutdown_message():
             )
         )
         print("✅ Сообщение об отключении обновлено.")
-    except discord.NotFound:
+    except disnake.NotFound:
         print(f"❌ Сообщение с ID {MESSAGE_ID_TIME_SHUTDOWS} не найдено.")
-    except discord.Forbidden:
+    except disnake.Forbidden:
         print("❌ У бота нет прав для редактирования сообщения.")
     except Exception as e:
         print(f"❌ Ошибка при обновлении сообщения об отключении: {e}")
@@ -75,7 +75,7 @@ async def update_error_status_message():
         message_id = 1320771122433622084  # ID сообщения о статусе сервера
         message = await channel.fetch_message(message_id)
 
-        embed = discord.Embed(color=discord.Color.red())
+        embed = disnake.Embed(color=disnake.Color.red())
         embed.title = "Ошибка получения данных"
         embed.add_field(name="Игроков", value="Error!", inline=False)
         embed.add_field(name="Статус", value="Error!", inline=False)
@@ -88,9 +88,9 @@ async def update_error_status_message():
 
         await message.edit(embed=embed)
         print("✅ Сообщение со статусом обновлено с ошибкой.")
-    except discord.NotFound:
+    except disnake.NotFound:
         print(f"❌ Сообщение со статусом с ID {message_id} не найдено.")
-    except discord.Forbidden:
+    except disnake.Forbidden:
         print("❌ У бота нет прав для редактирования сообщения о статусе.")
     except Exception as e:
         print(f"❌ Ошибка при обновлении сообщения о статусе: {e}")
@@ -105,8 +105,8 @@ async def update_bot_presence():
         status_state = (
             "Игроков: ERROR! | Режим: ERROR! | Раунд: ERROR! | Статус: ERROR!"
         )
-        activity = discord.Activity(
-            type=discord.ActivityType.unknown, name=name, state=status_state
+        activity = disnake.Activity(
+            type=disnake.ActivityType.unknown, name=name, state=status_state
         )
         await bot.change_presence(activity=activity)
         print("✅ Статус бота обновлён на 'Отключена'.")

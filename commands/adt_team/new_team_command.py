@@ -2,7 +2,7 @@
 Модуль команды new_team
 """
 
-import discord
+import disnake
 
 from bot_init import bot
 from commands.misc.check_roles import has_any_role_by_id
@@ -11,7 +11,7 @@ from config import ADMIN_TEAM, HEAD_ADT_TEAM
 
 @bot.command()
 @has_any_role_by_id(HEAD_ADT_TEAM)
-async def new_team(ctx, user: discord.Member, *roles: discord.Role):
+async def new_team(ctx, user: disnake.Member, *roles: disnake.Role):
     """
     Команда для назначения пользователя на должность в команде.
     Требует две роли: <роль отдела> и <роль должности>.
@@ -37,11 +37,11 @@ async def new_team(ctx, user: discord.Member, *roles: discord.Role):
             try:
                 await user.add_roles(role)
                 assigned_roles.append(role.name)
-            except discord.Forbidden:
+            except disnake.Forbidden:
                 await ctx.send(
                     f"⚠️ У бота нет прав для добавления роли **{role.name}** у {user.mention}."
                 )
-            except discord.HTTPException as e:
+            except disnake.HTTPException as e:
                 await ctx.send(
                     f"❌ Ошибка при добавлении роли **{role.name}**: {str(e)}"
                 )
@@ -60,7 +60,7 @@ async def new_team(ctx, user: discord.Member, *roles: discord.Role):
     if len(assigned_roles) == 2:
         admin_channel = bot.get_channel(ADMIN_TEAM)
         if admin_channel:
-            embed = discord.Embed(
+            embed = disnake.Embed(
                 title="Назначение на должность",
                 description=f"{ctx.author.mention} назначает {user.mention}",
                 color=role_position.color,

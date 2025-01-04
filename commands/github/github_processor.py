@@ -1,4 +1,4 @@
-import discord
+import disnake
 
 from config import AUTHOR, GLOBAL_SESSION, REPOSITORIES, WHITELIST_ROLE_ID
 
@@ -52,13 +52,13 @@ async def create_embed_list(
     Создаёт список Embed на основе переданных данных.
     """
     embed_list = []
-    current_embed = discord.Embed(title=title, color=color)
+    current_embed = disnake.Embed(title=title, color=color)
 
     for i, item in enumerate(items):
         # Создаем новый Embed, если достигнуто максимальное количество элементов
         if i % max_items_per_embed == 0 and i > 0:
             embed_list.append(current_embed)
-            current_embed = discord.Embed(title=title, color=color)
+            current_embed = disnake.Embed(title=title, color=color)
 
         # Добавляем поле, используя переданную функцию форматирования
         current_embed.add_field(**formatter(item))
@@ -77,5 +77,5 @@ async def send_embeds(ctx, embed_list):
     for embed in embed_list:
         try:
             await ctx.send(embed=embed)
-        except discord.HTTPException as exc:
+        except disnake.HTTPException as exc:
             await ctx.send(f"❌ Ошибка отправки сообщения: {exc}")

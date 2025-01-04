@@ -1,6 +1,6 @@
 import sys
 import requests
-from discord.ext import tasks
+from disnake.ext import tasks
 from bot_init import bot
 from commands.misc.shutdows_deff import shutdown_def
 from config import AUTHOR, GITHUB, LOG_CHANNEL_ID

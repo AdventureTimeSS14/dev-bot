@@ -1,4 +1,4 @@
-from discord.ext import commands
+from disnake.ext import commands
 
 
 def has_any_role_by_id(role_ids):
