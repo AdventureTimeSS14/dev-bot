@@ -51,6 +51,9 @@ jobs:
           echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
           echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
+          echo "POST_ADMIN_API=${{ secrets.POST_ADMIN_API }}" >> $GITHUB_ENV
+          echo "POST_ADMIN_NAME=${{ secrets.POST_ADMIN_NAME }}" >> $GITHUB_ENV
+          echo "POST_ADMIN_GUID=${{ secrets.POST_ADMIN_GUID }}" >> $GITHUB_ENV
 
       - name: Run bot
         env:

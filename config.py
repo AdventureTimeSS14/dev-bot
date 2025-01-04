@@ -38,11 +38,15 @@ POST_PASSWORD_DEV = get_env_variable("POST_PASSWORD_DEV")
 POST_USERNAME_MRP = get_env_variable("POST_USERNAME_MRP")
 POST_PASSWORD_MRP = get_env_variable("POST_PASSWORD_MRP")
 
-DB_HOST=get_env_variable("DB_HOST")
-DB_DATABASE=get_env_variable("DB_DATABASE")
-DB_USER=get_env_variable("DB_USER")
-DB_PASSWORD=get_env_variable("DB_PASSWORD")
-DB_PORT=get_env_variable("DB_PORT")
+DB_HOST = get_env_variable("DB_HOST")
+DB_DATABASE = get_env_variable("DB_DATABASE")
+DB_USER = get_env_variable("DB_USER")
+DB_PASSWORD = get_env_variable("DB_PASSWORD")
+DB_PORT = get_env_variable("DB_PORT")
+
+POST_ADMIN_API = get_env_variable("POST_ADMIN_API")
+POST_ADMIN_NAME = get_env_variable("POST_ADMIN_NAME")
+POST_ADMIN_GUID = get_env_variable("POST_ADMIN_GUID")
 
 # Константы для идентификаторов
 CHANGELOG_CHANNEL_ID = 1089490875182239754
