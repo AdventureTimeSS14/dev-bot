@@ -378,8 +378,8 @@ async def check_nick_file(ctx, *, user_name: str):
             related_accounts_str = 'Совпадения по аккаунтам:\n'
             count = 0
             for acc in related_accounts:
-                if count >= 1000:
-                    break  # Ограничиваем вывод до 1000 совпадений
+                if count >= 10000:
+                    break  # Ограничиваем вывод до 10000 совпадений
                 
                 related_user_name, related_address, related_hwid, related_last_seen_time = acc
                 # Пропустить если совпадает с текущими данными
