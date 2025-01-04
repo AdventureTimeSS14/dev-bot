@@ -38,6 +38,12 @@ POST_PASSWORD_DEV = get_env_variable("POST_PASSWORD_DEV")
 POST_USERNAME_MRP = get_env_variable("POST_USERNAME_MRP")
 POST_PASSWORD_MRP = get_env_variable("POST_PASSWORD_MRP")
 
+DB_HOST=get_env_variable("DB_HOST")
+DB_DATABASE=get_env_variable("DB_DATABASE")
+DB_USER=get_env_variable("DB_USER")
+DB_PASSWORD=get_env_variable("DB_PASSWORD")
+DB_PORT=get_env_variable("DB_PORT")
+
 # Константы для идентификаторов
 CHANGELOG_CHANNEL_ID = 1089490875182239754
 LOG_CHANNEL_ID = 1141810442721833060
@@ -86,6 +92,16 @@ SERVER_ADMIN_POST = [
     1116612861993689251,  # Создатель проекта🔑
     1127152229439246468,  # Зам. создателя проекта
     1266161300036390913,  # Руководство отдела разработки 
+]
+
+WHITELIST_ROLE_ID_ADMINISTRATION_TWINK = [
+    1116612861993689251,  # Создатель проекта🔑
+    1060264704838209586,  # Куратор Проекта
+    1054908932868538449,  # Руководитель проекта
+    1054827766211694593,  # Админ
+    1127152229439246468,  # Зам. создателя проекта
+    1266161300036390913,  # Руководство отдела разработки
+    1248667383334178902,  # Администрация
 ]
 
 REPOSITORIES = {

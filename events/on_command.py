@@ -25,11 +25,11 @@ async def on_command(ctx):
     if isinstance(ctx.channel, disnake.DMChannel):
         channel_info = "ЛС с пользователем"
         # В ЛС не будет ссылки на сообщение с использованием guild
-        message_link = f"https://disnake.com/channels/@me/{ctx.channel.id}/{ctx.message.id}"
+        message_link = f"https://discord.com/channels/@me/{ctx.channel.id}/{ctx.message.id}"
     else:
         channel_info = f"Канал {ctx.channel.name} в {ctx.guild.name}"
         message_link = (
-            f"https://disnake.com/channels/{ctx.guild.id}/{ctx.channel.id}/{ctx.message.id}"
+            f"https://discord.com/channels/{ctx.guild.id}/{ctx.channel.id}/{ctx.message.id}"
         )
 
     # Формируем сообщение для логирования

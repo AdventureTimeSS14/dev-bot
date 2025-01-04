@@ -46,6 +46,11 @@ jobs:
           echo "POST_PASSWORD_DEV=${{ secrets.POST_PASSWORD_DEV }}" >> $GITHUB_ENV
           echo "POST_USERNAME_MRP=${{ secrets.POST_USERNAME_MRP }}" >> $GITHUB_ENV
           echo "POST_PASSWORD_MRP=${{ secrets.POST_PASSWORD_MRP }}" >> $GITHUB_ENV
+          echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
+          echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> $GITHUB_ENV
+          echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+          echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
 
       - name: Run bot
         env:
