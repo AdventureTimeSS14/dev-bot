@@ -1,14 +1,9 @@
 # import pytz
 import disnake
 import psycopg2
-from disnake.ext import commands
-from disnake.ext.commands import BucketType
+import requests
 from datetime import datetime, timezone
 from dateutil import parser
-# import os
-# import json
-import requests
-# from bs4 import BeautifulSoup
 from bot_init import bot
 from config import (
     DB_HOST,
@@ -29,16 +24,7 @@ DB_PARAMS = {
     'port': DB_PORT
 }
 
-# ID аккаунты пользователей в дискорде. Которые могут пользоваться ботом
-AUTHORIZED_USER_IDS = {
-    '328502766622474240'
-}
-
 # SPONSOR_PATH = '/root/node_sponsors/data/' # моя спонсорка, не учитывать.
-
-# intents = disnake.Intents.default()
-# intents.message_content = True
-# bot = commands.Bot(command_prefix='%', intents=intents)
 
 # поиск секций в базе данных
 def fetch_player_data(user_name):
@@ -290,7 +276,6 @@ def get_creation_date(uuid):
         return f"Произошла ошибка: {err}"
 
 @bot.command()
-@commands.cooldown(1, 20, BucketType.user)
 @has_any_role_by_id(WHITELIST_ROLE_ID_ADMINISTRATION_TWINK)
 async def check_nick(ctx, *, user_name: str):
     data, related_accounts = fetch_player_data(user_name)
@@ -312,12 +297,8 @@ async def check_nick(ctx, *, user_name: str):
             first_seen_time = 'Неизвестно'
             last_seen_time_formatted = 'Неизвестно'
         
-        # hwid_message = format_hwid(last_seen_hwid)
-        if not last_seen_hwid:
-            hwid_message = uuid[:15]
-        else:
-            hwid_message = format_hwid(last_seen_hwid)
-            
+        hwid_message = format_hwid(last_seen_hwid) if last_seen_hwid else 'Неизвестно'
+        
         # # Получаем информацию о IP
         # ip_info = get_ip_info(last_seen_address)
         
@@ -327,10 +308,13 @@ async def check_nick(ctx, *, user_name: str):
         related_accounts_str = ''
         if related_accounts:
             related_accounts_str = '> **Совпадение по аккаунтам:**\n'
+            count = 0  # Счётчик для ограничения до 30 совпадений
             for acc in related_accounts:
+                if count >= 30:
+                    break  # Прекратить цикл, если уже нашли 30 совпадений
+
                 related_user_name, related_address, related_hwid, related_last_seen_time = acc
-                # if related_user_name in ['Assassin_Bro', 'fospas', 'SetTyCrime', 'Aurora_V']:
-                #     continue  # Пропустить пользователя 'Assassin_Bro'
+                # Пропустить если совпадает с текущими данными
                 if related_user_name == last_seen_user_name:
                     continue
                 related_last_seen_time_str = format_datetime(related_last_seen_time, 'short')
@@ -340,7 +324,8 @@ async def check_nick(ctx, *, user_name: str):
                     related_accounts_str += (f'> **{related_user_name}** [HWID] | Последний заход в игру: {related_last_seen_time_str}\n')
                 elif related_hwid == last_seen_hwid and related_address == last_seen_address:
                     related_accounts_str += (f'> **{related_user_name}** [IP, HWID] | Последний заход в игру: {related_last_seen_time_str}\n')
-  
+                count += 1  # Увеличиваем счётчик
+
         # # Check for sponsor status
         # sponsor_status = get_sponsor_tier(uuid)
         global_whitelist_status, whitelist_roles = get_whitelist_roles(uuid)
@@ -376,18 +361,3 @@ async def check_nick(ctx, *, user_name: str):
         await ctx.send(embed=embed)
     else:
         await ctx.send('Игрок не найден.')
-        
-@check_nick.error
-async def check_nick_error(ctx, error):
-    """
-    Обработка ошибок для команды check_nick.
-    Проверка на тайм-аут
-
-    Параметры:
-    ctx: Контекст команды из Discord.
-    error: Ошибка, возникшая при выполнении команды.
-    """
-    if isinstance(error, commands.CommandOnCooldown):
-        await ctx.send(
-            f"Эту команду можно использовать снова через {int(error.retry_after)} секунд."
-        )
