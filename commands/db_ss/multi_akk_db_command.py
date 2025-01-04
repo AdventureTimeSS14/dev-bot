@@ -363,47 +363,47 @@ async def check_nick(ctx, *, user_name: str):
         await ctx.send('Игрок не найден.')
 
 
-# import os
+import os
 
-# @bot.command()
-# @has_any_role_by_id(WHITELIST_ROLE_ID_ADMINISTRATION_TWINK)
-# async def check_nick_file(ctx, *, user_name: str):
-#     data, related_accounts = fetch_player_data(user_name)
+@bot.command()
+@has_any_role_by_id(WHITELIST_ROLE_ID_ADMINISTRATION_TWINK)
+async def check_nick_file(ctx, *, user_name: str):
+    data, related_accounts = fetch_player_data(user_name)
     
-#     if data:
-#         player_id, uuid, first_seen_time_str, last_seen_user_name, last_seen_time_str, last_seen_address, last_seen_hwid = data
+    if data:
+        player_id, uuid, first_seen_time_str, last_seen_user_name, last_seen_time_str, last_seen_address, last_seen_hwid = data
 
-#         related_accounts_str = ''
-#         if related_accounts:
-#             related_accounts_str = 'Совпадения по аккаунтам:\n'
-#             count = 0
-#             for acc in related_accounts:
-#                 if count >= 10000:
-#                     break  # Ограничиваем вывод до 10000 совпадений
+        related_accounts_str = ''
+        if related_accounts:
+            related_accounts_str = 'Совпадения по аккаунтам:\n'
+            count = 0
+            for acc in related_accounts:
+                if count >= 10000:
+                    break  # Ограничиваем вывод до 10000 совпадений
                 
-#                 related_user_name, related_address, related_hwid, related_last_seen_time = acc
-#                 # Пропустить если совпадает с текущими данными
-#                 if related_user_name == last_seen_user_name:
-#                     continue
+                related_user_name, related_address, related_hwid, related_last_seen_time = acc
+                # Пропустить если совпадает с текущими данными
+                if related_user_name == last_seen_user_name:
+                    continue
                 
-#                 if related_address == last_seen_address and related_hwid != last_seen_hwid:
-#                     related_accounts_str += (f'{related_user_name}\n')
-#                 elif related_hwid == last_seen_hwid and related_address != last_seen_address:
-#                     related_accounts_str += (f'{related_user_name}\n')
-#                 elif related_hwid == last_seen_hwid and related_address == last_seen_address:
-#                     related_accounts_str += (f'{related_user_name}\n')
-#                 count += 1
+                if related_address == last_seen_address and related_hwid != last_seen_hwid:
+                    related_accounts_str += (f'> **{related_user_name}** [IP] | Последний заход в игру: {related_last_seen_time_str}\n')
+                elif related_hwid == last_seen_hwid and related_address != last_seen_address:
+                    related_accounts_str += (f'> **{related_user_name}** [HWID] | Последний заход в игру: {related_last_seen_time_str}\n')
+                elif related_hwid == last_seen_hwid and related_address == last_seen_address:
+                    related_accounts_str += (f'> **{related_user_name}** [IP, HWID] | Последний заход в игру: {related_last_seen_time_str}\n')
+                count += 1
 
-#         # Создаем текстовый файл с данными
-#         file_name = f'related_accounts_{user_name}.txt'
-#         with open(file_name, 'w', encoding='utf-8') as f:
-#             f.write(related_accounts_str)
+        # Создаем текстовый файл с данными
+        file_name = f'related_accounts_{user_name}.txt'
+        with open(file_name, 'w', encoding='utf-8') as f:
+            f.write(related_accounts_str)
 
-#         # Отправляем файл в Discord
-#         if os.path.exists(file_name):
-#             with open(file_name, 'rb') as file:
-#                 await ctx.send(file=disnake.File(file, file_name))
-#             os.remove(file_name)  # Удаляем файл после отправки
+        # Отправляем файл в Discord
+        if os.path.exists(file_name):
+            with open(file_name, 'rb') as file:
+                await ctx.send(file=disnake.File(file, file_name))
+            os.remove(file_name)  # Удаляем файл после отправки
 
-#     else:
-#         await ctx.send('Игрок не найден.')
+    else:
+        await ctx.send('Игрок не найден.')
