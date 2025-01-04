@@ -1,7 +1,8 @@
 # import pytz
 import disnake
-# from disnake.ext import commands
 import psycopg2
+from disnake.ext import commands
+from disnake.ext.commands import BucketType
 from datetime import datetime, timezone
 from dateutil import parser
 # import os
@@ -289,6 +290,7 @@ def get_creation_date(uuid):
         return f"Произошла ошибка: {err}"
 
 @bot.command()
+@commands.cooldown(1, 20, BucketType.user)
 @has_any_role_by_id(WHITELIST_ROLE_ID_ADMINISTRATION_TWINK)
 async def check_nick(ctx, *, user_name: str):
     data, related_accounts = fetch_player_data(user_name)
@@ -374,3 +376,18 @@ async def check_nick(ctx, *, user_name: str):
         await ctx.send(embed=embed)
     else:
         await ctx.send('Игрок не найден.')
+        
+@check_nick.error
+async def check_nick_error(ctx, error):
+    """
+    Обработка ошибок для команды check_nick.
+    Проверка на тайм-аут
+
+    Параметры:
+    ctx: Контекст команды из Discord.
+    error: Ошибка, возникшая при выполнении команды.
+    """
+    if isinstance(error, commands.CommandOnCooldown):
+        await ctx.send(
+            f"Эту команду можно использовать снова через {int(error.retry_after)} секунд."
+        )
