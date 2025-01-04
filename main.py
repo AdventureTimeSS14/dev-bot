@@ -23,6 +23,9 @@ from commands.post_admin import (
     restart_command,
     update_command,
 )
+from commands.db_ss import (
+    multi_akk_db_command,
+)
 from commands.adt_team import (
     add_role_command,
     add_vacation_command,
