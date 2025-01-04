@@ -24,12 +24,13 @@ def get_env_variable(name: str) -> str:
 # Получение переменных из окружения
 DISCORD_KEY = get_env_variable("DISCORD_KEY")
 GITHUB = get_env_variable("GITHUB")
+# Моя база данных MAriaDB
 USER = get_env_variable("USER")
 PASSWORD = get_env_variable("PASSWORD")
 HOST = get_env_variable("HOST")
 PORT = get_env_variable("PORT")
 DATABASE = get_env_variable("DATABASE")
-# Для управление DEV/MRP
+# Для управление DEV/MRP апдейт, рестарт
 POST_AUTHORIZATION_DEV = get_env_variable("POST_AUTHORIZATION_DEV")
 POST_AUTHORIZATION_MRP = get_env_variable("POST_AUTHORIZATION_MRP")
 POST_USER_AGENT = get_env_variable("POST_USER_AGENT")
@@ -37,13 +38,13 @@ POST_USERNAME_DEV = get_env_variable("POST_USERNAME_DEV")
 POST_PASSWORD_DEV = get_env_variable("POST_PASSWORD_DEV")
 POST_USERNAME_MRP = get_env_variable("POST_USERNAME_MRP")
 POST_PASSWORD_MRP = get_env_variable("POST_PASSWORD_MRP")
-
+# Управление БД
 DB_HOST = get_env_variable("DB_HOST")
 DB_DATABASE = get_env_variable("DB_DATABASE")
 DB_USER = get_env_variable("DB_USER")
 DB_PASSWORD = get_env_variable("DB_PASSWORD")
 DB_PORT = get_env_variable("DB_PORT")
-
+# Имитация управление админкой
 POST_ADMIN_API = get_env_variable("POST_ADMIN_API")
 POST_ADMIN_NAME = get_env_variable("POST_ADMIN_NAME")
 POST_ADMIN_GUID = get_env_variable("POST_ADMIN_GUID")
