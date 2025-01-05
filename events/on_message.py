@@ -15,6 +15,7 @@ from config import (
     POST_ADMIN_NAME,
     POST_ADMIN_GUID,
     ADDRESS_MRP,
+    ADDRESS_DEV
 )
 from data import JsonData
 
@@ -154,9 +155,11 @@ async def get_github_link(repo_code, number):
     return None
 
 async def send_ahat_message_post(message):
+    if message.author.id == 1309279443943948328: # Игнорим ВэбХукк
+        return
+    
+    # url = f"http://{ADDRESS_DEV}:1211/admin/actions/a_chat" # DEV
     url = f"http://{ADDRESS_MRP}:1212/admin/actions/a_chat"
-    
-    
     
     post_data = {
         "Message": f"{message.content}",
