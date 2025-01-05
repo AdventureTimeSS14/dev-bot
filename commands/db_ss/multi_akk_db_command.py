@@ -11,7 +11,7 @@ from config import (
     DB_PASSWORD,
     DB_PORT,
     DB_USER,
-    WHITELIST_ROLE_ID_ADMINISTRATION_TWINK
+    WHITELIST_ROLE_ID_ADMINISTRATION_POST
 )
 from commands.misc.check_roles import has_any_role_by_id
 
@@ -276,7 +276,7 @@ def get_creation_date(uuid):
         return f"Произошла ошибка: {err}"
 
 @bot.command()
-@has_any_role_by_id(WHITELIST_ROLE_ID_ADMINISTRATION_TWINK)
+@has_any_role_by_id(WHITELIST_ROLE_ID_ADMINISTRATION_POST)
 async def check_nick(ctx, *, user_name: str):
     # Проверяем, если ID пользователя совпадает с запрещённым
     forbidden_user_id = "725633890726838282"  # Укажи ID пользователя, которому запрещен доступ
@@ -373,7 +373,7 @@ async def check_nick(ctx, *, user_name: str):
 import os
 
 @bot.command()
-@has_any_role_by_id(WHITELIST_ROLE_ID_ADMINISTRATION_TWINK)
+@has_any_role_by_id(WHITELIST_ROLE_ID_ADMINISTRATION_POST)
 async def check_nick_file(ctx, *, user_name: str):
     # Проверяем, если ID пользователя совпадает с запрещённым
     forbidden_user_id = "725633890726838282"  # Укажи ID пользователя, которому запрещен доступ
