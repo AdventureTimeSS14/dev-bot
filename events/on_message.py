@@ -1,5 +1,5 @@
 import re
-
+import json
 import disnake
 import requests
 from fuzzywuzzy import fuzz
@@ -11,6 +11,10 @@ from config import (
     GLOBAL_SESSION,
     LOG_CHANNEL_ID,
     REPOSITORIES,
+    POST_ADMIN_API,
+    POST_ADMIN_NAME,
+    POST_ADMIN_GUID,
+    ADDRESS_MRP,
 )
 from data import JsonData
 
@@ -37,6 +41,9 @@ async def on_message(message):
     # Проверка сообщений в канале для удаления
     if message.channel.id == ADMIN_TEAM:
         await handle_message_deletion(message)
+        
+    if message.channel.id == 1309262152586235964:
+        await send_ahat_message_post(message)
 
     # Проверка на шаблон GitHub issue/PR
     await handle_github_pattern(message)
@@ -145,3 +152,33 @@ async def get_github_link(repo_code, number):
         print(f"❌ Ошибка при запросе к GitHub API: {e}")
 
     return None
+
+async def send_ahat_message_post(message):
+    url = f"http://{ADDRESS_MRP}/admin/actions/a_chat"
+    
+    post_data = {
+        "Message": f"{message.content}",
+        "NickName": f"{message.author.name}"
+    }
+    
+    actor_data = {
+        "Guid": str(POST_ADMIN_GUID),
+        "Name": str(POST_ADMIN_NAME)
+    }
+    
+    headers = {
+    "Authorization": f"SS14Token {POST_ADMIN_API}",
+    "Content-Type": "application/json",
+    "Actor": json.dumps(actor_data)
+    }
+    
+    try:
+        response = requests.post(url, json=post_data, headers=headers)
+        response.raise_for_status()  # Если статус код 4xx или 5xx, будет сгенерировано исключение
+    except requests.exceptions.Timeout:
+        print("Request timed out")
+    except requests.exceptions.RequestException as e:
+        print(f"Request failed: {e}")
+    else:
+        print("Status Code:", response.status_code)
+        print("Response Text:", response.text)
