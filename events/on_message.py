@@ -154,7 +154,9 @@ async def get_github_link(repo_code, number):
     return None
 
 async def send_ahat_message_post(message):
-    url = f"http://{ADDRESS_MRP}/admin/actions/a_chat"
+    url = f"http://{ADDRESS_MRP}:1212/admin/actions/a_chat"
+    
+    
     
     post_data = {
         "Message": f"{message.content}",
