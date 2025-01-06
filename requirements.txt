@@ -1,8 +1,8 @@
-discord.py==2.4.0
 disnake
 curl_cffi
 aiohttp
 psycopg2
+beautifulsoup4
 fuzzywuzzy==0.18.0
 g4f==0.3.2.4
 nest-asyncio==1.6.0
