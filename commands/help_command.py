@@ -46,7 +46,7 @@ async def help_command(ctx):
         "name_3": "Доп. информация:",
         "context_3": "✨ Если у вас есть вопросы или вам нужна помощь, обращайтесь к создателю: Schrödinger's Cutie🖤👾",
         "name_4": "Разработчики:",
-        "context_4": "👨‍💻 Автор: schrodinger71\n👥 Maintainer: schrodinger71, nixsilvam, xelasto, mskaktus\n📡 Хост: 🐈‍⬛github-actions[bot]",
+        "context_4": "👨‍💻 Автор: Schrodinger71\n🛠️ Maintainer: Schrodinger71\n🤝 Contributors: nixsilvam, xelasto, mskaktus\n📡 Хост: 🐈‍⬛github-actions[bot]",
         "name_5": "Репозиторий бота:",
         "context_5": "🔗 GitHub: https://github.com/AdventureTimeSS14/Dev-bot",
     }
