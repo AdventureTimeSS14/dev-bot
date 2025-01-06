@@ -100,6 +100,17 @@ async def get_github_link(repo_code, number):
             comments_count = pr_data['comments']
             embed.add_field(name="Комментарии 💬", value=comments_count, inline=True)
 
+            # Получаем информацию о количестве добавленных и удалённых строк
+            diffstat_url = f"{pr_url}/files"
+            diffstat_response = GLOBAL_SESSION.get(diffstat_url)
+            if diffstat_response.status_code == 200:
+                diffstat_data = diffstat_response.json()
+                added_lines = sum(file['additions'] for file in diffstat_data)
+                deleted_lines = sum(file['deletions'] for file in diffstat_data)
+                # Добавляем изменения строк в нужном формате
+                embed.add_field(name="Изменение строк 🔄", value=f"Добавлено: +{added_lines}\nУдалено: −{deleted_lines}", inline=True)
+
+
             # Форматируем даты в более читаемый вид
             created_at = datetime.strptime(pr_data['created_at'], "%Y-%m-%dT%H:%M:%SZ")
             updated_at = datetime.strptime(pr_data['updated_at'], "%Y-%m-%dT%H:%M:%SZ")
