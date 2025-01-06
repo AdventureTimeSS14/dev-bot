@@ -165,7 +165,7 @@ async def send_ahat_message_post(message):
     }
 
     try:
-        response = requests.post(url, json=post_data, headers=POST_ADMIN_HEADERS)
+        response = requests.post(url, json=post_data, headers=POST_ADMIN_HEADERS, timeout=5)
         response.raise_for_status()  # Если статус код 4xx или 5xx, будет сгенерировано исключение
     except requests.exceptions.Timeout:
         print("Request timed out")
