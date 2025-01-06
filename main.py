@@ -23,6 +23,9 @@ from commands.post_admin import (
     restart_command,
     update_command,
     admin_info_command,
+    bunker_command,
+    admin_presets_command,
+    game_rules_command
 )
 from commands.db_ss import (
     multi_akk_db_command,

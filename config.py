@@ -4,6 +4,7 @@
 
 import os
 
+import json
 import requests
 from dotenv import load_dotenv
 
@@ -159,6 +160,12 @@ POST_HEADERS_DEV = {
 }
 
 ACTOR_DATA_ADMIN = {
-    "Guid": POST_ADMIN_NAME,
-    "Name": POST_ADMIN_GUID
+    "Guid": str(POST_ADMIN_NAME),
+    "Name": str(POST_ADMIN_GUID)
+}
+
+POST_ADMIN_HEADERS = {
+    "Authorization": f"SS14Token {POST_ADMIN_API}",
+    "Content-Type": "application/json",
+    "Actor": json.dumps(ACTOR_DATA_ADMIN)
 }
