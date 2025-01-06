@@ -39,7 +39,7 @@ async def on_message(message):
     # Проверка сообщений в канале для удаления
     if message.channel.id == ADMIN_TEAM:
         await handle_message_deletion(message)
-        
+
     if message.channel.id == 1309262152586235964:
         await send_ahat_message_post(message)
 
@@ -153,6 +153,10 @@ async def get_github_link(repo_code, number):
 
 
 async def send_ahat_message_post(message):
+    """
+    Если в логах а-чата замечено сообщение от пользователя
+    Создается пост запрос, и отправляется в игру
+    """
     if message.author.id == 1309279443943948328: # Игнорим ВэбХукк
         return
 
