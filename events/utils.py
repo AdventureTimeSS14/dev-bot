@@ -94,7 +94,7 @@ async def get_github_link(repo_code, number):
 
             # Метки (Labels)
             labels = pr_data.get('labels', [])
-            labels_str = ', '.join([label['name'] for label in labels]) if labels else "Нет меток 🏷️"
+            labels_str = ', '.join([f"[{label['name']}]" for label in labels]) if labels else "Нет меток 🏷️"
             embed.add_field(name="Метки 🏷️", value=labels_str, inline=True)
 
             # Количество комментариев
