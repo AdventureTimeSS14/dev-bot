@@ -2,6 +2,7 @@ import re
 
 import disnake
 import requests
+import random
 
 from fuzzywuzzy import fuzz
 from bot_init import bot
@@ -35,6 +36,7 @@ async def on_message(message):
 
     # Ответ на упоминание бота
     if f"<@{bot.user.id}>" in message.content:
+        await call_mention(message)
         await handle_mention(message)
         return
 
@@ -115,6 +117,38 @@ async def handle_message_deletion(message):
         await log_channel.send(
             f"⚠️ Не удалось отправить ЛС пользователю {user.mention}."
         )
+
+async def call_mention(message):
+    """
+    Обрабатывает упоминания бота и отвечает на определённые фразы.
+    """
+    text_without_mention = message.content.replace(
+        f"<@{bot.user.id}>", ""
+    ).strip()
+    data = JsonData()
+
+    # Проверяем вариации фраз из JsonData
+    for variation in data.get_data("call_bot"):
+        if fuzz.token_sort_ratio(text_without_mention.lower(), variation) > 80:
+            # Список возможных мурчаний
+            meow_responses = [
+                "Мурррр?",
+                "Мрья?! >~<",
+                "Мрррр",
+                "Мря? Я здеся 😽",
+                "Мррр, как я тебя услышала?! 😸",
+                "Мррр, что за вкусняшки принес?",
+                "Мяу, ну что, погладим меня? 😻",
+                "Мррр, ты меня разбудил!",
+                "Мяууууу, где моя вкусняшка?!",
+                "Мррр, не трогай моё место на диване! >_<",
+            ]
+
+            # Выбираем случайный ответ из списка
+            responce = random.choice(meow_responses)
+
+            await message.channel.send(responce)
+            break
 
 
 async def handle_mention(message):
