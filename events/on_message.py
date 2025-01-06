@@ -48,6 +48,29 @@ async def on_message(message):
     # Проверка на шаблон GitHub issue/PR
     await handle_github_pattern(message)
 
+async def send_ahat_message_post(message):
+    """
+    Если в логах а-чата замечено сообщение от пользователя
+    Создается пост запрос, и отправляется в игру
+    """
+    if message.author.id == 1309279443943948328: # Игнорим ВэбХукк
+        return
+    # url = f"http://{ADDRESS_DEV}:1211/admin/actions/a_chat" # DEV
+    url = f"http://{ADDRESS_MRP}:1212/admin/actions/a_chat"
+    post_data = {
+        "Message": f"{message.content}",
+        "NickName": f"{message.author.name}"
+    }
+    try:
+        response = requests.post(url, json=post_data, headers=POST_ADMIN_HEADERS, timeout=5)
+        response.raise_for_status()  # Если статус код 4xx или 5xx, будет сгенерировано исключение
+    except requests.exceptions.Timeout:
+        print("Request timed out")
+    except requests.exceptions.RequestException as e:
+        print(f"Request failed: {e}")
+    else:
+        print("Status Code:", response.status_code)
+        print("Response Text:", response.text)
 
 async def handle_message_deletion(message):
     """
