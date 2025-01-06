@@ -59,20 +59,45 @@ async def get_github_link(repo_code, number):
             embed.add_field(name="Создатель PR 👨‍💻", value=pr_data['user']['login'], inline=True)
 
             # Ревьюеры
-            reviewers = pr_data.get('requested_reviewers', [])
-            reviewers_str = ', '.join([reviewer['login'] for reviewer in reviewers]) if reviewers else "Нет 👥"
-            embed.add_field(name="Ревьюеры 🔍", value=reviewers_str, inline=True)
+            requested_reviewers = pr_data.get('requested_reviewers', [])
+            reviewers_str = ', '.join([reviewer['login'] for reviewer in requested_reviewers]) if requested_reviewers else "Нет назначенных 👥"
 
-            # Количество комментариев
-            comments_count = pr_data['comments']
-            embed.add_field(name="Комментарии 💬", value=comments_count, inline=True)
+            # Получаем информацию о том, кто поставил отзыв
+            reviews_url = f"{pr_url}/reviews"
+            reviews_response = GLOBAL_SESSION.get(reviews_url)
+            if reviews_response.status_code == 200:
+                reviews_data = reviews_response.json()
+                reviewed_reviewers = [review['user']['login'] for review in reviews_data]
+
+                # Объединяем список назначенных и тех, кто уже поставил отзыв (не повторяем)
+                all_reviewers = set(requested_reviewers + reviewed_reviewers)  # Используем set, чтобы избежать дублирования
+                all_reviewers_str = ', '.join(all_reviewers) if all_reviewers else "Нет ревьюеров"
+
+                # Добавляем информацию о всех ревьюерах
+                embed.add_field(name="Ревьюеры 🔍", value=all_reviewers_str, inline=True)
+            else:
+                embed.add_field(name="Ревьюеры 🔍", value=reviewers_str, inline=True)
+
+            # Информация о том, кто одобрил (approved) PR
+            reviews_url = f"{pr_url}/reviews"
+            reviews_response = GLOBAL_SESSION.get(reviews_url)
+            if reviews_response.status_code == 200:
+                reviews_data = reviews_response.json()
+                approved_reviewers = [review['user']['login'] for review in reviews_data if review['state'] == 'APPROVED']
+                if approved_reviewers:
+                    approved_reviewers_str = ', '.join(approved_reviewers)
+                    embed.add_field(name="Одобрение 🌟", value=approved_reviewers_str, inline=True)
+                else:
+                    embed.add_field(name="Одобрение 🌟", value="Нет одобрений", inline=True)
 
             # Метки (Labels)
             labels = pr_data.get('labels', [])
             labels_str = ', '.join([label['name'] for label in labels]) if labels else "Нет меток 🏷️"
             embed.add_field(name="Метки 🏷️", value=labels_str, inline=True)
 
-
+            # Количество комментариев
+            comments_count = pr_data['comments']
+            embed.add_field(name="Комментарии 💬", value=comments_count, inline=True)
 
             # Форматируем даты в более читаемый вид
             created_at = datetime.strptime(pr_data['created_at'], "%Y-%m-%dT%H:%M:%SZ")
