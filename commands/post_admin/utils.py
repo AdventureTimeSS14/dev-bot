@@ -44,3 +44,18 @@ async def send_server_request(ctx, url, post_data, headers, retries=3):
             return False, "Неудачная попытка подключения после нескольких попыток."
     except Exception as e:
         return False, f"Не удалось выполнить запрос: {str(e)}"
+
+def get_field_value(data, keys, default="Не задано"):
+    """
+    Функция для безопасного извлечения значения из вложенной структуры данных.
+    Если значение не найдено, возвращается default.
+    """
+    try:
+        for key in keys:
+            data = data.get(key, {})
+            if not data:
+                return default
+        return data if data else default
+    except Exception as e:
+        print(f"Ошибка извлечения данных: {e}")
+        return default
