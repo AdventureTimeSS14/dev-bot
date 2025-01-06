@@ -60,23 +60,25 @@ async def get_github_link(repo_code, number):
 
             # Ревьюеры
             requested_reviewers = pr_data.get('requested_reviewers', [])
-            reviewers_str = ', '.join([reviewer['login'] for reviewer in requested_reviewers]) if requested_reviewers else "Нет назначенных 👥"
+            # Извлекаем только login каждого ревьюера
+            requested_reviewers_logins = [reviewer['login'] for reviewer in requested_reviewers]
 
             # Получаем информацию о том, кто поставил отзыв
             reviews_url = f"{pr_url}/reviews"
             reviews_response = GLOBAL_SESSION.get(reviews_url)
             if reviews_response.status_code == 200:
                 reviews_data = reviews_response.json()
-                reviewed_reviewers = [review['user']['login'] for review in reviews_data]
+                # Извлекаем только login ревьюеров, которые оставили отзывы
+                reviewed_reviewers_logins = [review['user']['login'] for review in reviews_data]
 
                 # Объединяем список назначенных и тех, кто уже поставил отзыв (не повторяем)
-                all_reviewers = set(requested_reviewers + reviewed_reviewers)  # Используем set, чтобы избежать дублирования
+                all_reviewers = set(requested_reviewers_logins + reviewed_reviewers_logins)  # Теперь это список логинов
                 all_reviewers_str = ', '.join(all_reviewers) if all_reviewers else "Нет ревьюеров"
 
                 # Добавляем информацию о всех ревьюерах
                 embed.add_field(name="Ревьюеры 🔍", value=all_reviewers_str, inline=True)
             else:
-                embed.add_field(name="Ревьюеры 🔍", value=reviewers_str, inline=True)
+                embed.add_field(name="Ревьюеры 🔍", value=", ".join(requested_reviewers_logins), inline=True)
 
             # Информация о том, кто одобрил (approved) PR
             reviews_url = f"{pr_url}/reviews"
