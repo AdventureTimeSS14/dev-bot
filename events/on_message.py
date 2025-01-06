@@ -1,5 +1,5 @@
 import re
-import json
+
 import disnake
 import requests
 from fuzzywuzzy import fuzz
@@ -11,11 +11,8 @@ from config import (
     GLOBAL_SESSION,
     LOG_CHANNEL_ID,
     REPOSITORIES,
-    POST_ADMIN_API,
-    POST_ADMIN_NAME,
-    POST_ADMIN_GUID,
     ADDRESS_MRP,
-    ADDRESS_DEV
+    POST_ADMIN_HEADERS,
 )
 from data import JsonData
 
@@ -154,31 +151,21 @@ async def get_github_link(repo_code, number):
 
     return None
 
+
 async def send_ahat_message_post(message):
     if message.author.id == 1309279443943948328: # Игнорим ВэбХукк
         return
-    
+
     # url = f"http://{ADDRESS_DEV}:1211/admin/actions/a_chat" # DEV
     url = f"http://{ADDRESS_MRP}:1212/admin/actions/a_chat"
-    
+
     post_data = {
         "Message": f"{message.content}",
         "NickName": f"{message.author.name}"
     }
-    
-    actor_data = {
-        "Guid": str(POST_ADMIN_GUID),
-        "Name": str(POST_ADMIN_NAME)
-    }
-    
-    headers = {
-    "Authorization": f"SS14Token {POST_ADMIN_API}",
-    "Content-Type": "application/json",
-    "Actor": json.dumps(actor_data)
-    }
-    
+
     try:
-        response = requests.post(url, json=post_data, headers=headers)
+        response = requests.post(url, json=post_data, headers=POST_ADMIN_HEADERS)
         response.raise_for_status()  # Если статус код 4xx или 5xx, будет сгенерировано исключение
     except requests.exceptions.Timeout:
         print("Request timed out")
