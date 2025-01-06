@@ -142,6 +142,12 @@ async def handle_github_pattern(message):
         repo_code, number = match.groups()
         # Если 'n' не найдено, то присваиваем 'n' по умолчанию
         repo_code = 'n' if not repo_code else repo_code
-        embed = await get_github_link(repo_code, number)
-        if embed:
-            await message.channel.send(embed=embed)
+        embed_or_str = await get_github_link(repo_code, number)
+        
+        # Если получен embed (объект disnake.Embed)
+        if isinstance(embed_or_str, disnake.Embed):
+            await message.channel.send(embed=embed_or_str)
+        elif isinstance(embed_or_str, str):
+            await message.channel.send(embed=disnake.Embed(description=embed_or_str))  # Отправка строки как обычного сообщения
+        else:
+            await message.channel.send("Не удалось получить информацию о PR или Issue.")

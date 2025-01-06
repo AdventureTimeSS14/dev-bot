@@ -3,10 +3,11 @@ import mariadb
 
 from bot_init import bot
 from commands.dbCommand.get_db_connection import get_db_connection
-from config import LOG_CHANNEL_ID
+from config import LOG_CHANNEL_ID, WHITELIST_ROLE_ID_ADMINISTRATION_POST
 
 
 @bot.command(name="db_status")
+@has_any_role_by_id(WHITELIST_ROLE_ID_ADMINISTRATION_POST)
 async def db_status(ctx):
     """
     Команда для проверки состояния подключения к базе данных MariaDB.

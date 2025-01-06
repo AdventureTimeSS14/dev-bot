@@ -3,12 +3,13 @@ import mariadb
 
 from bot_init import bot
 from commands.dbCommand.get_db_connection import get_db_connection
-from config import DATABASE, HOST, LOG_CHANNEL_ID, PORT, USER
+from config import DATABASE, HOST, LOG_CHANNEL_ID, PORT, USER, WHITELIST_ROLE_ID_ADMINISTRATION_POST
 
 COLOR = disnake.Color.dark_purple()
 
 
 @bot.command(name="db_info")
+@has_any_role_by_id(WHITELIST_ROLE_ID_ADMINISTRATION_POST)
 async def db_info(ctx):
     """
     Команда для получения информации о базе данных MariaDB.

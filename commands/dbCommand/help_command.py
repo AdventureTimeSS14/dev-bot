@@ -3,6 +3,12 @@ from disnake.ext import commands
 
 from bot_init import bot
 
+from commands.misc.check_roles import has_any_role_by_id
+
+
+from config import (
+    WHITELIST_ROLE_ID_ADMINISTRATION_POST
+)
 COLOR = disnake.Color.dark_purple()
 
 # Список команд и их описаний для работы с базой данных
@@ -19,6 +25,7 @@ DB_COMMANDS = [
 
 
 @bot.command(name="db_help")
+@has_any_role_by_id(WHITELIST_ROLE_ID_ADMINISTRATION_POST)
 async def db_help(ctx: commands.Context):
     """
     Выводит список доступных команд для работы с базой данных.
