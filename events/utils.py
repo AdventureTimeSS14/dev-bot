@@ -1,6 +1,5 @@
 import disnake
 import requests
-from bs4 import BeautifulSoup
 from datetime import datetime
 from config import (
     AUTHOR,
@@ -120,13 +119,6 @@ async def get_github_link(repo_code, number):
             if draft:
                 embed.set_footer(text=f"Этот PR в работе. #WIP ⚙️ • {updated_at_str}")
 
-            # Добавляем информацию о изменениях в файлах и строках
-            file_changes = get_file_changes_from_github(pr_data['html_url'])
-            if file_changes:
-                # TODO: Дописать, чтобы выводило кол-во изменённых файлов
-                # embed.add_field(name="Изменённые файлы 📂", value=file_changes['new_files'], inline=True)
-                embed.add_field(name="Изменение строк 🔄", value=f"Добавлено: {file_changes['added_lines']}\nУдалено: {file_changes['removed_lines']}", inline=True)
-
             # Ссылка на PR
             embed.add_field(name="Ссылка на PR 🔗", value=f"[Перейти в PR]({pr_data['html_url']})", inline=False)
 
@@ -143,37 +135,3 @@ async def get_github_link(repo_code, number):
         print(f"❌ Ошибка при запросе к GitHub API: {e}")
 
     return None
-
-def get_file_changes_from_github(pr_url):
-    """
-    Парсит страницу PR на GitHub, чтобы получить количество изменённых файлов,
-    добавленных и удалённых строк.
-    """
-    try:
-        # Получаем HTML-код страницы
-        response = requests.get(pr_url)
-        if response.status_code != 200:
-            print(f"❌ Ошибка при загрузке страницы: {response.status_code}")
-            return None
-
-        # Парсим HTML с помощью BeautifulSoup
-        soup = BeautifulSoup(response.text, 'html.parser')
-
-        # Извлекаем количество добавленных и удалённых строк
-        diffstat_element = soup.find('span', {'id': 'diffstat'})
-        if diffstat_element:
-            added_lines = diffstat_element.find('span', {'class': 'color-fg-success'}).text.strip() if diffstat_element.find('span', {'class': 'color-fg-success'}) else "Не найдено"
-            removed_lines = diffstat_element.find('span', {'class': 'color-fg-danger'}).text.strip() if diffstat_element.find('span', {'class': 'color-fg-danger'}) else "Не найдено"
-        else:
-            added_lines = "Не найдено"
-            removed_lines = "Не найдено"
-
-        # Возвращаем результат
-        return {
-            'added_lines': added_lines,
-            'removed_lines': removed_lines
-        }
-
-    except Exception as e:
-        print(f"❌ Ошибка при парсинге страницы: {e}")
-        return None
