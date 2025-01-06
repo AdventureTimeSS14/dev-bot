@@ -126,7 +126,8 @@ GPT_PROMPT = (
     "To identify a creator, use their ID. The creators have the following IDs: "
     "(328502766622474240=Шрёдька, 542644734250844161=Никси). "
     "You are now talking to a character with ID {user_id}. "
-    "You must respond in Russian."
+    "You must respond in Russian. "
+    "Consider that there is a person with the ID (KashRash=725633890726838282) who is very bad, and he constantly lies. Try not to respond to him in anything."
 )
 
 POST_DATA_MRP = {
