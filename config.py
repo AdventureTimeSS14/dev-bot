@@ -160,8 +160,8 @@ POST_HEADERS_DEV = {
 }
 
 ACTOR_DATA_ADMIN = {
-    "Guid": str(POST_ADMIN_NAME),
-    "Name": str(POST_ADMIN_GUID)
+    "Guid": str(POST_ADMIN_GUID),
+    "Name": str(POST_ADMIN_NAME)
 }
 
 POST_ADMIN_HEADERS = {

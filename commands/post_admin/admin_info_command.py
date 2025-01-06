@@ -32,9 +32,6 @@ async def admin_info(ctx):
     if response.status_code == 200:
         data = response.json()
         
-        # # Логируем данные, чтобы понять их структуру
-        # print(f"Response JSON Data: {json.dumps(data, indent=4)}")
-        
         # Создание Embed для красивого вывода
         embed = disnake.Embed(
             title="Информация о сервере SS14",
@@ -62,7 +59,7 @@ async def admin_info(ctx):
                 while len(text) > max_length:
                     split_idx = text.rfind("\n", 0, max_length)  # Разделить по последнему \n, чтобы не обрывать слово
                     chunks.append(text[:split_idx])
-                    text = text[split_idx + 1:]
+                    text = text[split_idx + 1:]  # Остаток
                 chunks.append(text)  # Остаток
                 return chunks
 
@@ -78,6 +75,13 @@ async def admin_info(ctx):
         else:
             embed.add_field(name="Игроки на сервере", value="Нет игроков", inline=False)
             embed.add_field(name="Игроки в деадмине", value="Нет игроков в деадмине", inline=False)
+
+        # Активные администраторы
+        active_admins = "\n".join([f"**{player['Name']}** - Админ" for player in players if player['IsAdmin'] and not player['IsDeadminned']])
+        if active_admins:
+            embed.add_field(name="Активные администраторы", value=active_admins, inline=False)
+        else:
+            embed.add_field(name="Активные администраторы", value="Нет активных администраторов", inline=False)
 
         # Правила игры
         game_rules = get_field_value(data, ["GameRules"], default="Нет доступных правил")

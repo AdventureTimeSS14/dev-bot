@@ -14,20 +14,20 @@ from config import (
 async def bunker(ctx, toggle: str):
     # Устанавливаем адрес URL
     url = f"http://{ADDRESS_MRP}:1212/admin/actions/panic_bunker"
-    
+
     # Проверяем, что toggle имеет корректное значение
     if toggle.lower() not in ["true", "false"]:
         await ctx.send("Ошибка: пожалуйста, используйте 'true' или 'false' для включения/выключения бункера.")
         return
-    
+
     # Определяем значение для бункера
     bunker_bool = True if toggle.lower() == "true" else False
-    
+
     # Подготовка данных для запроса
     data = {
         "game.panic_bunker.enabled": bunker_bool,
     }
-    
+
     try:
         # Отправка PATCH запроса
         response = requests.patch(url, headers=POST_ADMIN_HEADERS, json=data)
