@@ -17,24 +17,27 @@ async def user_role(ctx, *role_names: str):
 
     if not role_name:
         await ctx.send(
-            "❌ Вы не указали название роли. Используйте команду так: `&user_role <название роли>`."
+            "❌ **Вы не указали название роли.**\n"
+            "Используйте команду так: `&user_role <название роли>`."
         )
         return
 
     # Ищем роль в списке ролей сервера
     role = disnake.utils.get(ctx.guild.roles, name=role_name)
     if role is None:
-        await ctx.send(f"❌ Роль '{role_name}' не найдена на сервере.")
+        await ctx.send(f"❌ **Роль '{role_name}' не найдена на сервере.**")
         return
 
     # Получаем список пользователей с этой ролью
     members_with_role = [member.name for member in role.members]
 
     if members_with_role:
-        # Формируем сообщение с упоминанием пользователей
-        members_list = ", ".join(members_with_role)
+        # Формируем сообщение с подсчётом пользователей
+        members_count = len(members_with_role)
+        members_list = "\n".join([f"👤 **{member}**" for member in members_with_role])
         await ctx.send(
-            f"✅ Пользователи с ролью **{role.name}**:\n{members_list}"
+            f"✅ **Пользователи с ролью '{role.name}':** ({members_count})\n\n"
+            f"{members_list}"
         )
     else:
-        await ctx.send(f"⚠️ Нет пользователей с ролью **{role.name}**.")
+        await ctx.send(f"⚠️ **Нет пользователей с ролью '{role.name}'.**")
