@@ -31,13 +31,30 @@ async def user_role(ctx, *role_names: str):
     # Получаем список пользователей с этой ролью
     members_with_role = [member.name for member in role.members]
 
-    if members_with_role:
-        # Формируем сообщение с подсчётом пользователей
-        members_count = len(members_with_role)
-        members_list = "\n".join([f"👤 **{member}**" for member in members_with_role])
-        await ctx.send(
-            f"✅ **Пользователи с ролью '{role.name}':** ({members_count})\n\n"
-            f"{members_list}"
-        )
-    else:
-        await ctx.send(f"⚠️ **Нет пользователей с ролью '{role.name}'.**")
+    try:
+        if members_with_role:
+            members_count = len(members_with_role)
+            members_list = "\n".join([f"👤 **{member}**" for member in members_with_role])
+
+            await ctx.send(
+                f"✅ **Пользователи с ролью '{role.name}':** ({members_count})\n\n"
+                f"{members_list}"
+            )
+        else:
+            await ctx.send(f"⚠️ **Нет пользователей с ролью '{role.name}'.**")
+    
+    except disnake.errors.HTTPException as e:
+        # Если ошибка превышения лимита, показываем только первых 10 пользователей
+        if e.code == 50035:  # Проверка на ошибку из-за превышения лимита
+            members_to_display = members_with_role[:10]  # Ограничиваем до 10 пользователей
+            members_count = len(members_with_role)
+            members_list = "\n".join([f"👤 **{member}**" for member in members_to_display])
+
+            message = f"✅ **Пользователи с ролью '{role.name}':** ({members_count})\n\n"
+            message += members_list
+
+            # Если пользователей больше 10, добавим информацию о количестве оставшихся
+            if members_count > 10:
+                message += f"\n\n⚠️ **И ещё {members_count - 10} пользователей...**"
+
+            await ctx.send(message)
