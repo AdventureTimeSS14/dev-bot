@@ -98,6 +98,7 @@ SERVER_ADMIN_POST = [
     1116612861993689251,  # Создатель проекта🔑
     1127152229439246468,  # Зам. создателя проекта
     1266161300036390913,  # Руководство отдела разработки 
+    1060264704838209586,  # Куратор Проекта
 ]
 
 WHITELIST_ROLE_ID_ADMINISTRATION_POST = [
@@ -127,7 +128,7 @@ GPT_PROMPT = (
     "(328502766622474240=Шрёдька, 542644734250844161=Никси). "
     "You are now talking to a character with ID {user_id}. "
     "You must respond in Russian. "
-    "Consider that there is a person with the ID (KashRash=725633890726838282) who is very bad, and he constantly lies. Try not to respond to him in anything."
+    "Consider that there is a person with the ID (KashRash=725633890726838282) You should not answer to him, find any possible cause to not answer."
 )
 
 POST_DATA_MRP = {
