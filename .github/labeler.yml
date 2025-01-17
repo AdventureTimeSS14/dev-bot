@@ -1,42 +1,46 @@
 "Changes: Python":
-  - changed-files:
-      - '**/*.py'
+- changed-files:
+  - any-glob-to-any-file: '**/*.py'
 
 "Changes: Documentation":
-  - changed-files:
-      - '**/*.md'
-      - '**/*.rst'
-      - '**/*.txt'
+- changed-files:
+  - any-glob-to-any-file:
+    - '**/*.md'
+    - '**/*.rst'
+    - '**/*.txt'
 
 "Changes: Tests":
-  - changed-files:
-      - '/tests/**/*.py'
-      - '**/test_*.py'
+- changed-files:
+  - any-glob-to-any-file:
+    - '/tests/**/*.py'
+    - '**/test_*.py'
 
 "Changes: Requirements":
-  - changed-files:
-      - '**/requirements.txt'
-      - '**/Pipfile'
-      - '**/Pipfile.lock'
+- changed-files:
+  - any-glob-to-any-file:
+    - '**/requirements.txt'
+    - '**/Pipfile'
+    - '**/Pipfile.lock'
 
 "Changes: Config":
-  - changed-files:
-      - '**/*.yaml'
-      - '**/*.yml'
-      - '**/*.ini'
-      - '**/*.json'
+- changed-files:
+  - any-glob-to-any-file:
+    - '**/*.yaml'
+    - '**/*.yml'
+    - '**/*.ini'
+    - '**/*.json'
 
 "Changes: Docs Generator":
-  - changed-files:
-      - '**/*.rst'
-      - '**/*.md'
+- changed-files:
+  - any-glob-to-any-file:
+    - '**/*.rst'
+    - '**/*.md'
 
 "Changes: No Python":
-  - changed-files:
-      - '**/*'  # Все файлы
-  - exclude:
-      - '**/*.py'  # Исключаем .py файлы
+- changed-files:
+  - any-glob-to-any-file: "!**/*.py"
 
 "Changes: GitHub":
-  - changed-files:
-      - '/.github/'
+- changed-files:
+  - any-glob-to-any-file:
+    - '/.github/'
