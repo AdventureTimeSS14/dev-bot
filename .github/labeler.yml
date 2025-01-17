@@ -29,7 +29,7 @@
 "Changes: Docs Generator":
   - changed-files:
       - '**/*.rst'
-      - '**/*.md'
+      - '**/*.md' # TODO: возможно ещё добавить 
 
 "Changes: No Python":
   - changed-files:
