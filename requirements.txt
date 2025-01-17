@@ -12,3 +12,6 @@ requests==2.32.3
 mariadb==1.1.11
 mysql-connector-python==9.1.0
 python-dateutil==2.9.0
+
+
+
