@@ -1,7 +1,6 @@
 "Changes: Python":
   - changed-files:
-    - any-glob-to-any-file:
-      - '**/*.py'
+    - any-glob-to-any-file: '**/*.py'
 
 "Changes: Documentation":
   - changed-files:
@@ -35,12 +34,11 @@
   - changed-files:
     - any-glob-to-any-file:
       - '**/*.rst'
-      - '**/*.md' # TODO: возможно ещё добавить 
+      - '**/*.md'
 
 "Changes: No Python":
   - changed-files:
-    - any-glob-to-any-file:
-      - '!**/*.py'
+    - any-glob-to-any-file: "!**/*.py"
 
 "Changes: GitHub":
   - changed-files:
