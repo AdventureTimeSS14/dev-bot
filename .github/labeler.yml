@@ -1,46 +1,46 @@
 "Changes: Python":
-  - changed-files:
-    - any-glob-to-any-file: '**/*.py'
+- changed-files:
+  - any-glob-to-any-file: '**/*.py'
 
 "Changes: Documentation":
-  - changed-files:
-    - any-glob-to-any-file:
-      - '**/*.md'
-      - '**/*.rst'
-      - '**/*.txt'
+- changed-files:
+  - any-glob-to-any-file:
+    - '**/*.md'
+    - '**/*.rst'
+    - '**/*.txt'
 
 "Changes: Tests":
-  - changed-files:
-    - any-glob-to-any-file:
-      - '/tests/**/*.py'
-      - '**/test_*.py'
+- changed-files:
+  - any-glob-to-any-file:
+    - '/tests/**/*.py'
+    - '**/test_*.py'
 
 "Changes: Requirements":
-  - changed-files:
-    - any-glob-to-any-file:
-      - '**/requirements.txt'
-      - '**/Pipfile'
-      - '**/Pipfile.lock'
+- changed-files:
+  - any-glob-to-any-file:
+    - '**/requirements.txt'
+    - '**/Pipfile'
+    - '**/Pipfile.lock'
 
 "Changes: Config":
-  - changed-files:
-    - any-glob-to-any-file:
-      - '**/*.yaml'
-      - '**/*.yml'
-      - '**/*.ini'
-      - '**/*.json'
+- changed-files:
+  - any-glob-to-any-file:
+    - '**/*.yaml'
+    - '**/*.yml'
+    - '**/*.ini'
+    - '**/*.json'
 
 "Changes: Docs Generator":
-  - changed-files:
-    - any-glob-to-any-file:
-      - '**/*.rst'
-      - '**/*.md'
+- changed-files:
+  - any-glob-to-any-file:
+    - '**/*.rst'
+    - '**/*.md'
 
 "Changes: No Python":
-  - changed-files:
-    - any-glob-to-any-file: "!**/*.py"
+- changed-files:
+  - any-glob-to-any-file: "!**/*.py"
 
 "Changes: GitHub":
-  - changed-files:
-    - any-glob-to-any-file:
-      - '/.github/'
+- changed-files:
+  - any-glob-to-any-file:
+    - '/.github/'
