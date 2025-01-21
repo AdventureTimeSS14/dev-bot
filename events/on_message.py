@@ -49,6 +49,8 @@ async def on_message(message):
 
     # Проверка на шаблон GitHub issue/PR
     await handle_github_pattern(message)
+    
+    await check_time_transfer_with_fuzz(message)
 
 async def send_ahat_message_post(message):
     """
@@ -185,3 +187,34 @@ async def handle_github_pattern(message):
             await message.channel.send(embed=disnake.Embed(description=embed_or_str))  # Отправка строки как обычного сообщения
         else:
             await message.channel.send("Не удалось получить информацию о PR или Issue.")
+
+
+async def check_time_transfer_with_fuzz(message):
+    """
+    Проверяет наличие фраз, связанных с переносом времени, используя fuzz.
+    """
+    time_transfer_phrases = [
+        "а где перенос времени",
+        "где перенести время",
+        "как перевести время",
+        "перенос времени на роли",
+        "перенос времени",
+        "перенос времени с проекта",
+        "Тут есть перенос времени",
+        "я хочу понять где перенести время на этом проекте",
+        "я хочу понять где перенести время",
+        "хочу понять где перенести время",
+    ]
+
+    # Проходим по каждой фразе и проверяем на совпадения с помощью fuzz
+    for phrase in time_transfer_phrases:
+        if fuzz.token_sort_ratio(message.content.lower(), phrase) > 80:
+            # Ответ бота
+            response = (
+                "Вы говорите о переносе времени? Для таких вопросов ты можешь обратиться в следующий канал: "
+                "https://discord.com/channels/901772674865455115/1172159356117200936"
+            )
+            
+            # Отправляем ответ в канал
+            await message.channel.send(response)
+            break
