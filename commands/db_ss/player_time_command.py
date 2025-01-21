@@ -75,7 +75,7 @@ async def player_stats(ctx, *, user_name: str):
 
                 # Добавление эмбедов
                 if len(embed.fields) == 20 or idx == len(result) - 1:
-                    embed.set_footer(text="Информация предоставлена администрацией")
+                    embed.set_footer(text="Сбор информации из базы данных")
                     embed.timestamp = datetime.now()
                     embeds.append(embed)
                     embed = disnake.Embed(
