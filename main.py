@@ -18,6 +18,7 @@ from commands import (
     status_command,
     uptime_command,
     user_role_command,
+    admin_help_command,
 )
 from commands.post_admin import (
     restart_command,
@@ -30,6 +31,7 @@ from commands.post_admin import (
 from commands.db_ss import (
     multi_akk_db_command,
     player_notes_command,
+    player_time_command,
 )
 from commands.adt_team import (
     add_role_command,

@@ -6,23 +6,10 @@ from datetime import datetime, timezone
 from dateutil import parser
 from bot_init import bot
 from config import (
-    DB_HOST,
-    DB_DATABASE,
-    DB_PASSWORD,
-    DB_PORT,
-    DB_USER,
     WHITELIST_ROLE_ID_ADMINISTRATION_POST
 )
+from commands.db_ss.setup_db_ss14_mrp import DB_PARAMS
 from commands.misc.check_roles import has_any_role_by_id
-
-# Ваши параметры подключения к базе данных и авторизованные пользователи
-DB_PARAMS = {
-    'database': DB_DATABASE,
-    'user': DB_USER,
-    'password': DB_PASSWORD,
-    'host': DB_HOST,
-    'port': DB_PORT
-}
 
 # SPONSOR_PATH = '/root/node_sponsors/data/' # моя спонсорка, не учитывать.
 
@@ -57,24 +44,6 @@ def fetch_player_data(user_name):
     
     return result, related_results
 
-# Моя спонсора. Не учитывать.    
-#def get_sponsor_tier(uuid):
-#    file_path = os.path.join(SPONSOR_PATH, f"{uuid}.json")
-#    if os.path.isfile(file_path):
-#        with open(file_path, 'r') as f:
-#            data = json.load(f)
-#            tier = data.get('tier')
-#           return {
-#                0: 'Бесплатный',
-#                1: 'EAT',
-#                2: 'Команда Разработки',
-#                11: 'Поддержка Сервера',
-#                12: 'Приоритетный Вход',
-#                23: 'Администрация',
-#                24: 'Старший состав',
-#                25: 'Совет'
-#            }.get(tier, 'Неизвестный уровень')
-#    return None
 
 # нужно для конвертации времени с базы данных
 def datetime_to_unix_timestamp(dt):

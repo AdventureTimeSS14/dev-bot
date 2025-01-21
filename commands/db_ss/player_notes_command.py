@@ -2,24 +2,11 @@ import disnake
 import psycopg2
 from bot_init import bot
 from config import (
-    DB_HOST,
-    DB_DATABASE,
-    DB_PASSWORD,
-    DB_PORT,
-    DB_USER,
     WHITELIST_ROLE_ID_ADMINISTRATION_POST
 )
+from commands.db_ss.setup_db_ss14_mrp import DB_PARAMS
 from commands.misc.check_roles import has_any_role_by_id
 from datetime import datetime
-
-# Параметры подключения к базе данных
-DB_PARAMS = {
-    'database': DB_DATABASE,
-    'user': DB_USER,
-    'password': DB_PASSWORD,
-    'host': DB_HOST,
-    'port': DB_PORT
-}
 
 # Команда для получения заметок об игроке
 @bot.command()
