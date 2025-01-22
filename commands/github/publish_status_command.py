@@ -96,4 +96,7 @@ async def last_publish_tests(ctx, repository: str = "n"):
     else:
         embed.add_field(name="❓ Информация о последнем запуске", value="Не удалось получить информацию о последнем запуске workflow.", inline=False)
 
+    # Добавляем ссылку на работу паблиша в конце
+    embed.add_field(name="🔗 GitHub", value=f"[Publish-ADT-RUN](https://github.com/{AUTHOR}/{REPOSITORIES[repository]}/actions/runs/{last_run['id']})", inline=False)
+
     await ctx.send(embed=embed)
