@@ -34,6 +34,7 @@ jobs:
         run: |
           echo "DISCORD_KEY=${{ secrets.DISCORD_KEY }}" >> $GITHUB_ENV
           echo "GITHUB=${{ secrets.GITHUB }}" >> $GITHUB_ENV
+          echo "ACTION_GITHUB=${{ secrets.ACTION_GITHUB }}" >> $GITHUB_ENV
           echo "USER=${{ secrets.USER }}" >> $GITHUB_ENV
           echo "PASSWORD=${{ secrets.PASSWORD }}" >> $GITHUB_ENV
           echo "HOST=${{ secrets.HOST }}" >> $GITHUB_ENV

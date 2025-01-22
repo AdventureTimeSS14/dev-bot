@@ -25,6 +25,7 @@ def get_env_variable(name: str) -> str:
 # Получение переменных из окружения
 DISCORD_KEY = get_env_variable("DISCORD_KEY")
 GITHUB = get_env_variable("GITHUB")
+ACTION_GITHUB = get_env_variable("ACTION_GITHUB")
 # Моя база данных MAriaDB
 USER = get_env_variable("USER")
 PASSWORD = get_env_variable("PASSWORD")
