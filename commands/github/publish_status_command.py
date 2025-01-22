@@ -87,7 +87,7 @@ async def last_publish_tests(ctx, repository: str = "n"):
                 for step in job.get("steps", []):
                     step_name, step_status = step["name"], step["status"]
                     translated_step_status, step_color, step_emoji = translate_status(step_status)
-                    step_statuses.append(f"{step_emoji} {step_name}: {translated_step_status}")
+                    step_statuses.append(f"{step_emoji} {step_name}")
 
                 if step_statuses:
                     embed.add_field(name="Шаги", value="\n".join(step_statuses), inline=False)
