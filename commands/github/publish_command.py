@@ -1,8 +1,9 @@
 import disnake
 import requests
 from bot_init import bot
-from config import AUTHOR, REPOSITORIES, ACTION_GITHUB
+from config import AUTHOR, REPOSITORIES, ACTION_GITHUB, WHITELIST_ROLE_ID
 from disnake.ext import commands
+from commands.misc.check_roles import has_any_role_by_id
 
 # Функция для запуска GitHub Actions workflow
 def trigger_github_action(repository, branch):
@@ -30,6 +31,7 @@ def trigger_github_action(repository, branch):
     name="publish",
     help="Запускает GitHub Actions workflow для указанной ветки репозитория. По умолчанию используется репозиторий 'n'."
 )
+@has_any_role_by_id(WHITELIST_ROLE_ID)
 async def publish(ctx, branch: str, repository: str = "n"):
     """
     Команда для запуска GitHub Actions для репозитория 'n' или 'o'. 
