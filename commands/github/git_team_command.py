@@ -38,7 +38,7 @@ async def git_team(ctx):
         return
 
     # Формируем строку с участниками
-    members_list = "👤 **" + "**\n👤 ".join([f"**{member}**" for member in members])
+    members_list = "👤 " + "\n👤 ".join([f"**{member}**" for member in members])
     if len(members_list) > 2000:
         # Если список слишком длинный, выводим только первые 2000 символов
         members_list = members_list[:2000] + "..."
