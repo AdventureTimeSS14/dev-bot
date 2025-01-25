@@ -103,12 +103,12 @@ async def git_team(ctx):
     
     # Ищем команду с названием "Mainteiners"
     for team in teams:
-        if team['name'].lower() == 'mainteiners':
+        if team['name'].lower() == 'adt_maintainer':
             mainteiners_team_slug = team['slug']
             break
 
     if not mainteiners_team_slug:
-        await ctx.send("❌ Не удалось найти команду 'Mainteiners'.")
+        await ctx.send("❌ Не удалось найти команду.")
         return
 
     # Получаем участников основной команды
