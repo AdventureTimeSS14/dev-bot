@@ -27,7 +27,7 @@ def get_github_org_members():
 def get_github_repo_owners():
     """Получает список владельцев репозитория на GitHub."""
     url = f'https://api.github.com/orgs/{AUTHOR}/memberships'
-    
+
     headers = {
         "Accept": "application/vnd.github.v3+json",
         "Authorization": f"Bearer {ACTION_GITHUB}"
@@ -48,7 +48,7 @@ def get_github_repo_owners():
 def get_github_teams():
     """Получает список команд организации на GitHub."""
     url = f'https://api.github.com/orgs/{AUTHOR}/teams'
-    
+
     headers = {
         "Accept": "application/vnd.github.v3+json",
         "Authorization": f"Bearer {ACTION_GITHUB}"
@@ -67,7 +67,7 @@ def get_github_teams():
 def get_team_members(team_slug):
     """Получает участников конкретной команды на GitHub."""
     url = f'https://api.github.com/orgs/{AUTHOR}/teams/{team_slug}/members'
-    
+
     headers = {
         "Accept": "application/vnd.github.v3+json",
         "Authorization": f"Bearer {ACTION_GITHUB}"
@@ -100,7 +100,7 @@ async def git_team(ctx):
     # Получаем список команд и участников основной команды (Mainteiners)
     teams = get_github_teams()
     mainteiners_team_slug = None
-    
+
     # Ищем команду с названием "Mainteiners"
     for team in teams:
         if team['name'].lower() == 'adt_maintainer':
@@ -115,21 +115,21 @@ async def git_team(ctx):
     mainteiners_members = get_team_members(mainteiners_team_slug)
 
     # Сортируем участников
-    sorted_owners = [member for member in owners if member in members]
-    sorted_mainteiners = [member for member in members if member in mainteiners_members]
-    sorted_members = [member for member in members if member not in owners and member not in mainteiners_members]
+    sorted_owners = [member for member in owners if member in members]  # Владельцы организации
+    sorted_mainteiners = [member for member in members if member in mainteiners_members]  # Mainteiners
+    sorted_members = [member for member in members if member not in owners and member not in mainteiners_members]  # Остальные участники
 
     # Формируем строку с владельцами (с эмодзи короны)
     owners_list = "👑 " + "\n👑 ".join([f"**{owner}**" for owner in sorted_owners])
-    
+
     # Формируем строку с участниками основной команды (Mainteiners)
     mainteiners_list = "🛠️ " + "\n🛠️ ".join([f"**{member}**" for member in sorted_mainteiners])
-    
+
     # Формируем строку с остальными участниками
     members_list = "👤 " + "\n👤 ".join([f"**{member}**" for member in sorted_members])
 
+    # Если список слишком длинный, выводим только первые 2000 символов
     if len(owners_list + mainteiners_list + members_list) > 2000:
-        # Если список слишком длинный, выводим только первые 2000 символов
         combined_list = owners_list + "\n\n" + mainteiners_list + "\n\n" + members_list
         combined_list = combined_list[:2000] + "..."
     else:
@@ -159,4 +159,3 @@ async def git_team(ctx):
 
     # Отправляем Embed в канал
     await ctx.send(embed=embed)
- 
