@@ -123,7 +123,7 @@ async def git_team(ctx):
     owners_list = "👑 " + "\n👑 ".join([f"**{owner}**" for owner in sorted_owners])
     
     # Формируем строку с участниками основной команды (Mainteiners)
-    mainteiners_list = "🛠️ " + "\n🛠️ ".join([f"**{member}** (Mainteiner)" for member in sorted_mainteiners])
+    mainteiners_list = "🛠️ " + "\n🛠️ ".join([f"**{member}**" for member in sorted_mainteiners])
     
     # Формируем строку с остальными участниками
     members_list = "👤 " + "\n👤 ".join([f"**{member}**" for member in sorted_members])
