@@ -1,12 +1,107 @@
 import disnake
 import aiohttp
+import asyncio
 from bot_init import bot
 from config import AUTHOR, ACTION_GITHUB, REPOSITORIES
 from disnake.ext import commands
 
-# Функция для получения статистики пользователя по GitHub
+GRAPHQL_URL = "https://api.github.com/graphql"
+
+# Запрос для получения информации о пулл-реквестах
+graphql_query = """
+query($owner: String!, $repo: String!, $cursor: String) {
+  repository(owner: $owner, name: $repo) {
+    pullRequests(states: [OPEN, CLOSED, MERGED], first: 100, after: $cursor) {
+      edges {
+        node {
+          title
+          url
+          state
+          mergedAt
+          createdAt
+          author {
+            login
+          }
+          reviews(first: 10) {
+            totalCount
+          }
+          comments(first: 10) {
+            totalCount
+          }
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+}
+"""
+
+async def get_github_pull_requests_graphql(username, repo):
+    """Получает пулл-реквесты, связанные с пользователем в репозитории через GraphQL API."""
+    headers = {
+        "Authorization": f"Bearer {ACTION_GITHUB}",
+        "Content-Type": "application/json",
+    }
+
+    all_pull_requests = []
+    cursor = None
+    has_next_page = True
+    
+    while has_next_page:
+        variables = {
+            "owner": AUTHOR,
+            "repo": repo,
+            "username": username,
+            "cursor": cursor
+        }
+
+        data = {
+            "query": graphql_query,
+            "variables": variables
+        }
+
+        async with aiohttp.ClientSession() as session:
+            try:
+                async with session.post(GRAPHQL_URL, json=data, headers=headers) as response:
+                    response.raise_for_status()
+                    result = await response.json()
+                    
+                    # Проверяем наличие ключа 'data'
+                    if 'data' not in result:
+                        print(f"❌ Ошибка API: нет данных в ответе. Ответ: {result}")
+                        return []
+
+                    # Обрабатываем пулл-реквесты
+                    pull_requests = result['data']['repository']['pullRequests']['edges']
+                    for pr in pull_requests:
+                        node = pr['node']
+                        if node['author']['login'] == username:
+                            pr_data = {
+                                'url': node['url'],
+                                'state': node['state'],
+                                'merged_at': node['mergedAt'],
+                                'reviews': node['reviews']['totalCount'],
+                                'comments': node['comments']['totalCount']
+                            }
+                            all_pull_requests.append(pr_data)
+
+                    # Обновляем курсор для следующей страницы
+                    page_info = result['data']['repository']['pullRequests']['pageInfo']
+                    has_next_page = page_info['hasNextPage']
+                    cursor = page_info['endCursor']
+
+            except aiohttp.ClientError as e:
+                print(f"❌ Ошибка при выполнении запроса: {e}")
+                return []
+
+    return all_pull_requests
+
+# Функция для получения информации о пользователе
 async def get_github_user_info(username):
-    """Получает информацию о пользователе GitHub асинхронно."""
+    """Получает информацию о пользователе GitHub."""
     url = f'https://api.github.com/users/{username}'
     
     headers = {
@@ -24,73 +119,6 @@ async def get_github_user_info(username):
         print(f"❌ Ошибка при получении информации о пользователе: {e}")
         return None
 
-# Функция для получения всех пулл-реквестов пользователя в репозитории (с пагинацией)
-async def get_github_pull_requests(username, repo):
-    """Получает пулл-реквесты, связанные с пользователем в репозитории асинхронно (с пагинацией)."""
-    url = f'https://api.github.com/repos/{AUTHOR}/{repo}/pulls?state=all&per_page=100&page=1'
-    
-    headers = {
-        "Accept": "application/vnd.github.v3+json",
-        "Authorization": f"Bearer {ACTION_GITHUB}"
-    }
-    
-    all_pull_requests = []
-    while url:
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url, headers=headers) as response:
-                    response.raise_for_status()
-                    pull_requests = await response.json()
-                    all_pull_requests.extend(pull_requests)
-
-                    # Проверяем наличие следующей страницы через заголовки ответа
-                    if 'link' in response.headers and 'rel="next"' in response.headers['link']:
-                        # Получаем ссылку на следующую страницу
-                        url = response.headers['link'].split(';')[0][1:-1]  # Извлекаем URL
-                    else:
-                        break  # Если нет следующей страницы, выходим из цикла
-        except aiohttp.ClientError as e:
-            print(f"❌ Ошибка при получении пулл-реквестов: {e}")
-            break
-
-    # Фильтруем пулл-реквесты по авторству
-    user_pull_requests = [pr for pr in all_pull_requests if pr['user']['login'] == username]
-    return user_pull_requests
-
-# Функция для подсчета количества ревью в пулл-реквестах
-async def get_github_reviews(pr_url):
-    """Получает количество ревью для пулл-реквеста асинхронно."""
-    try:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(f'{pr_url}/reviews', headers={
-                "Accept": "application/vnd.github.v3+json",
-                "Authorization": f"Bearer {ACTION_GITHUB}"
-            }) as response:
-                response.raise_for_status()
-                reviews = await response.json()
-                print(f"Reviews for PR {pr_url}: {len(reviews)}")
-                return len(reviews)  # Подсчитываем количество ревью
-    except aiohttp.ClientError as e:
-        print(f"❌ Ошибка при получении ревью для пулл-реквеста: {e}")
-        return 0
-
-# Функция для подсчета количества дискуссий в пулл-реквестах
-async def get_github_discussions(pr_url):
-    """Получает количество дискуссий для пулл-реквеста асинхронно."""
-    try:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(f'{pr_url}/comments', headers={
-                "Accept": "application/vnd.github.v3+json",
-                "Authorization": f"Bearer {ACTION_GITHUB}"
-            }) as response:
-                response.raise_for_status()
-                discussions = await response.json()
-                print(f"Discussions for PR {pr_url}: {len(discussions)}")
-                return len(discussions)  # Подсчитываем количество комментариев
-    except aiohttp.ClientError as e:
-        print(f"❌ Ошибка при получении комментариев для пулл-реквеста: {e}")
-        return 0
-
 @bot.command(
     name="git_logininfo",
     help="Выводит краткую статистику о пользователе и его вкладе в репозиторий."
@@ -100,16 +128,24 @@ async def git_logininfo(ctx, username: str):
     Команда для вывода статистики пользователя по логину и его вкладе в репозиторий.
     """
     print(f"Получение информации о пользователе {username}...")
+
+    # Получаем информацию о пользователе
     user_info = await get_github_user_info(username)
 
     if not user_info:
         await ctx.send("❌ Не удалось получить информацию о пользователе. Проверьте правильность логина.")
         return
 
-    # Получаем пулл-реквесты, связанные с пользователем
-    repo = 'space_station_ADT'  # Указываем репозиторий для получения вклада
+    # Получаем пулл-реквесты для пользователя
+    repo = 'space_station_ADT'  # Указываем репозиторий
     print(f"Получение пулл-реквестов для пользователя {username} из репозитория {repo}...")
-    user_pull_requests = await get_github_pull_requests(username, repo)
+
+    user_pull_requests = await get_github_pull_requests_graphql(username, repo)
+
+    if not user_pull_requests:
+        print(f"❌ Нет пулл-реквестов для пользователя {username} в репозитории {repo}.")
+        await ctx.send(f"❌ Нет пулл-реквестов для пользователя {username} в репозитории {repo}.")
+        return
 
     # Инициализируем счетчики для различных типов пулл-реквестов
     merged_prs = 0
@@ -118,24 +154,26 @@ async def git_logininfo(ctx, username: str):
     draft_prs = 0
     total_reviews = 0
     total_discussions = 0
+    total_prs = len(user_pull_requests)
 
+    # Обрабатываем пулл-реквесты
     for pr in user_pull_requests:
         pr_state = pr['state']
         pr_url = pr['url']
+        print(f"Обрабатываем пулл-реквест: {pr_url}, состояние: {pr_state}")
 
         # Подсчитываем количество пулл-реквестов по состояниям
-        if pr_state == 'closed' and pr['merged_at']:  # Если пулл-реквест был замержен
+        if pr_state == 'CLOSED' and pr['merged_at']:  # Если пулл-реквест был замержен
             merged_prs += 1
-        elif pr_state == 'closed':  # Если пулл-реквест был закрыт
+        elif pr_state == 'CLOSED':  # Если пулл-реквест был закрыт
             closed_prs += 1
-        elif pr_state == 'open':  # Если пулл-реквест открыт
+        elif pr_state == 'OPEN':  # Если пулл-реквест открыт
             open_prs += 1
-        elif pr_state == 'draft':  # Если пулл-реквест в драфте
+        elif pr_state == 'DRAFT':  # Если пулл-реквест в драфте
             draft_prs += 1
 
-        # Получаем количество ревью и дискуссий для каждого пулл-реквеста
-        total_reviews += await get_github_reviews(pr_url)
-        total_discussions += await get_github_discussions(pr_url)
+        total_reviews += pr['reviews']
+        total_discussions += pr['comments']
 
     # Создаём Embed с красивым дизайном
     embed = disnake.Embed(
@@ -158,7 +196,8 @@ async def git_logininfo(ctx, username: str):
     # Добавляем информацию о вкладе в репозиторий
     embed.add_field(
         name="🔧 Вклад в репозиторий",
-        value=f"**Замерженные пулл-реквесты**: {merged_prs}\n"
+        value=f"**Общее количество пулл-реквестов**: {total_prs}\n"
+              f"**Замерженные пулл-реквесты**: {merged_prs}\n"
               f"**Закрытые пулл-реквесты**: {closed_prs}\n"
               f"**Открытые пулл-реквесты**: {open_prs}\n"
               f"**Пулл-реквесты в драфте**: {draft_prs}\n"
@@ -173,4 +212,3 @@ async def git_logininfo(ctx, username: str):
     
     # Отправляем Embed в канал
     await ctx.send(embed=embed)
-
