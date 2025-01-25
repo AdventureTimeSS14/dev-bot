@@ -38,7 +38,7 @@ def get_github_repo_owners():
         response.raise_for_status()
         members = response.json()
         # Извлекаем владельцев (admins)
-        owners = [member['login'] for member in members if member['role'] == 'admin']
+        owners = [member['login'] for member in members if member['role'] == 'owner']
         return owners
     except requests.RequestException as e:
         print(f"❌ Ошибка при получении владельцев: {e}")
