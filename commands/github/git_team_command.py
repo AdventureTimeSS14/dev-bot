@@ -23,22 +23,35 @@ def get_github_org_members():
         print(f"❌ Ошибка при получении участников: {e}")
         return []
 
-# Функция для получения владельцев репозитория на GitHub
-def get_github_repo_owners():
-    """Получает список владельцев репозитория на GitHub."""
-    url = f'https://api.github.com/orgs/{AUTHOR}/memberships'
+# Функция для получения списка владельцев (admins) из команд
+def get_github_org_owners():
+    """Получает список владельцев организации (admins) из всех команд."""
+    url = f'https://api.github.com/orgs/{AUTHOR}/teams'
 
     headers = {
         "Accept": "application/vnd.github.v3+json",
         "Authorization": f"Bearer {ACTION_GITHUB}"
     }
 
+    owners = []
+
     try:
         response = requests.get(url, headers=headers)
         response.raise_for_status()
-        members = response.json()
-        # Извлекаем владельцев (admins)
-        owners = [member['login'] for member in members if member['role'] == 'owner']
+        teams = response.json()
+        
+        # Для каждой команды получаем участников с ролью "admin"
+        for team in teams:
+            team_slug = team['slug']
+            team_members_url = f'https://api.github.com/orgs/{AUTHOR}/teams/{team_slug}/members'
+            team_members_response = requests.get(team_members_url, headers=headers)
+            team_members_response.raise_for_status()
+            team_members = team_members_response.json()
+            
+            for member in team_members:
+                if member.get('role') == 'admin':  # Проверяем роль "admin"
+                    owners.append(member['login'])
+
         return owners
     except requests.RequestException as e:
         print(f"❌ Ошибка при получении владельцев: {e}")
@@ -91,7 +104,7 @@ async def git_team(ctx):
     Команда для вывода списка участников организации на GitHub.
     """
     members = get_github_org_members()
-    owners = get_github_repo_owners()
+    owners = get_github_org_owners()
 
     if not members:
         await ctx.send("❌ Не удалось получить список участников организации.")
