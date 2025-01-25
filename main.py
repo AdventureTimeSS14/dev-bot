@@ -49,6 +49,7 @@ from commands.github import (
     achang_command,
     check_workflows,
     forks_command,
+    git_invite_command,
     github_processor,
     milestones_command,
     pr_changelog_send,
@@ -56,6 +57,12 @@ from commands.github import (
     branch_command,
     publish_command,
     publish_status_command,
+    git_logininfo_command,
+    git_repoinfo_command,
+    git_team_command,
+    git_pending_invites_command,
+    git_cancel_invite_command,
+    git_help_command,
 )
 from commands.misc.shutdows_deff import (
     shutdown_def,
