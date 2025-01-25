@@ -163,13 +163,13 @@ async def git_logininfo(ctx, username: str):
         print(f"Обрабатываем пулл-реквест: {pr_url}, состояние: {pr_state}")
 
         # Подсчитываем количество пулл-реквестов по состояниям
-        if pr_state == 'CLOSED' and pr['merged_at']:  # Если пулл-реквест был замержен
+        if pr_state == 'MERGED':
             merged_prs += 1
-        elif pr_state == 'CLOSED':  # Если пулл-реквест был закрыт
+        if pr_state == 'CLOSED':  # Если пулл-реквест был закрыт
             closed_prs += 1
-        elif pr_state == 'OPEN':  # Если пулл-реквест открыт
+        if pr_state == 'OPEN':  # Если пулл-реквест открыт
             open_prs += 1
-        elif pr_state == 'DRAFT':  # Если пулл-реквест в драфте
+        if pr_state == 'DRAFT':  # Если пулл-реквест в драфте
             draft_prs += 1
 
         total_reviews += pr['reviews']
