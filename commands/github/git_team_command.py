@@ -1,8 +1,10 @@
 import disnake
 import requests
 from bot_init import bot
-from config import AUTHOR, ACTION_GITHUB
 from disnake.ext import commands
+from config import AUTHOR, ACTION_GITHUB, SERVER_ADMIN_POST
+from commands.misc.check_roles import has_any_role_by_id
+
 
 # Функция для получения списка участников организации на GitHub
 def get_github_org_members():
@@ -145,3 +147,82 @@ async def git_team(ctx):
 
     # Отправляем Embed в канал
     await ctx.send(embed=embed)
+
+# Функция для добавления участника в команду
+def add_member_to_team(team_slug, github_login):
+    """Добавляет участника в указанную команду на GitHub."""
+    url = f'https://api.github.com/orgs/{AUTHOR}/teams/{team_slug}/memberships/{github_login}'
+
+    headers = {
+        "Accept": "application/vnd.github.v3+json",
+        "Authorization": f"Bearer {ACTION_GITHUB}"
+    }
+
+    payload = {
+        "role": "member"  # Можно указать "maintainer", если нужно назначить роль мейнтейнера
+    }
+
+    try:
+        response = requests.put(url, headers=headers, json=payload)
+        response.raise_for_status()
+        return True
+    except requests.RequestException as e:
+        print(f"❌ Ошибка при добавлении пользователя {github_login} в команду {team_slug}: {e}")
+        return False
+
+
+# Функция для удаления участника из команды
+def remove_member_from_team(team_slug, github_login):
+    """Удаляет участника из указанной команды на GitHub."""
+    url = f'https://api.github.com/orgs/{AUTHOR}/teams/{team_slug}/memberships/{github_login}'
+
+    headers = {
+        "Accept": "application/vnd.github.v3+json",
+        "Authorization": f"Bearer {ACTION_GITHUB}"
+    }
+
+    try:
+        response = requests.delete(url, headers=headers)
+        if response.status_code == 204:  # Успешное удаление возвращает 204 No Content
+            return True
+        else:
+            response.raise_for_status()
+    except requests.RequestException as e:
+        print(f"❌ Ошибка при удалении пользователя {github_login} из команды {team_slug}: {e}")
+        return False
+
+
+# Команда для добавления пользователя в команду adt_maintainer
+@bot.command(
+    name="add_maintainer",
+    help="Добавляет пользователя в команду adt_maintainer на GitHub."
+)
+@has_any_role_by_id(SERVER_ADMIN_POST)
+async def add_to_maintainer(ctx, github_login: str):
+    """
+    Добавляет пользователя в команду adt_maintainer.
+    """
+    team_slug = "adt_maintainer"  # Название команды
+
+    if add_member_to_team(team_slug, github_login):
+        await ctx.send(f"✅ Пользователь `{github_login}` успешно добавлен в команду `{team_slug}`.")
+    else:
+        await ctx.send(f"❌ Не удалось добавить пользователя `{github_login}` в команду `{team_slug}`.")
+
+
+# Команда для удаления пользователя из команды adt_maintainer
+@bot.command(
+    name="del_maintainer",
+    help="Удаляет пользователя из команды adt_maintainer на GitHub."
+)
+@has_any_role_by_id(SERVER_ADMIN_POST)
+async def remove_from_maintainer(ctx, github_login: str):
+    """
+    Удаляет пользователя из команды adt_maintainer.
+    """
+    team_slug = "adt_maintainer"  # Название команды
+
+    if remove_member_from_team(team_slug, github_login):
+        await ctx.send(f"✅ Пользователь `{github_login}` успешно удалён из команды `{team_slug}`.")
+    else:
+        await ctx.send(f"❌ Не удалось удалить пользователя `{github_login}` из команды `{team_slug}`.")

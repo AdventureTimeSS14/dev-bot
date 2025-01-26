@@ -5,6 +5,7 @@ from config import AUTHOR, ACTION_GITHUB, SERVER_ADMIN_POST
 from disnake.ext import commands
 from commands.misc.check_roles import has_any_role_by_id
 
+
 def invite_to_github_org(username_or_email):
     """Приглашает пользователя в организацию GitHub."""
     url = f'https://api.github.com/orgs/{AUTHOR}/invitations'
