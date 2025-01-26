@@ -25,7 +25,7 @@ def get_github_org_members():
 
 # Функция для получения списка владельцев (admins) из команд
 def get_github_org_owners():
-    """Получает список владельцев организации (admins) из всех команд."""
+    """Получает список владельцев организации (admins) из команды."""
     url = f'https://api.github.com/orgs/{AUTHOR}/teams'
 
     headers = {
@@ -33,28 +33,13 @@ def get_github_org_owners():
         "Authorization": f"Bearer {ACTION_GITHUB}"
     }
 
-    owners = []
-
     try:
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         teams = response.json()
-        
-        # Для каждой команды получаем участников с ролью "admin"
-        for team in teams:
-            team_slug = team['slug']
-            team_members_url = f'https://api.github.com/orgs/{AUTHOR}/teams/{team_slug}/members'
-            team_members_response = requests.get(team_members_url, headers=headers)
-            team_members_response.raise_for_status()
-            team_members = team_members_response.json()
-            
-            for member in team_members:
-                if member.get('role') == 'admin':  # Проверяем роль "admin"
-                    owners.append(member['login'])
-
-        return owners
+        return teams
     except requests.RequestException as e:
-        print(f"❌ Ошибка при получении владельцев: {e}")
+        print(f"❌ Ошибка при получении команд: {e}")
         return []
 
 # Функция для получения списка команд организации на GitHub
@@ -104,71 +89,59 @@ async def git_team(ctx):
     Команда для вывода списка участников организации на GitHub.
     """
     members = get_github_org_members()
-    owners = get_github_org_owners()
+    teams = get_github_teams()
 
     if not members:
         await ctx.send("❌ Не удалось получить список участников организации.")
         return
 
-    # Получаем список команд и участников основной команды (Mainteiners)
-    teams = get_github_teams()
-    mainteiners_team_slug = None
+    # Получение владельцев
+    owners_slug = None
+    mainteiners_slug = None
 
-    # Ищем команду с названием "Mainteiners"
+    # Поиск команд по slug
     for team in teams:
-        if team['name'].lower() == 'adt_maintainer':
-            mainteiners_team_slug = team['slug']
-            break
+        if team['slug'] == 'owners':
+            owners_slug = team['slug']
+        elif team['slug'] == 'adt_maintainer':
+            mainteiners_slug = team['slug']
 
-    if not mainteiners_team_slug:
-        await ctx.send("❌ Не удалось найти команду.")
+    if not owners_slug:
+        await ctx.send("❌ Не удалось найти команду владельцев (owners).")
         return
 
-    # Получаем участников основной команды
-    mainteiners_members = get_team_members(mainteiners_team_slug)
+    if not mainteiners_slug:
+        await ctx.send("❌ Не удалось найти команду мейнтейнеров (adt_mainteiner).")
+        return
 
-    # Сортируем участников
-    sorted_owners = [member for member in owners if member in members]  # Владельцы организации
-    sorted_mainteiners = [member for member in members if member in mainteiners_members]  # Mainteiners
-    sorted_members = [member for member in members if member not in owners and member not in mainteiners_members]  # Остальные участники
+    # Получение участников команд
+    owners = get_team_members(owners_slug)
+    mainteiners = get_team_members(mainteiners_slug)
 
-    # Формируем строку с владельцами (с эмодзи короны)
+    # Сортировка участников
+    sorted_owners = [member for member in members if member in owners]
+    sorted_mainteiners = [member for member in members if member in mainteiners and member not in owners]
+    sorted_members = [member for member in members if member not in owners and member not in mainteiners]
+
+    # Формирование строк для embed
     owners_list = "👑 " + "\n👑 ".join([f"**{owner}**" for owner in sorted_owners])
-
-    # Формируем строку с участниками основной команды (Mainteiners)
     mainteiners_list = "🛠️ " + "\n🛠️ ".join([f"**{member}**" for member in sorted_mainteiners])
-
-    # Формируем строку с остальными участниками
     members_list = "👤 " + "\n👤 ".join([f"**{member}**" for member in sorted_members])
 
-    # Если список слишком длинный, выводим только первые 2000 символов
-    if len(owners_list + mainteiners_list + members_list) > 2000:
-        combined_list = owners_list + "\n\n" + mainteiners_list + "\n\n" + members_list
+    # Проверка длины сообщения
+    combined_list = f"{owners_list}\n\n{mainteiners_list}\n\n{members_list}"
+    if len(combined_list) > 2000:
         combined_list = combined_list[:2000] + "..."
-    else:
-        combined_list = owners_list + "\n\n" + mainteiners_list + "\n\n" + members_list
 
-    # Создаём Embed с улучшенным дизайном
+    # Создание Embed
     embed = disnake.Embed(
         title="🌟 Список участников организации на GitHub 🚀",
-        description=f"**Организация**: {AUTHOR}\n**Владельцы**:\n{owners_list}\n\n**Mainteiners**:\n{mainteiners_list}\n\n**Остальные участники**:\n{members_list}",
+        description=f"**Организация**: {AUTHOR}\n\n**Владельцы**:\n{owners_list}\n\n**Мейнтейнеры**:\n{mainteiners_list}\n\n**Остальные участники**:\n{members_list}",
         color=disnake.Color.dark_grey(),
         timestamp=disnake.utils.utcnow()
     )
 
     embed.set_footer(text=f"Запрос от {ctx.author.display_name}", icon_url=ctx.author.avatar.url)
-
-    # Дополнительные поля для улучшения
-    embed.add_field(
-        name="👥 Кто может присоединиться?",
-        value="**Только участники команды разработки** могут быть в списке участников. Если вы хотите присоединиться, пишите в https://discord.com/channels/901772674865455115/1297176881732386847.",
-        inline=False
-    )
-    embed.add_field(
-        name="📣 Внимание!",
-        value="Это список всех участников организации на GitHub. Если вы хотите узнать больше информации о конкретном участнике, используйте команду &git_logininfo <login> для получения деталей о пользователе.",
-        inline=False
-    )
 
     # Отправляем Embed в канал
     await ctx.send(embed=embed)
