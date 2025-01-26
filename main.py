@@ -68,7 +68,7 @@ from commands.misc.shutdows_deff import (
     shutdown_def,
 )  # Для выполнения завершающих операций
 from config import DISCORD_KEY
-from events import on_command, on_error, on_message, on_ready, update_status
+from events import on_command, on_error, on_message, on_ready, update_status, on_button_click
 
 # Настройка логирования
 logging.basicConfig(

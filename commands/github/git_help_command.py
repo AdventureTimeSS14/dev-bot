@@ -1,8 +1,10 @@
 import disnake
+
 from bot_init import bot
 from disnake.ext import commands
+from components.button_help_components import action_row_button_help
 
-COLOR = disnake.Color.dark_embed()
+COLOR = disnake.Color.dark_purple()
 
 @bot.command(name="git_help")
 async def git_help(ctx: commands.Context):
@@ -36,10 +38,10 @@ async def git_help(ctx: commands.Context):
             "name_4": "Управление участниками:",
             "context_4": (
                 "📊 **&git_logininfo <username>** - Выводит краткую статистику пользователя и его вклад в репозиторий. (В РАБОТЕ)\n"
-                "📂 **&git_repoinfo** - Выводит информацию о репозитории `AdventureTimeSS14/space_station_ADT`.\n"
+                "📂 **&git_repoinfo** - Выводит информацию о репозитории *AdventureTimeSS14/space_station_ADT*.\n"
                 "👥 **&git_team** - Выводит список участников организации на GitHub.\n"
-                "🛠️ **&adt_maintainer <github_login>** - Добавляет участника в команду `adt_maintainer` на GitHub.\n"
-                "🛠️ **&del_maintainer <github_login>** - Удаляет участника из команды `adt_maintainer` на GitHub.\n"
+                "🛠️ **&adt_maintainer <github_login>** - Добавляет участника в команду *adt_maintainer* на GitHub.\n"
+                "🛠️ **&del_maintainer <github_login>** - Удаляет участника из команды *adt_maintainer* на GitHub.\n"
             ),
         }
 
@@ -81,7 +83,7 @@ async def git_help(ctx: commands.Context):
         )
 
         # Отправляем embed
-        await ctx.send(embed=embed)
+        await ctx.send(embed=embed, components=[action_row_button_help])
 
     except Exception as e:
         # Логируем и обрабатываем ошибку

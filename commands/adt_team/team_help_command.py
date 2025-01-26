@@ -2,6 +2,7 @@ import disnake
 
 from bot_init import bot
 from config import ADMIN_TEAM
+from components.button_help_components import action_row_button_help
 
 commands_info = {
     "Основные команды": {
@@ -103,4 +104,4 @@ async def team_help(ctx):
     )
 
     # Отправляем Embed
-    await ctx.send(embed=embed)
+    await ctx.send(embed=embed, components=[action_row_button_help])

@@ -5,6 +5,7 @@
 import disnake
 
 from bot_init import bot
+from components.button_help_components import action_row_button_help
 
 
 @bot.command(name="help")
@@ -81,4 +82,4 @@ async def help_command(ctx):
     embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar.url)
 
     # Отправляем embed-сообщение
-    await ctx.send(embed=embed)
+    await ctx.send(embed=embed, components=[action_row_button_help])
