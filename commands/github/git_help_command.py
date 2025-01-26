@@ -38,8 +38,8 @@ async def git_help(ctx: commands.Context):
                 "📊 **&git_logininfo <username>** - Выводит краткую статистику пользователя и его вклад в репозиторий. (В РАБОТЕ)\n"
                 "📂 **&git_repoinfo** - Выводит информацию о репозитории `AdventureTimeSS14/space_station_ADT`.\n"
                 "👥 **&git_team** - Выводит список участников организации на GitHub.\n"
-                "🛠️ **&add_to_maintainer <github_login>** - Добавляет участника в команду `adt_maintainer` на GitHub.\n"
-                "🛠️ **&remove_from_maintainer <github_login>** - Удаляет участника из команды `adt_maintainer` на GitHub.\n"
+                "🛠️ **&adt_maintainer <github_login>** - Добавляет участника в команду `adt_maintainer` на GitHub.\n"
+                "🛠️ **&del_maintainer <github_login>** - Удаляет участника из команды `adt_maintainer` на GitHub.\n"
             ),
         }
 
