@@ -31,8 +31,8 @@ class BugReportModal(Modal):
                 # Создаем Embed для отправки
                 embed = disnake.Embed(
                     title="📝 Новый отзыв/баг-репорт",
-                    description=f"Сообщение от пользователя {inter.author.mention} ({inter.author.id}):",
-                    color=disnake.Color.yellow
+                    description=f"Сообщение от пользователя {inter.author.display_name} ({inter.author.mention}) ({inter.author.id}):",
+                    color=disnake.Color.yellow()
                 )
                 embed.add_field(name="Текст сообщения:", value=report_text, inline=False)
                 embed.set_footer(
