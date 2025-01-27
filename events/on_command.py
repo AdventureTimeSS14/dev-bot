@@ -2,6 +2,8 @@ import datetime
 
 import disnake
 from disnake.ext import commands
+from disnake.ui import View
+from components.button_help_components import button_bug_report
 
 from bot_init import bot
 from config import LOG_CHANNEL_ID
@@ -54,16 +56,24 @@ async def on_command_error(ctx, error):
     """
     Обрабатывает ошибки, связанные с выполнением команд.
     """
+    view = View()
+    view.add_item(button_bug_report)
+    
     if isinstance(error, commands.CommandNotFound):
+
+        
         # Если команда не найдена, отправляем сообщение с предложением использовать &help
         await ctx.send(
             "❌ Команда не найдена! "
             "Попробуйте использовать команду "
-            "`&help`, чтобы узнать доступные команды."
+            "`&help`, чтобы узнать доступные команды.",
+            view=view
         )
     else:
         # Если произошла другая ошибка, выводим её
-        await ctx.send(f"❌ Произошла ошибка: {error}")
+        await ctx.send(f"❌ Произошла ошибка: {error}",
+                       view=view
+        )
 
 
 def format_command_log_message(ctx, current_time, channel_info, message_link):

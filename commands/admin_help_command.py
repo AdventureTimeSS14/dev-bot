@@ -4,7 +4,7 @@ from disnake.ext import commands
 from bot_init import bot
 
 from commands.misc.check_roles import has_any_role_by_id
-from components.button_help_components import action_row_button_help
+from components.button_help_components import action_row_button_help, action_row_bug_report
 
 from config import (
     WHITELIST_ROLE_ID_ADMINISTRATION_POST
@@ -76,7 +76,7 @@ async def admin_help(ctx: commands.Context):
         embed.set_author(name=ctx.author.name, icon_url=avatar_url)
 
         # Отправляем embed
-        await ctx.send(embed=embed, components=[action_row_button_help])
+        await ctx.send(embed=embed, components=[action_row_button_help, action_row_bug_report])
 
     except Exception as e:
         # Логируем и обрабатываем ошибку

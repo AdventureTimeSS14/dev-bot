@@ -2,7 +2,7 @@ import disnake
 
 from bot_init import bot
 from disnake.ext import commands
-from components.button_help_components import action_row_button_help
+from components.button_help_components import action_row_button_help, action_row_bug_report
 
 COLOR = disnake.Color.dark_purple()
 
@@ -83,7 +83,7 @@ async def git_help(ctx: commands.Context):
         )
 
         # Отправляем embed
-        await ctx.send(embed=embed, components=[action_row_button_help])
+        await ctx.send(embed=embed, components=[action_row_button_help, action_row_bug_report])
 
     except Exception as e:
         # Логируем и обрабатываем ошибку
