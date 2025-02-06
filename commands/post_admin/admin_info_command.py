@@ -25,14 +25,12 @@ async def admin_info(ctx):
     response = requests.get(url, headers=POST_ADMIN_HEADERS)
     
     # Логируем полный ответ для отладки
-    print(f"Response Status Code: {response.status_code}")
-    print(f"Response Text: {response.text}")
+    # print(f"Response Status Code: {response.status_code}")
+    # print(f"Response Text: {response.text}")
     
-    # Обработка ответа
     if response.status_code == 200:
         data = response.json()
         
-        # Создание Embed для красивого вывода
         embed = disnake.Embed(
             title="Информация о сервере SS14",
             description="Данная команда выводит информацию о текущем состоянии сервера Mrp в подробном виде SS14.",
@@ -45,68 +43,62 @@ async def admin_info(ctx):
         embed.add_field(name="MOTD (Сообщение дня)", value=get_field_value(data, ["MOTD"], default="Нет сообщения"), inline=False)
         embed.add_field(name="Геймпресет", value=get_field_value(data, ["GamePreset"]), inline=False)
         
-        # Список игроков
+        # Обработка списка игроков
         players = data.get("Players", [])
+
+        def format_player(player):
+            """Форматирование информации об игроке, убирая 'Null' у AdminTitle."""
+            role = "Админ" if player["IsAdmin"] else "Игрок"
+            ping = f"({player['PingUser']} ms)" if "PingUser" in player else ""
+
+            # Проверяем, что AdminTitle не "Null" (как строка) и не пустой
+            admin_title = f" ({player['AdminTitle']})" if player.get("AdminTitle") and player["AdminTitle"] != "Null" else ""
+
+            return f"**{player['Name']}** - {role}{admin_title} {ping}".strip()
+
         if players:
-            # Разделение списка игроков на несколько частей, если их слишком много
-            players_list = "\n".join([f"**{player['Name']}** - {'Админ' if player['IsAdmin'] else 'Игрок'}" for player in players if not player['IsDeadminned']])
-            deadminned_list = "\n".join([f"**{player['Name']}** - {('Админ' if player['IsAdmin'] else 'Игрок')} (Deadminned)" for player in players if player['IsDeadminned']])
-            
-            # Если список игроков слишком длинный, разбиваем его на несколько полей
-            def split_text(text, max_length=1024):
-                """Функция для разделения текста на части, чтобы не превышать лимит символов."""
-                chunks = []
-                while len(text) > max_length:
-                    split_idx = text.rfind("\n", 0, max_length)  # Разделить по последнему \n, чтобы не обрывать слово
-                    chunks.append(text[:split_idx])
-                    text = text[split_idx + 1:]  # Остаток
-                chunks.append(text)  # Остаток
+            player_list = [format_player(p) for p in players if not p["IsDeadminned"]]
+            deadminned_list = [format_player(p) for p in players if p["IsDeadminned"]]
+
+            def split_list(lst, max_length=1024):
+                """Разбивает длинный список строк на части, чтобы не превышать лимит Discord."""
+                chunks, chunk = [], ""
+                for item in lst:
+                    if len(chunk) + len(item) + 1 > max_length:
+                        chunks.append(chunk)
+                        chunk = item
+                    else:
+                        chunk += f"\n{item}"
+                if chunk:
+                    chunks.append(chunk)
                 return chunks
 
-            # Разделяем списки игроков и деадминов на части
-            player_chunks = split_text(players_list)
-            deadminned_chunks = split_text(deadminned_list)
+            # Добавляем игроков
+            for i, chunk in enumerate(split_list(player_list)):
+                embed.add_field(name="Игроки на сервере" if i == 0 else f"Игроки (часть {i+1})", value=chunk, inline=False)
 
-            # Добавляем все части в Embed, если текст был разбит
-            for i, chunk in enumerate(player_chunks):
-                embed.add_field(name=f"Игроки на сервере" if i == 0 else f"Игроки на сервере (часть {i+1})", value=chunk, inline=False)
-            for i, chunk in enumerate(deadminned_chunks):
-                embed.add_field(name=f"Игроки в деадмине" if i == 0 else f"Игроки в деадмине (часть {i+1})", value=chunk, inline=False)
+            # Добавляем деадминов
+            for i, chunk in enumerate(split_list(deadminned_list)):
+                embed.add_field(name="Игроки в деадмине" if i == 0 else f"Деадмины (часть {i+1})", value=chunk, inline=False)
         else:
             embed.add_field(name="Игроки на сервере", value="Нет игроков", inline=False)
-            embed.add_field(name="Игроки в деадмине", value="Нет игроков в деадмине", inline=False)
 
         # Активные администраторы
-        active_admins = "\n".join([f"**{player['Name']}** - Админ" for player in players if player['IsAdmin'] and not player['IsDeadminned']])
-        if active_admins:
-            embed.add_field(name="Активные администраторы", value=active_admins, inline=False)
-        else:
-            embed.add_field(name="Активные администраторы", value="Нет активных администраторов", inline=False)
+        active_admins = [format_player(p) for p in players if p["IsAdmin"] and not p["IsDeadminned"]]
+        embed.add_field(name="Активные администраторы", value="\n".join(active_admins) if active_admins else "Нет активных администраторов", inline=False)
 
         # Правила игры
         game_rules = get_field_value(data, ["GameRules"], default="Нет доступных правил")
-        
-        # Разбиение списка правил на части, если он слишком длинный
-        game_rules_list = "\n".join(game_rules) if isinstance(game_rules, list) else game_rules
-        game_rules_chunks = split_text(game_rules_list)
+        game_rules_text = "\n".join(game_rules) if isinstance(game_rules, list) else game_rules
+        for i, chunk in enumerate(split_list([game_rules_text])):
+            embed.add_field(name="Правила игры" if i == 0 else f"Правила (часть {i+1})", value=chunk, inline=False)
 
-        # Добавляем части в Embed
-        for i, chunk in enumerate(game_rules_chunks):
-            embed.add_field(name=f"Правила игры" if i == 0 else f"Правила игры (часть {i+1})", value=chunk, inline=False)
-
-        # Паника
+        # Паника (Panic Bunker)
         panic_bunker_info = data.get("PanicBunker", {})
-        if panic_bunker_info:
-            panic_info = "\n".join([f"{key}: {value}" for key, value in panic_bunker_info.items() if value is not None])
-            panic_status = panic_info if panic_info else "Не активирован"
-        else:
-            panic_status = "Не активирован"
-        
+        panic_status = "\n".join(f"{key}: {value}" for key, value in panic_bunker_info.items() if value is not None) if panic_bunker_info else "Не активирован"
         embed.add_field(name="Panic Bunker", value=panic_status, inline=False)
         
-        # Отправка Embed в канал
         await ctx.send(embed=embed)
         
     else:
-        # Если запрос не успешен
         await ctx.send(f"Ошибка запроса: {response.status_code}, {response.text}")
