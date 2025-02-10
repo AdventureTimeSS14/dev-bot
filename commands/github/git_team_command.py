@@ -207,7 +207,7 @@ def remove_member_from_team(team_slug, github_login):
 
 # Команда для добавления пользователя в команду adt_maintainer
 @bot.command(
-    name="add_maintainer",
+    name="add_maint",
     help="Добавляет пользователя в команду adt_maintainer на GitHub."
 )
 @has_any_role_by_id(SERVER_ADMIN_POST)
@@ -225,7 +225,7 @@ async def add_to_maintainer(ctx, github_login: str):
 
 # Команда для удаления пользователя из команды adt_maintainer
 @bot.command(
-    name="del_maintainer",
+    name="del_maint",
     help="Удаляет пользователя из команды adt_maintainer на GitHub."
 )
 @has_any_role_by_id(SERVER_ADMIN_POST)
