@@ -109,7 +109,7 @@ async def handle_message_deletion(message):
 
         # Логируем причину удаления
         log_message = (
-            f"❌ Сообщение пользователя `{user.mention}` "
+            f"❌ Сообщение пользователя {user.mention} "
             f"было удалено в канале {message.channel.mention}. "
             "Причина: нарушение правил."
         )
