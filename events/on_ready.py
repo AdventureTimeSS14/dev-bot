@@ -48,20 +48,12 @@ async def on_ready():
                                              # если бот уже запущен на GitHub Actions
 
     # Запуск всех фоновых задач
-    await start_task_if_not_running(
-        fetch_merged_pull_requests, "fetch_merged_pull_requests"
-    )
-    await start_task_if_not_running(list_team_task, "list_team_task")
-    await start_task_if_not_running(monitor_commits, "monitor_commits")
-    await start_task_if_not_running(
-        update_status_presence, "update_status_presence"
-    )
-    await start_task_if_not_running(
-        update_status_server_message_eddit, "update_status_server_message_eddit"
-    )
-    await start_task_if_not_running(
-        update_time_shutdows, "update_time_shutdows"
-    )
+    await start_task_if_not_running(fetch_merged_pull_requests, "fetch merged pr")
+    await start_task_if_not_running(list_team_task, "list team")
+    await start_task_if_not_running(monitor_commits, "monitor commits")
+    await start_task_if_not_running(update_status_presence, "update status presence")
+    await start_task_if_not_running(update_status_server_message_eddit, "update status server")
+    await start_task_if_not_running(update_time_shutdows, "update time shutdows")
 
     print(f"✅ Bot {bot.user.name} (ID: {bot.user.id}) is ready to work!")
 
