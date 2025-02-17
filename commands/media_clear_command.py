@@ -14,11 +14,15 @@ async def media_clear(ctx, count: int):
     try:
         deleted = 0
         async for message in ctx.channel.history(limit=count):
+            # Пропускаем системные сообщения
+            if message.type != message.Type.default:
+                continue
+            
             # Проверяем, содержит ли сообщение вложения (медиа, файлы и т. д.)
             if not message.attachments:
                 await message.delete()
                 deleted += 1
-
+        
         await ctx.send(f"✅ Удалено {deleted} сообщений без медиафайлов.", delete_after=5)
 
     except Exception as e:
