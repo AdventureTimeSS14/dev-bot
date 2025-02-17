@@ -16,11 +16,11 @@ async def media_clear(ctx, count: int):
         deleted = 0
         async for message in ctx.channel.history(limit=count):
             # Пропускаем системные сообщения
-            if message.type != MessageType.default:
+            if message.type not in (MessageType.default, MessageType.reply):
                 continue
 
             # Проверяем, содержит ли сообщение вложения (медиа, файлы и т. д.)
-            if not message.attachments and not message.content.startswith("https://"):
+            if not message.attachments and not message.content.startswith("https://tenor.com") and not message.content.startswith("https://youtube.com"):
                 await message.delete()
                 deleted += 1
 
