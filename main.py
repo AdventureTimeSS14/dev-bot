@@ -19,6 +19,7 @@ from commands import (
     uptime_command,
     user_role_command,
     admin_help_command,
+    media_clear_command,
 )
 from commands.post_admin import (
     restart_command,
